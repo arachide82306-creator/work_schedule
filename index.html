@@ -32,7 +32,7 @@
       transition:border-color var(--transition-fast),box-shadow var(--transition-fast)}
     select:focus,input[type="month"]:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(25,118,210,.15)}
     .toggle{display:inline-flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;padding:6px 10px;border-radius:999px;border:1px solid var(--border-soft);background:#fff;
-      transition:box-shadow var(--transition-fast),border-color var(--transition-fast);user-select:none}
+      transition:box-shadow var(--transition-fast),border-color var(--transition-fast);user-select:none;white-space:nowrap}
     .toggle input{display:none}
     .toggle-pill{width:34px;height:18px;border-radius:999px;background:#e5e7eb;position:relative;transition:background-color var(--transition-fast)}
     .toggle-thumb{width:16px;height:16px;border-radius:50%;background:#fff;position:absolute;top:1px;left:1px;box-shadow:0 1px 3px rgba(0,0,0,.15);transition:transform var(--transition-fast)}
@@ -115,9 +115,22 @@ table.schedule thead th{position:sticky;top:0;z-index:10;background:#fafafa;font
 .employee-table-fixed{table-layout:fixed}
 .employee-table-fixed th,.employee-table-fixed td{border:1px solid var(--border-soft);padding:6px 8px;font-size:12px;vertical-align:middle}
 .employee-table-fixed th{background:#f9fafb;font-weight:800}
-.employee-drag-handle{cursor:grab;user-select:none;text-align:center;color:#6b7280;font-weight:900}
+.employee-drag-handle{cursor:grab;user-select:none;text-align:center;color:var(--accent-strong);font-weight:900;background:linear-gradient(90deg, rgba(25,118,210,.12), rgba(25,118,210,.04));border-radius:8px;}
 .employee-drag-handle:active{cursor:grabbing}
 .employee-table-fixed input,.employee-table-fixed select{width:100%;box-sizing:border-box}
+  .employee-left-actions{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:8px;row-gap:6px;}
+  .employee-left-actions .actions-left{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .employee-left-actions .actions-left .badge{white-space:nowrap;}
+  .employee-unassigned-info{display:none;align-items:center;gap:10px;padding:8px 10px;margin:-2px 0 8px;background:var(--accent-soft);border:1px solid rgba(25,118,210,.18);border-radius:10px;font-size:12px;color:var(--accent-strong);flex-wrap:wrap;}
+  .employee-unassigned-info .count-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:#fff;border:1px solid rgba(25,118,210,.25);font-weight:750;white-space:nowrap;}
+  .employee-unassigned-info button{padding:6px 10px;border-radius:10px;}
+  .employee-unassigned-info .info-text{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+  .emp-drag-cell{background:#f6f9ff;}
+  .emp-drag-handle{color:var(--accent-strong);background:#fff;border-radius:12px;padding:4px 6px;display:inline-flex;align-items:center;justify-content:center;box-shadow:inset 0 0 0 1px rgba(25,118,210,.16);}
+  .emp-drag-handle::before{content:"↔";margin-right:4px;font-size:12px;color:var(--accent-strong);}
+  .emp-drag-handle:active{cursor:grabbing}
+  .employee-drag-tip{margin-top:8px;font-size:12px;color:var(--text-muted);display:flex;align-items:center;gap:8px;background:#f8fafc;border:1px dashed rgba(25,118,210,.35);padding:8px 10px;border-radius:10px;}
+  .employee-drag-tip .icon{color:var(--accent-strong);font-weight:900;}
 
     .settings-table th,.settings-table td{border:1px solid var(--border-soft);padding:6px 8px;font-size:12px;text-align:left;vertical-align:top}
     .settings-table th{background:#f9fafb;font-weight:800}
@@ -146,6 +159,10 @@ table.schedule thead th{position:sticky;top:0;z-index:10;background:#fafafa;font
     .unsaved-body ul{padding-left:18px;margin:6px 0 0}
     .unsaved-body li{margin:4px 0}
     @media(max-width:980px){header{flex-direction:column;align-items:flex-start;height:auto}.header-left,.header-right{width:100%;justify-content:space-between}aside.sidebar{display:flex}}
+    @media(max-width:720px){
+      .employee-left-actions{flex-direction:column;align-items:flex-start;}
+      .employee-left-actions .actions-left{width:100%;justify-content:space-between;}
+    }
     @media print{
       @page{size:A4 landscape;margin:8mm}
       header,aside.sidebar{display:none!important}
@@ -1403,6 +1420,20 @@ html.is-dragging #employeeOrderList.drop-over{
 <p class="text-muted">同姓同名は不可。勤務表データがある従業員は削除不可（未所属へ）。</p>
 <div class="employee-two-col">
 <div class="employee-col employee-col-left">
+<div class="employee-left-actions">
+<div class="actions-left">
+<label class="toggle" id="employeeUnassignedToggle">
+<input id="employeeUnassignedCheckbox" type="checkbox"/>
+<span class="toggle-pill"><span class="toggle-thumb"></span></span>
+<span class="toggle-label" id="employeeUnassignedLabel">全従業員を表示</span>
+</label>
+<span class="badge work" id="employeeTotalBadge">全員: <span id="employeeTotalCount">0</span>名</span>
+</div>
+</div>
+<div class="employee-unassigned-info" id="employeeUnassignedInfo">
+<div class="info-text">未所属の従業員 <span class="count-badge" id="employeeUnassignedCount">0名</span> を表示中。</div>
+<button class="icon" id="employeeUnassignedReset" type="button">全員を表示に戻す</button>
+</div>
 <div class="employee-table-frame">
 <table class="settings-table employee-table-fixed">
 <colgroup>
@@ -1414,13 +1445,14 @@ html.is-dragging #employeeOrderList.drop-over{
 <col style="width:12%"/>
 </colgroup>
 <thead><tr>
-<th class="employee-drag-handle" title="ドラッグして店舗へ追加"> </th>
+<th class="employee-drag-handle" title="ドラッグして店舗へ追加">⇆</th>
 <th style="width:160px;">姓</th><th style="width:160px;">名</th><th>所属店舗</th><th style="width:110px;">店舗内順</th><th style="width:90px;">削除</th>
 </tr></thead>
 <tbody id="employeeTableBody"></tbody>
 </table>
 </div>
 <button id="addEmployeeButton" class="add-link-btn">従業員を追加</button>
+<div class="employee-drag-tip"><span class="icon">↔</span><span>左列のハンドルをドラッグして右の店舗列へ割当できます。</span></div>
 </div>
 <div class="employee-col employee-col-right">
 <div class="employee-order-head">
@@ -1604,6 +1636,7 @@ let pendingNavigationTarget=null;
 let pendingFocus=null;
 
 let imeAlertTimer=null;
+let employeeUnassignedOnly=false;
 
 const dom={};
 
@@ -1650,10 +1683,29 @@ dom.supportStoreSelect=document.getElementById("supportStoreSelect");
   dom.settingsCancelButton=document.getElementById("settingsCancelButton");
   dom.storeTableBody=document.getElementById("storeTableBody");
   dom.employeeTableBody=document.getElementById("employeeTableBody");
+  dom.employeeUnassignedToggle=document.getElementById("employeeUnassignedToggle");
+  dom.employeeUnassignedCheckbox=document.getElementById("employeeUnassignedCheckbox");
+  dom.employeeUnassignedLabel=document.getElementById("employeeUnassignedLabel");
+  dom.employeeUnassignedInfo=document.getElementById("employeeUnassignedInfo");
+  dom.employeeUnassignedCount=document.getElementById("employeeUnassignedCount");
+  dom.employeeUnassignedReset=document.getElementById("employeeUnassignedReset");
+  dom.employeeTotalCount=document.getElementById("employeeTotalCount");
+  dom.employeeSearchInput=document.getElementById("employeeSearchInput");
   dom.employeeOrderStoreSelect=document.getElementById("employeeOrderStoreSelect");
   dom.employeeOrderList=document.getElementById("employeeOrderList");
   // 右ペイン：店舗セレクト切替で即再描画
   dom.employeeOrderStoreSelect?.addEventListener("change", ()=>{ refreshEmployeeOrderPanel(); });
+  dom.employeeUnassignedCheckbox?.addEventListener("change", ()=>{
+    employeeUnassignedOnly = !!dom.employeeUnassignedCheckbox.checked;
+    updateEmployeeUnassignedToggleUI();
+    applyEmployeeTableFilter();
+  });
+  dom.employeeUnassignedReset?.addEventListener("click", ()=>{
+    employeeUnassignedOnly = false;
+    if(dom.employeeUnassignedCheckbox) dom.employeeUnassignedCheckbox.checked = false;
+    updateEmployeeUnassignedToggleUI();
+    applyEmployeeTableFilter();
+  });
   // 店舗タブの変更を従業員タブの所属店舗プルダウンに即反映（設定モーダル内で完結させる）
   let __storeChangeRaf = null;
   const __onStoreChange = ()=>{
@@ -4173,6 +4225,8 @@ function populateSettingsFromState(){
   master.employees.forEach(emp=>addEmployeeRow(emp));
   refreshEmployeeStoreOptionsFromSettings();
   refreshEmployeeOrderPanel();
+  resetEmployeeUnassignedFilter();
+  applyEmployeeTableFilter();
 
   dom.workCodeTableBody.innerHTML="";
   master.workCodes.forEach(wc=>{
@@ -4188,6 +4242,51 @@ function populateSettingsFromState(){
 
   dom.leaveCodeTableBody.innerHTML="";
   master.leaveCodes.forEach(lc=>addLeaveCodeRow(lc));
+}
+
+function resetEmployeeUnassignedFilter(){
+  employeeUnassignedOnly=false;
+  if(dom.employeeUnassignedCheckbox) dom.employeeUnassignedCheckbox.checked=false;
+  updateEmployeeUnassignedToggleUI();
+}
+
+function updateEmployeeUnassignedToggleUI(){
+  const on=!!employeeUnassignedOnly;
+  dom.employeeUnassignedToggle?.classList.toggle("on", on);
+  if(dom.employeeUnassignedLabel){
+    dom.employeeUnassignedLabel.textContent = on ? "未所属のみ表示中" : "全従業員を表示";
+  }
+}
+
+function applyEmployeeTableFilter(){
+  if(!dom.employeeTableBody) return;
+  const keywordRaw = dom.employeeSearchInput ? String(dom.employeeSearchInput.value||"") : "";
+  const keyword = keywordRaw.trim().toLowerCase();
+  let visibleUnassignedCount=0;
+  let totalCount=0;
+
+  dom.employeeTableBody.querySelectorAll("tr").forEach(tr=>{
+    totalCount++;
+    const last=(tr.querySelector(".emp-last")?.value||"").trim();
+    const first=(tr.querySelector(".emp-first")?.value||"").trim();
+    const storeVal=(tr.querySelector("select.emp-store")?.value||"");
+    const isUnassigned = !String(storeVal||"");
+    const matchesKeyword = !keyword || (last+first).toLowerCase().includes(keyword);
+    const shouldShow = (!employeeUnassignedOnly || isUnassigned) && matchesKeyword;
+    tr.style.display = shouldShow ? "" : "none";
+    if(shouldShow && isUnassigned) visibleUnassignedCount++;
+  });
+
+  if(dom.employeeUnassignedInfo){
+    dom.employeeUnassignedInfo.style.display = employeeUnassignedOnly ? "flex" : "none";
+  }
+  if(dom.employeeUnassignedCount){
+    dom.employeeUnassignedCount.textContent = `${visibleUnassignedCount}名`;
+  }
+  if(dom.employeeTotalCount){
+    dom.employeeTotalCount.textContent = String(totalCount);
+  }
+  updateEmployeeUnassignedToggleUI();
 }
 
 function saveSettingsFromUI(){
@@ -4481,6 +4580,7 @@ function refreshEmployeeStoreOptionsFromSettings(){
       sel.value = current || "";
     }
   });
+  applyEmployeeTableFilter();
 }
 
 
@@ -5102,8 +5202,8 @@ function addEmployeeRow(emp){
   inputLast.type="text"; inputLast.className="emp-last"; inputLast.value=emp?emp.lastName:"";
   tdLast.appendChild(inputLast);
   // 左の編集（姓）を右パネルへ即反映
-  inputLast.addEventListener("input", ()=>{ refreshEmployeeOrderPanel(); });
-  inputLast.addEventListener("change", ()=>{ refreshEmployeeOrderPanel(); });
+  inputLast.addEventListener("input", ()=>{ refreshEmployeeOrderPanel(); applyEmployeeTableFilter(); });
+  inputLast.addEventListener("change", ()=>{ refreshEmployeeOrderPanel(); applyEmployeeTableFilter(); });
 
   tr.appendChild(tdHandle);
 
@@ -5112,12 +5212,12 @@ function addEmployeeRow(emp){
   inputFirst.type="text"; inputFirst.className="emp-first"; inputFirst.value=emp?emp.firstName:"";
   tdFirst.appendChild(inputFirst);
   // 左の編集（名）を右パネルへ即反映
-  inputFirst.addEventListener("input", ()=>{ refreshEmployeeOrderPanel(); });
-  inputFirst.addEventListener("change", ()=>{ refreshEmployeeOrderPanel(); });
+  inputFirst.addEventListener("input", ()=>{ refreshEmployeeOrderPanel(); applyEmployeeTableFilter(); });
+  inputFirst.addEventListener("change", ()=>{ refreshEmployeeOrderPanel(); applyEmployeeTableFilter(); });
 
   const tdStore=document.createElement("td");
   const selectStore=document.createElement("select"); selectStore.className="emp-store";
-  selectStore.addEventListener("change", ()=>{ refreshEmployeeOrderPanel(); });
+  selectStore.addEventListener("change", ()=>{ refreshEmployeeOrderPanel(); applyEmployeeTableFilter(); });
   const optNone=document.createElement("option"); optNone.value=""; optNone.textContent="(未所属)";
   selectStore.appendChild(optNone);
     // 店舗候補は設定モーダル内の店舗タブDOM（未保存追加を含む）から都度反映する
@@ -5135,8 +5235,8 @@ function addEmployeeRow(emp){
   inputOrder.value = emp && Number.isFinite(emp.orderInStore) ? String(Math.round((emp.orderInStore||0)/10)) : "";
   tdOrder.appendChild(inputOrder);
   // 左の編集（店舗内順）を右パネルへ即反映
-  inputOrder.addEventListener("input", ()=>{ refreshEmployeeOrderPanel(); });
-  inputOrder.addEventListener("change", ()=>{ refreshEmployeeOrderPanel(); });
+  inputOrder.addEventListener("input", ()=>{ refreshEmployeeOrderPanel(); applyEmployeeTableFilter(); });
+  inputOrder.addEventListener("change", ()=>{ refreshEmployeeOrderPanel(); applyEmployeeTableFilter(); });
 
   const tdDelete=document.createElement("td");
   const btnDel=document.createElement("button"); btnDel.className="btn-delete"; btnDel.textContent="削除";
@@ -5149,6 +5249,7 @@ function addEmployeeRow(emp){
     tr.remove();
     refreshEmployeeStoreOptionsFromSettings();
     refreshEmployeeOrderPanel();
+    applyEmployeeTableFilter();
   });
   tdDelete.appendChild(btnDel);
 
@@ -5157,6 +5258,7 @@ function addEmployeeRow(emp){
   // 店舗タブの編集内容（未保存店舗追加/無効化など）を即反映
   refreshEmployeeStoreOptionsFromSettings();
   refreshEmployeeOrderPanel();
+  applyEmployeeTableFilter();
 }
 
 function employeeHasScheduleData(empId){
