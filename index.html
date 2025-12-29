@@ -17,7 +17,7 @@
       --warning:#f9a825;
       --shadow-soft:0 1px 3px rgba(15,23,42,.12);
       --radius:6px;--transition-fast:.15s ease;
-      --sidebar-width:280px;--header-height:64px;
+      --sidebar-width:268px;--header-height:64px;
       --font-jp:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Yu Gothic UI","Meiryo",sans-serif;
     }
     *{box-sizing:border-box}
@@ -31,21 +31,62 @@
     select,input[type="month"]{padding:5px 10px;border-radius:8px;border:1px solid var(--border-soft);background:#fff;font-size:13px;min-width:160px;outline:none;
       transition:border-color var(--transition-fast),box-shadow var(--transition-fast)}
     select:focus,input[type="month"]:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(25,118,210,.15)}
-    .toggle{display:inline-flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;padding:6px 10px;border-radius:999px;border:1px solid var(--border-soft);background:#fff;
-      transition:box-shadow var(--transition-fast),border-color var(--transition-fast);user-select:none;white-space:nowrap}
+    .toggle{display:inline-flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;padding:6px 10px;border-radius:999px;border:1px solid transparent;background:#fff;
+      transition:box-shadow var(--transition-fast),border-color var(--transition-fast);user-select:none}
     .toggle input{display:none}
+    .toggle:hover{color:var(--accent)}
     .toggle-pill{width:34px;height:18px;border-radius:999px;background:#e5e7eb;position:relative;transition:background-color var(--transition-fast)}
-    .toggle-thumb{width:16px;height:16px;border-radius:50%;background:#fff;position:absolute;top:1px;left:1px;box-shadow:0 1px 3px rgba(0,0,0,.15);transition:transform var(--transition-fast)}
-    .toggle.on .toggle-pill{background:var(--success)} .toggle.on .toggle-thumb{transform:translateX(16px)}
-    .toggle.on{border-color:rgba(46,125,50,.35);box-shadow:0 0 0 2px rgba(46,125,50,.12)}
-    button{border:1px solid var(--border-soft);border-radius:999px;padding:7px 14px;font-size:13px;cursor:pointer;background:#fff;color:var(--text-main);
-      display:inline-flex;align-items:center;gap:6px;transition:background-color var(--transition-fast),box-shadow var(--transition-fast),border-color var(--transition-fast),transform var(--transition-fast);user-select:none}
-    button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
-    button.primary:hover:not(:disabled){background:var(--accent-strong);border-color:var(--accent-strong)}
+    .toggle-thumb{width:16px;height:16px;border-radius:50%;background:#fff;position:absolute;top:1px;left:1px;box-shadow:0 1px 2px rgba(0,0,0,.18);transition:transform var(--transition-fast)}
+    .toggle.on .toggle-pill{background:var(--accent)} .toggle.on .toggle-thumb{transform:translateX(16px)}
+    .toggle.on{border-color:transparent;box-shadow:none}
+
+    /* Debug: click inspector highlight */
+    .debug-click-box{position:absolute;left:0;top:0;width:0;height:0;pointer-events:none;z-index:999999;border:2px solid var(--accent);border-radius:8px;box-sizing:border-box;background:transparent}
+    .debug-click-box.secondary{border-style:dashed;border-color:rgba(239,68,68,.75)}
+    .debug-click-label{position:absolute;left:0;top:0;pointer-events:none;z-index:1000000;font-size:11px;line-height:1.3;color:#111827;background:#fff;border:1px solid rgba(0,0,0,.12);border-radius:8px;padding:6px 8px;box-shadow:none;max-width:520px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    button{border:none;border-radius:999px;padding:8px 12px;font-weight:650;font-size:13px;cursor:pointer;background:#fff;color:var(--text-main);display:inline-flex;align-items:center;gap:6px;transition:background-color var(--transition-fast),color var(--transition-fast);user-select:none}
+    button.primary{background:var(--accent);color:#fff}
+    button.primary:hover:not(:disabled){background:var(--accent-strong)}
     button.icon{padding:7px 10px;border-radius:12px}
-    button:hover:not(:disabled){background:#f3f4f6;box-shadow:0 2px 8px rgba(15,23,42,.12);transform:translateY(-.5px)}
-    button:active:not(:disabled){transform:translateY(0);box-shadow:none}
-    button:disabled{opacity:.55;cursor:default;box-shadow:none}
+    /* Stores tab: reorder (sort) buttons styled like textbox (gray outline) */
+    #settingsStores button.reorder-btn{
+      border:1px solid var(--border-soft);
+      background:#fff;
+      border-radius:10px;
+      /* square size */
+      width:30px;
+      height:30px;
+      padding:0;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      line-height:1;
+      color:var(--text-muted);
+    }
+.reorder-btn:disabled{opacity:.35;cursor:not-allowed;}
+
+    #settingsStores button.reorder-btn:hover:not(:disabled){
+      background:#f9fafb;
+      border-color:var(--border-strong);
+      color:var(--text-main);
+    }
+    #settingsStores button.reorder-btn:active:not(:disabled){
+      background:#f3f4f6;
+    }
+
+    /* Stores tab: reorder cell alignment + spacing */
+    #settingsStores td.reorder-cell{
+      text-align:center;
+      vertical-align:middle;
+    }
+    #settingsStores td.reorder-cell .reorder-btn + .reorder-btn{
+      margin-left:6px;
+    }
+
+
+    button:hover:not(:disabled){background:#f3f4f6}
+    button:active:not(:disabled){background:#e5e7eb}
+    button:disabled{opacity:.55;cursor:default}
     .app-main{flex:1;display:flex;min-height:0;overflow:hidden}
     aside.sidebar{width:var(--sidebar-width);min-width:var(--sidebar-width);background:var(--bg-sidebar);box-shadow:1px 0 0 var(--border-soft);
       padding:12px 12px 16px;display:flex;flex-direction:column;gap:12px}
@@ -53,30 +94,41 @@
     .sidebar-section h3{margin:0 0 8px;font-size:12px;font-weight:700;color:var(--text-muted);letter-spacing:.08em;text-transform:uppercase}
     .sidebar-row{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:12px}
     .badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font-size:11px;border:1px solid transparent;gap:6px;font-weight:650}
-    .badge.work{background:var(--accent-soft);color:var(--accent-strong);border-color:rgba(25,118,210,.2)}
+    #modeBadge{cursor:pointer; user-select:none;}
+.badge.work{background:var(--accent-soft);color:var(--accent-strong);border-color:rgba(25,118,210,.2)}
     .badge.leave{background:var(--success-soft);color:var(--success);border-color:rgba(46,125,50,.2)}
     .badge.support{background:#eef2ff;color:#3730a3;border-color:rgba(55,48,163,.2)}
     .keypad{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:6px}
-    .keypad button{padding:8px 10px;border-radius:10px;justify-content:space-between;font-size:12px}
+    .keypad button{position:relative;height:38px;box-sizing:border-box;border-radius:10px;border:1px solid var(--border-soft);background:var(--bg);display:flex;align-items:center;justify-content:center;padding:0;gap:6px;font-size:12px;cursor:pointer}
+    .keypad button:hover:not(:disabled){background:var(--bg-2)}
+    .keypad button:active:not(:disabled){background:var(--bg-3)}
+    .keypad button:disabled{opacity:.45;cursor:not-allowed}
+    .keypad button .kp-num{position:absolute;top:4px;left:6px;font-size:10px;color:var(--text-muted);opacity:.75;font-weight:600;line-height:1}
+    .keypad button .key-left{display:inline-flex;align-items:center;gap:6px;min-width:0}
     .keypad .code-label{font-weight:800;min-width:1.6em}
-    .sidebar-section small{font-size:11px;color:var(--text-muted);display:block;margin-top:6px;line-height:1.35}
-    .alert-list{max-height:200px;overflow:auto;margin-top:8px}
+.sidebar-section small{font-size:11px;color:var(--text-muted);display:block;margin-top:6px;line-height:1.35}
+    .alert-list{max-height:200px;overflow:auto;margin-top:6px}
     .alert-item{font-size:11px;padding:6px 8px;border-radius:10px;background:var(--danger-soft);color:var(--danger);margin-bottom:6px;border:1px solid rgba(211,47,47,.15);line-height:1.35}
     .alert-item.good{background:var(--success-soft);color:var(--success);border-color:rgba(46,125,50,.15)}
-    .ime-alert{font-size:11px;color:#7c5b00;background:#fff8e1;border-radius:10px;padding:8px 10px;margin-top:8px;border:1px solid rgba(249,168,37,.25);display:none;line-height:1.35}
+    .ime-alert{font-size:11px;color:#7c5b00;background:#fff8e1;border-radius:10px;padding:8px 10px;margin-top:6px;border:1px solid rgba(249,168,37,.25);display:none;line-height:1.35}
     .ime-alert.visible{display:block}
     main{flex:1;padding:12px 12px 16px;min-width:0;display:flex;flex-direction:column;gap:10px}
-    .schedule-header{display:flex;justify-content:center;align-items:center;padding:4px 0 2px;min-height:34px}
+    .schedule-header{display:flex;justify-content:center;align-items:center;padding:3px 0 2px;min-height:34px}
     .schedule-title{font-weight:750;font-size:15px;letter-spacing:.06em}
-    .schedule-wrapper{flex:1;border-radius:var(--radius);border:1px solid var(--border-soft);background:var(--bg-main);display:flex;flex-direction:column;min-height:0;
+    .schedule-wrapper{flex:0 1 auto;max-height:100%;border-radius:var(--radius);border:1px solid var(--border-soft);background:var(--bg-main);display:flex;flex-direction:column;min-height:0;
       box-shadow:0 1px 0 rgba(15,23,42,.02)}
-    .schedule-inner{flex:1;overflow:auto;position:relative;overscroll-behavior:contain}
+    .schedule-inner{flex:0 1 auto;max-height:100%;overflow:auto;position:relative;overscroll-behavior:contain}
     table.schedule{border-collapse:collapse;width:max-content;min-width:100%;font-size:12px}
     table.schedule th,table.schedule td{border:1px solid var(--border-soft);padding:3px 4px;text-align:center;white-space:nowrap;min-width:34px;max-width:44px;height:24px}
 
 table.schedule thead th{position:sticky;top:0;z-index:10;background:#fafafa;font-weight:600}
         .weekday-row th{font-size:11px;color:var(--text-muted);font-weight:650}
-    .day-sat{color:#1976d2}.day-sun{color:#d32f2f}
+    .day-sat{color:#1976d2}.day-sun{color:#d32f2f}.day-holiday{color:#d32f2f}
+    /* weekday row color overrides (higher specificity than .weekday-row th) */
+    .weekday-row th.day-sat{color:#1976d2}
+    .weekday-row th.day-sun{color:#d32f2f}
+    .weekday-row th.day-holiday{color:#d32f2f}
+
     .cell-emp-name{font-weight:650;text-align:center;vertical-align:middle;padding:4px 6px}
     .employee-main-row td{border-bottom:1px dashed var(--border-strong)!important}
     .employee-main-row td,.employee-note-row td{border-top:1px dashed var(--border-strong)!important}
@@ -99,7 +151,7 @@ table.schedule thead th{position:sticky;top:0;z-index:10;background:#fafafa;font
     .cell-work-text{font-weight:800}
     .notice{font-size:12px;color:var(--text-muted);padding:10px 12px}
 
-    .modal-backdrop{position:fixed;inset:0;background:rgba(15,23,42,.34);display:none;align-items:center;justify-content:center;z-index:100;padding:16px}
+    .modal-backdrop{position:absolute;inset:0;background:rgba(15,23,42,.34);display:none;align-items:center;justify-content:center;z-index:100;padding:16px}
     .modal-backdrop.visible{display:flex}
     .modal{background:#fff;border-radius:16px;box-shadow:0 18px 40px rgba(15,23,42,.28);max-width:980px;width:100%;max-height:92vh;display:flex;flex-direction:column;overflow:hidden}
     .modal-header{padding:12px 16px;border-bottom:1px solid var(--border-soft);display:flex;justify-content:space-between;align-items:center;gap:10px;background:#fff}
@@ -110,31 +162,149 @@ table.schedule thead th{position:sticky;top:0;z-index:10;background:#fafafa;font
     .modal-tab{padding:8px 12px;font-size:13px;cursor:pointer;border-radius:12px 12px 0 0;border-bottom:2px solid transparent;color:var(--text-muted);
       transition:color var(--transition-fast),border-color var(--transition-fast),background-color var(--transition-fast);user-select:none}
     .modal-tab.active{border-bottom-color:var(--accent);color:var(--accent-strong);background:#f3f8ff}
+    .modal-tab:hover{color:var(--accent-strong)}
+    .modal-tab:focus-visible{outline:2px solid rgba(25,118,210,.35);outline-offset:2px}
+    .modal-tab:active{transform:translateY(1px)}
     .settings-panel{display:none}.settings-panel.active{display:block}
     .settings-table{width:100%;border-collapse:collapse;margin-bottom:10px;border-radius:12px;overflow:hidden}
 .employee-table-fixed{table-layout:fixed}
 .employee-table-fixed th,.employee-table-fixed td{border:1px solid var(--border-soft);padding:6px 8px;font-size:12px;vertical-align:middle}
 .employee-table-fixed th{background:#f9fafb;font-weight:800}
-.employee-drag-handle{cursor:grab;user-select:none;text-align:center;color:var(--accent-strong);font-weight:900;background:linear-gradient(90deg, rgba(25,118,210,.12), rgba(25,118,210,.04));border-radius:8px;}
+.employee-drag-handle{cursor:grab;user-select:none;text-align:center;color:#6b7280;font-weight:900}
 .employee-drag-handle:active{cursor:grabbing}
 .employee-table-fixed input,.employee-table-fixed select{width:100%;box-sizing:border-box}
-  .employee-left-actions{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:8px;row-gap:6px;}
-  .employee-left-actions .actions-left{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
-  .employee-left-actions .actions-left .badge{white-space:nowrap;}
-  .employee-unassigned-info{display:none;align-items:center;gap:10px;padding:8px 10px;margin:-2px 0 8px;background:var(--accent-soft);border:1px solid rgba(25,118,210,.18);border-radius:10px;font-size:12px;color:var(--accent-strong);flex-wrap:wrap;}
-  .employee-unassigned-info .count-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:#fff;border:1px solid rgba(25,118,210,.25);font-weight:750;white-space:nowrap;}
-  .employee-unassigned-info button{padding:6px 10px;border-radius:10px;}
-  .employee-unassigned-info .info-text{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
-  .emp-drag-cell{background:#f6f9ff;}
-  .emp-drag-handle{color:var(--accent-strong);background:#fff;border-radius:12px;padding:4px 6px;display:inline-flex;align-items:center;justify-content:center;box-shadow:inset 0 0 0 1px rgba(25,118,210,.16);}
-  .emp-drag-handle::before{content:"↔";margin-right:4px;font-size:12px;color:var(--accent-strong);}
-  .emp-drag-handle:active{cursor:grabbing}
-  .employee-drag-tip{margin-top:8px;font-size:12px;color:var(--text-muted);display:flex;align-items:center;gap:8px;background:#f8fafc;border:1px dashed rgba(25,118,210,.35);padding:8px 10px;border-radius:10px;}
-  .employee-drag-tip .icon{color:var(--accent-strong);font-weight:900;}
 
     .settings-table th,.settings-table td{border:1px solid var(--border-soft);padding:6px 8px;font-size:12px;text-align:left;vertical-align:top}
-    .settings-table th{background:#f9fafb;font-weight:800}
-    .settings-table input[type="text"],.settings-table input[type="number"],.settings-table select{width:100%;font-size:12px;padding:6px 8px;border-radius:10px;border:1px solid var(--border-soft);outline:none}
+    
+/* Stores tab: center controls (name / short / enabled) inside cells
+   NOTE: keep <td> as table-cell (no flex) to avoid breaking table layout. */
+#settingsStores .settings-table tbody td:nth-child(2),
+#settingsStores .settings-table tbody td:nth-child(3),
+#settingsStores .settings-table tbody td:nth-child(4){
+  vertical-align:middle;        /* vertical center within tall rows */
+}
+#settingsStores .settings-table tbody td:nth-child(4){ text-align:center; } /* checkbox */
+#settingsStores .settings-table tbody td:nth-child(2) input[type="text"],
+#settingsStores .settings-table tbody td:nth-child(3) input[type="text"]{
+  display:block;
+  margin:0 auto;
+  width:100%;
+}
+#settingsStores .settings-table tbody td:nth-child(4) input[type="checkbox"]{
+  display:block;
+  margin:0 auto;
+}
+
+.settings-table th{background:#f9fafb;font-weight:800}
+    .settings-table input[type="text"],.settings-table input[type="number"],.settings-table input[type="date"],.settings-table select{width:100%;font-size:12px;padding:6px 8px;border-radius:10px;border:1px solid var(--border-soft);outline:none}
+
+    
+    
+    /* Holiday tab: date input + formatted hint (clean & stable) */
+.hol-date-field{position:relative;display:block;width:100%}
+.hol-date-field /* v55: Custom modern date picker (for holidays) */
+.mdp-field{position:relative !important;display:block;width:100%}
+.mdp-display{
+  width:100%;
+  height:28px;
+  padding:6px 34px 6px 8px;
+  border-radius:10px;
+  border:1px solid var(--border-soft);
+  font-size:12px;
+  outline:none;
+  background:#fff;
+  cursor:pointer;
+
+  position:relative;
+  z-index:1;}
+
+.calendar-icon{
+  position:absolute;
+  right:10px;
+  top:50%;
+  transform:translateY(-50%);
+  width:18px;
+  height:18px;
+  color:rgba(0,0,0,.35);
+  pointer-events:none;
+  z-index:2;
+}
+.mdp-display:focus-visible{outline:2px solid rgba(25,118,210,.35);outline-offset:2px}
+.mdp-pop{
+  position:absolute;
+  z-index:99999;
+  background:#fff;
+  border:1px solid var(--border-soft);
+  border-radius:14px;
+  box-shadow:0 12px 30px rgba(0,0,0,.16);
+  padding:8px 8px 6px;
+  width:268px;
+  user-select:none;
+}
+.mdp-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+.mdp-month{font-weight:900;font-size:13px;color:#111827;letter-spacing:.02em}
+.mdp-nav{
+  width:28px;height:28px;border-radius:8px;border:0;
+  background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;
+}
+.mdp-nav:hover{background:#f3f4f6}
+.mdp-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.mdp-wd{font-size:11px;color:#6b7280;text-align:center;padding:3px 0}
+.mdp-day{
+  height:30px;border-radius:10px;border:1px solid transparent;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:12px;color:#111827;
+}
+.mdp-day:hover{background:#f3f4f6}
+.mdp-day.is-out{color:#9ca3af}
+.mdp-day.is-out.is-sun{color:rgba(220,38,38,.35)}
+.mdp-day.is-out.is-sat{color:rgba(37,99,235,.35)}
+.mdp-day.is-today{
+  background:var(--accent);
+  color:#fff;
+  border-color:transparent;
+  font-weight:900;
+  border-radius:999px;
+}
+.mdp-day.is-selected{
+  background:#dbeafe;
+  border-color:#60a5fa;
+  font-weight:900;
+}
+.mdp-day.is-today.is-selected{
+  border-radius:10px;
+  color:var(--accent);
+}
+.mdp-day:not(.is-today):not(.is-selected):hover{background:#dbeafe}
+.mdp-day.is-selected:hover{background:#dbeafe}
+.mdp-day.is-sun{color:#dc2626}
+.mdp-day.is-sat{color:#2563eb}
+.mdp-foot{display:flex;justify-content:space-between;align-items:center;margin-top:6px;gap:8px}
+.mdp-mini{font-size:11px;color:#6b7280}
+.mdp-today{border:0;background:transparent;color:var(--accent);font-size:12px;font-weight:400;cursor:pointer;padding:4px 6px;border-radius:8px}
+.mdp-today:hover{background:#eff6ff}
+.mdp-clear:hover{background:#fef2f2}
+
+#holidayTable td.hol-del-cell{vertical-align:middle;padding:6px 0}
+#settingsHolidays #holidayTable th:last-child,#settingsHolidays #holidayTable td:last-child{width:56px;text-align:center}
+.settings-table /* Holiday tab: year input matches other number controls + shows unit suffix */
+    .holiday-year-field{display:flex;align-items:center;gap:6px}
+    .holiday-year-field .unit{font-size:12px;color:var(--text-muted)}
+    .holiday-year-input{
+      height:28px;
+      padding:6px 10px;
+      font-size:12px;
+      border-radius:10px;
+      border:1px solid var(--border-soft);
+      background:#fff;
+      color:var(--text);
+      outline:none;
+    }
+    .holiday-year-input:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(25,118,210,.12)}
+    /* Make spinner less visually noisy, consistent with other numeric controls */
+    .holiday-year-input::-webkit-outer-spin-button,
+    .holiday-year-input::-webkit-inner-spin-button{opacity:.65}
+
     .settings-table input[type="text"]:focus,.settings-table input[type="number"]:focus,.settings-table select:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(25,118,210,.12)}
     .settings-table input[type="color"]{padding:0;border:none;background:transparent;width:38px;height:28px}
     .settings-inline-controls{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
@@ -151,6 +321,20 @@ table.schedule thead th{position:sticky;top:0;z-index:10;background:#fafafa;font
 #settingsStores .status-dot.dot-night{ background:#7c3aed; }    /* 夜勤（青系） */
 #settingsStores .status-dot.dot-disabled{ background:#9ca3af; } /* 無効 */
 
+/* vXXX: サイドバーのパレットボタンにも「日勤/夜勤」ドットを表示 */
+.keypad .status-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  display:inline-block;
+  flex:0 0 auto;
+  margin-right:6px;
+}
+.keypad .status-dot.dot-day{ background:#f59e0b; }      /* 日勤 */
+.keypad .status-dot.dot-night{ background:#7c3aed; }    /* 夜勤 */
+.keypad .status-dot.dot-disabled{ background:#9ca3af; } /* 無効 */
+
+
     .pill select{min-width:72px;padding:4px 8px;border-radius:999px}
     .text-danger{color:var(--danger)}.text-muted{color:var(--text-muted)}
     .divider{height:1px;background:var(--border-soft);margin:8px 0}
@@ -159,17 +343,13 @@ table.schedule thead th{position:sticky;top:0;z-index:10;background:#fafafa;font
     .unsaved-body ul{padding-left:18px;margin:6px 0 0}
     .unsaved-body li{margin:4px 0}
     @media(max-width:980px){header{flex-direction:column;align-items:flex-start;height:auto}.header-left,.header-right{width:100%;justify-content:space-between}aside.sidebar{display:flex}}
-    @media(max-width:720px){
-      .employee-left-actions{flex-direction:column;align-items:flex-start;}
-      .employee-left-actions .actions-left{width:100%;justify-content:space-between;}
-    }
     @media print{
       @page{size:A4 landscape;margin:8mm}
       header,aside.sidebar{display:none!important}
       body{background:#fff!important}
       main{padding:0!important}
       .schedule-wrapper{border:none!important}
-      .schedule-inner{flex:1;overflow:auto;position:relative;overscroll-behavior:contain}
+      .schedule-inner{flex:0 1 auto;max-height:100%;overflow:auto;position:relative;overscroll-behavior:contain}
       table.schedule thead th{position:sticky;top:0;z-index:10;background:#fafafa;font-weight:600}
       .cell-emp-name,.col-employee-header,.cell-support-header{position:static!important}
     }
@@ -382,13 +562,68 @@ table.schedule{
     .employee-col{background:rgba(255,255,255,.7);border:1px solid var(--line);border-radius:14px;padding:10px}
     .employee-col-left{flex:1 1 62%;min-width:420px}
     .employee-col-right{flex:1 1 38%;min-width:280px}
-    .employee-order-head{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+    .employee-order-head{display:flex;flex-direction:column;gap:6px;margin-bottom:6px}
     .employee-order-row{display:flex;gap:10px;align-items:center}
     .employee-order-row .label{font-size:12px;font-weight:800;color:#374151;min-width:40px}
     .employee-order-row select{width:100%}
     .employee-order-list{border:1px dashed rgba(0,0,0,.12);border-radius:12px;padding:8px;min-height:120px;background:rgba(255,255,255,.55)}
-    .employee-order-item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;border-radius:10px;border:1px solid rgba(0,0,0,.08);background:rgba(255,255,255,.9);margin-bottom:8px}
+    .employee-order-item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;border-radius:10px;border:1px solid rgba(0,0,0,.08);background:rgba(255,255,255,.9);margin-bottom:6px}
     .employee-order-item:last-child{margin-bottom:0}
+    /* v63: 従業員タブ右リスト（並び替えリスト） hover 応答 */
+    .employee-order-item{
+      transition: box-shadow .12s ease, transform .12s ease;
+      position: relative; /* for focus ring */
+    }
+    .employee-order-item:not(.dragging-row):hover{
+      box-shadow: 0 1px 6px rgba(0,0,0,.08);
+      transform: translateY(-1px);
+    }
+    .employee-order-item:not(.dragging-row):focus-within{
+      outline: 2px solid rgba(45, 130, 255, .30);
+      outline-offset: 2px;
+    }
+
+    .employee-order-item{
+  cursor: grab;
+}
+.employee-order-item:active{
+  cursor: grabbing;
+}
+/* If the row contains interactive controls, keep their native cursors */
+.employee-order-item button,
+.employee-order-item a,
+.employee-order-item [role="button"]{
+  cursor: pointer;
+}
+.employee-order-item input,
+.employee-order-item textarea{
+  cursor: text;
+}
+.employee-order-item select{
+  cursor: default;
+}
+.employee-order-item.dragging-row{cursor:grabbing;opacity:.35;transform:scale(.985);box-shadow:0 8px 20px rgba(0,0,0,.14);filter:saturate(.9)}
+
+.employee-order-item.dragging-row{
+  opacity: .25;
+  filter: grayscale(.2);
+}
+/* v9/v10: left employee table row should NOT fade while dragging */
+#settingsEmployees .employee-col.employee-col-left table.employee-table-fixed tbody tr.dragging-row{
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+#settingsEmployees .employee-col.employee-col-left table.employee-table-fixed tbody tr.dragging-row td{
+  opacity: inherit;
+}
+
+.employee-order-spacer{
+  border: 2px dashed rgba(0,0,0,.25);
+  border-radius: 10px;
+  margin: 6px 0;
+  background: rgba(255,255,255,.35);
+}
     .employee-order-item .name{font-weight:800}
     .employee-order-item .meta{font-size:11px;color:#6b7280}
     .employee-order-handle{font-size:14px;opacity:.6;user-select:none}
@@ -548,6 +783,11 @@ td.emp-drag-cell{ user-select:none; text-align:center; }
 #settingsEmployees .employee-col.employee-col-left table.employee-table-fixed tbody tr textarea{
   cursor: text;
 }
+/* vXXX: Fix cursor on dropdowns in employee left table (keep normal arrow like other dropdowns) */
+#settingsEmployees .employee-col.employee-col-left table.employee-table-fixed tbody tr select{
+  cursor: default;
+}
+
 #settingsEmployees .employee-col.employee-col-left table.employee-table-fixed tbody tr button{
   cursor: pointer;
 }
@@ -723,6 +963,57 @@ html.is-dragging #employeeOrderList.drop-over{
     }
     /* reduce vertical jump from margins */
     #settingsModalBackdrop .settings-table{margin-bottom:0;}
+
+
+/* v200: 従業員タブ 左表フィルター（未所属のみ表示） */
+#settingsEmployees .employee-left-toolbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:6px;
+  flex-wrap:wrap;
+}
+#settingsEmployees .employee-left-toolbar .toggle{ cursor:pointer; }
+#settingsEmployees .employee-left-toolbar .helper{
+  font-size:11px;
+  color: var(--text-muted, #6b7280);
+}
+
+/* === v4: 右リストから外へドラッグ時の「未所属へ戻す」ヒント === */
+.unassign-hint{
+  position: fixed;
+  left: 0;
+  top: 0;
+  transform: translate(calc(var(--x, 0px) + 14px), calc(var(--y, 0px) + 14px));
+  background: rgba(20,20,20,0.92);
+  color: #fff;
+  font-size: 12px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+  display: none;
+  align-items: center;
+  gap: 8px;
+  z-index: 9999;
+  pointer-events: none;
+  user-select: none;
+  max-width: min(320px, calc(100vw - 20px));
+}
+.unassign-hint.show{ display: inline-flex; }
+.unassign-hint-dot{
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #ff4d4f; /* “削除/解除” を想起させる赤 */
+  box-shadow: 0 0 0 3px rgba(255,77,79,0.25);
+  flex: 0 0 auto;
+}
+.unassign-hint b{ font-weight: 700; }
+
+
+    /* v15: サイドバーが縦に収まらない場合はスクロール */
+    .sidebar{overflow-y:auto;max-height:100vh;}
 
 </style>
 <style id="v158-fix-employee-col-widths">
@@ -1079,7 +1370,6 @@ html.is-dragging #employeeOrderList.drop-over{
 }
 
 </style>
-
 <script id="v156-equal-diff-distribution">
 /* v156: 2〜6列の幅差（余り/不足）を等分で配分する
    delta = (テーブルの表示幅 - 1列目 - 基準合計) / 5
@@ -1309,6 +1599,60 @@ html.is-dragging #employeeOrderList.drop-over{
 }
 
 </style>
+<style>
+/* v199: 設定画面（店舗/従業員/休暇コード）の表内「削除」をラベルのみ（アクセント色/通常太さ）に統一 */
+#settingsStores button.btn-delete,
+#settingsEmployees button.btn-delete,
+#settingsHolidays button.btn-delete,
+#settingsEmployees .employee-table-frame button[data-action="delete-employee"],
+#settingsLeaveCodes button.btn-delete{
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+
+  /* ラベルのみだが、クリックしやすい当たり判定は確保 */
+  padding: 2px 6px !important;
+
+  height: auto !important;
+  min-height: 0 !important;
+  border-radius: 0 !important;
+
+  color: var(--accent) !important;
+  font-weight: 400 !important; /* 通常 */
+  line-height: 1.2 !important;
+  display: inline-block !important;
+  cursor: pointer !important;
+}
+
+#settingsStores button.btn-delete:hover,
+#settingsEmployees button.btn-delete:hover,
+#settingsEmployees .employee-table-frame button[data-action="delete-employee"]:hover,
+#settingsLeaveCodes button.btn-delete:hover{
+  text-decoration: underline !important;
+  opacity: .9;
+}
+
+#settingsStores button.btn-delete:focus-visible,
+#settingsEmployees button.btn-delete:focus-visible,
+#settingsEmployees .employee-table-frame button[data-action="delete-employee"]:focus-visible,
+#settingsLeaveCodes button.btn-delete:focus-visible{
+  outline: 2px solid rgba(25,118,210,.35) !important;
+  outline-offset: 2px !important;
+}
+
+/* 削除列：セル内の左右/上下中央揃え + テキスト幅想定の固定幅（他タブと統一） */
+#settingsStores table.settings-table th:last-child,
+#settingsStores table.settings-table td:last-child,
+#settingsEmployees table.settings-table.employee-table-fixed th:last-child,
+#settingsEmployees table.settings-table.employee-table-fixed td:last-child,
+#settingsLeaveCodes table.settings-table th:last-child,
+#settingsLeaveCodes table.settings-table td:last-child{
+  text-align: center !important;
+  vertical-align: middle !important;
+  width: 56px !important;
+  white-space: nowrap !important;
+}
+</style>
 </head>
 <body>
 <header>
@@ -1362,6 +1706,14 @@ html.is-dragging #employeeOrderList.drop-over{
 <div class="divider"></div>
 <div id="debugInfo" style="font-size:11px;line-height:1.45;color:var(--text-muted);"></div>
 <div class="divider"></div>
+<div class="settings-inline-controls" style="justify-content:flex-start;gap:10px;flex-wrap:wrap;">
+<label class="toggle on" id="dbgClickInspectToggle" title="クリックした要素と重なり（上に乗っている要素）を表示します">
+<div class="toggle-pill"><div class="toggle-thumb"></div></div>
+<span>クリック対象表示</span>
+</label>
+</div>
+<div id="debugClickInfo" style="font-size:11px;line-height:1.45;color:var(--text-muted);"></div>
+<div class="divider"></div>
 <div class="settings-inline-controls">
 <button id="dbgExport" title="現在のデータをJSONとして保存">データ書き出し</button>
 <button id="dbgCopyState" title="状態のJSONをクリップボードへ">状態コピー</button>
@@ -1403,37 +1755,32 @@ html.is-dragging #employeeOrderList.drop-over{
 <div class="modal-tab" data-target="settingsEmployees">従業員</div>
 <div class="modal-tab" data-target="settingsWorkCodes">業務コード</div>
 <div class="modal-tab" data-target="settingsLeaveCodes">休暇コード</div>
+<div class="modal-tab" data-target="settingsHolidays">祝日</div>
 </div>
 <div class="settings-panels">
 <div class="settings-panel active" id="settingsStores">
 <p class="text-muted">店舗名・略称はユニーク。勤務表データがある店舗は削除できず無効化してください。</p>
 <div class="settings-table-frame"><table class="settings-table">
 <thead><tr>
-<th style="width:120px;">並び</th><th>店舗名</th><th style="width:90px;">略称</th><th style="width:70px;">有効</th>
-<th>業務コード（日勤/夜勤/無効）</th><th style="width:90px;">削除</th>
+<th style="width:88px;">並び</th><th>店舗名</th><th style="width:90px;">略称</th><th style="width:70px;">有効</th>
+<th>業務コード（日勤/夜勤/無効）</th><th style="width:56px;">削除</th>
 </tr></thead>
 <tbody id="storeTableBody"></tbody>
 </table></div>
-<button id="addStoreButton" class="add-link-btn">店舗を追加</button>
+<button class="add-link-btn" id="addStoreButton">店舗を追加</button>
 </div>
 <div class="settings-panel" id="settingsEmployees">
 <p class="text-muted">同姓同名は不可。勤務表データがある従業員は削除不可（未所属へ）。</p>
 <div class="employee-two-col">
 <div class="employee-col employee-col-left">
-<div class="employee-left-actions">
-<div class="actions-left">
-<label class="toggle" id="employeeUnassignedToggle">
-<input id="employeeUnassignedCheckbox" type="checkbox"/>
-<span class="toggle-pill"><span class="toggle-thumb"></span></span>
-<span class="toggle-label" id="employeeUnassignedLabel">全従業員を表示</span>
+<div class="employee-left-toolbar">
+<label class="toggle on" id="employeeUnassignedOnlyToggle" title="未所属の従業員だけを一覧表示します">
+<div class="toggle-pill"><div class="toggle-thumb"></div></div>
+<span>未所属のみ表示</span>
 </label>
-<span class="badge work" id="employeeTotalBadge">全員: <span id="employeeTotalCount">0</span>名</span>
+<div class="helper text-muted">未所属の従業員を右へドラッグして店舗へ割り当て</div>
 </div>
-</div>
-<div class="employee-unassigned-info" id="employeeUnassignedInfo">
-<div class="info-text">未所属の従業員 <span class="count-badge" id="employeeUnassignedCount">0名</span> を表示中。</div>
-<button class="icon" id="employeeUnassignedReset" type="button">全員を表示に戻す</button>
-</div>
+<div class="text-muted" id="employeeUnassignedHint" style="display:none;font-size:11px;margin:-4px 0 8px;">未所属の従業員がいません</div>
 <div class="employee-table-frame">
 <table class="settings-table employee-table-fixed">
 <colgroup>
@@ -1442,17 +1789,16 @@ html.is-dragging #employeeOrderList.drop-over{
 <col style="width:18%"/>
 <col style="width:30%"/>
 <col style="width:12%"/>
-<col style="width:12%"/>
+<col style="width:56px"/>
 </colgroup>
 <thead><tr>
-<th class="employee-drag-handle" title="ドラッグして店舗へ追加">⇆</th>
-<th style="width:160px;">姓</th><th style="width:160px;">名</th><th>所属店舗</th><th style="width:110px;">店舗内順</th><th style="width:90px;">削除</th>
+<th class="employee-drag-handle" title="ドラッグして店舗へ追加"> </th>
+<th style="width:160px;">姓</th><th style="width:160px;">名</th><th>所属店舗</th><th style="width:110px;">店舗内順</th><th style="width:56px;">削除</th>
 </tr></thead>
 <tbody id="employeeTableBody"></tbody>
 </table>
 </div>
-<button id="addEmployeeButton" class="add-link-btn">従業員を追加</button>
-<div class="employee-drag-tip"><span class="icon">↔</span><span>左列のハンドルをドラッグして右の店舗列へ割当できます。</span></div>
+<button class="add-link-btn" id="addEmployeeButton">従業員を追加</button>
 </div>
 <div class="employee-col employee-col-right">
 <div class="employee-order-head">
@@ -1475,11 +1821,39 @@ html.is-dragging #employeeOrderList.drop-over{
 <div class="settings-panel" id="settingsLeaveCodes">
 <p class="text-muted">休暇コード（全店舗共通）。追加・削除可。</p>
 <div class="settings-table-frame"><table class="settings-table">
-<thead><tr><th>コード</th><th style="width:120px;">テンキー</th><th style="width:90px;">削除</th></tr></thead>
+<thead><tr><th>コード</th><th style="width:120px;">テンキー</th><th style="width:56px;">削除</th></tr></thead>
 <tbody id="leaveCodeTableBody"></tbody>
 </table></div>
-<button id="addLeaveCodeButton" class="add-link-btn">休暇コードを追加</button>
+<button class="add-link-btn" id="addLeaveCodeButton">休暇コードを追加</button>
 </div>
+
+<div class="settings-panel" id="settingsHolidays">
+  <p class="text-muted">
+    祝日マスタ。新規年月の勤務表作成時に外部（Holidays JP API）から初期値を自動取得し、以降はこのマスタを参照します。必要に応じて名称変更や独自の休日を追加できます。
+  </p>
+  <div class="holiday-toolbar" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0 10px;">
+    <label class="holiday-year-field">
+      <input id="holidayYearInput" class="holiday-year-input" type="number" min="2000" max="2100" step="1" inputmode="numeric" style="width:96px;">
+      <span class="unit">年</span>
+    </label>
+    <button class="btn" id="holidayFetchButton" type="button">外部から取得</button>
+    <span class="text-muted" style="font-size:12px;">（外部取得は不足分のみ追加。既に編集した日付は上書きしません）</span>
+  </div>
+  <div class="settings-table-frame">
+    <table class="settings-table" id="holidayTable">
+      <thead>
+        <tr>
+          <th style="width:180px;">日付</th>
+          <th>名称</th>
+<th style="width:56px;">削除</th>
+        </tr>
+      </thead>
+      <tbody id="holidayTableBody"></tbody>
+    </table>
+  </div>
+  <button class="add-link-btn" id="addHolidayButton" type="button">祝日を追加</button>
+</div>
+
 </div>
 </div>
 <div class="modal-footer">
@@ -1572,6 +1946,65 @@ let preserveSelectionKeys=null;
 let preserveSelectionActiveKey=null;
 let activeCell=null;
 
+
+// ===== Clear selection / focus =====
+function clearScheduleCellFocus(){
+  try{
+    const table = document.getElementById("scheduleTable");
+    if(table){
+      // 選択強調（cell-selected / cell-multi）と、ドラッグプレビューをまとめて解除
+      table.querySelectorAll("td.cell-selected, td.cell-multi, td.cell-preview-add, td.cell-preview-remove")
+        .forEach(td=>{
+          td.classList.remove("cell-selected","cell-multi","cell-preview-add","cell-preview-remove");
+        });
+    }
+  }catch(_e){}
+  try{ selectedCells = []; }catch(_e){}
+  try{ selectedKeySet = new Set(); }catch(_e){}
+  try{ activeCell = null; }catch(_e){}
+  try{ shiftAnchorCell = null; }catch(_e){}
+  try{ dragLastRectKeys = null; }catch(_e){}
+  try{
+    // 念のため：フォーカスが残っていると見た目が残る環境があるので解除
+    if(document.activeElement && document.activeElement.closest?.("#scheduleTable")){
+      document.activeElement.blur();
+    }
+  }catch(_e){}
+  try{
+    if(typeof renderDebugInfo==="function") renderDebugInfo();
+  }catch(_e){}
+}
+
+
+function isClickInsideScheduleOrKeypad(target){
+  try{
+    if(!target) return false;
+    if(target.closest?.("#scheduleTable")) return true;
+    if(target.closest?.("#keypad")) return true; // keypad clicks should not clear selection
+    return false;
+  }catch(_e){ return false; }
+}
+
+// click outside schedule => clear focus
+document.addEventListener("mousedown",(e)=>{
+  try{
+    if((selectedKeySet && selectedKeySet.size>0) || activeCell){
+      if(!isClickInsideScheduleOrKeypad(e.target)){
+        clearScheduleCellFocus();
+      }
+    }
+  }catch(_e){}
+}, true);
+
+// Esc => clear focus
+window.addEventListener("keydown",(e)=>{
+  try{
+    if(e.key==="Escape"){
+      clearScheduleCellFocus();
+    }
+  }catch(_e){}
+}, true);
+
 // ===== Keyboard Debug =====
 const __KEY_DEBUG__ = { enabled:true, max:80, events:[] };
 function safeCellKeyMaybe(cell){
@@ -1636,7 +2069,6 @@ let pendingNavigationTarget=null;
 let pendingFocus=null;
 
 let imeAlertTimer=null;
-let employeeUnassignedOnly=false;
 
 const dom={};
 
@@ -1683,29 +2115,10 @@ dom.supportStoreSelect=document.getElementById("supportStoreSelect");
   dom.settingsCancelButton=document.getElementById("settingsCancelButton");
   dom.storeTableBody=document.getElementById("storeTableBody");
   dom.employeeTableBody=document.getElementById("employeeTableBody");
-  dom.employeeUnassignedToggle=document.getElementById("employeeUnassignedToggle");
-  dom.employeeUnassignedCheckbox=document.getElementById("employeeUnassignedCheckbox");
-  dom.employeeUnassignedLabel=document.getElementById("employeeUnassignedLabel");
-  dom.employeeUnassignedInfo=document.getElementById("employeeUnassignedInfo");
-  dom.employeeUnassignedCount=document.getElementById("employeeUnassignedCount");
-  dom.employeeUnassignedReset=document.getElementById("employeeUnassignedReset");
-  dom.employeeTotalCount=document.getElementById("employeeTotalCount");
-  dom.employeeSearchInput=document.getElementById("employeeSearchInput");
   dom.employeeOrderStoreSelect=document.getElementById("employeeOrderStoreSelect");
   dom.employeeOrderList=document.getElementById("employeeOrderList");
   // 右ペイン：店舗セレクト切替で即再描画
   dom.employeeOrderStoreSelect?.addEventListener("change", ()=>{ refreshEmployeeOrderPanel(); });
-  dom.employeeUnassignedCheckbox?.addEventListener("change", ()=>{
-    employeeUnassignedOnly = !!dom.employeeUnassignedCheckbox.checked;
-    updateEmployeeUnassignedToggleUI();
-    applyEmployeeTableFilter();
-  });
-  dom.employeeUnassignedReset?.addEventListener("click", ()=>{
-    employeeUnassignedOnly = false;
-    if(dom.employeeUnassignedCheckbox) dom.employeeUnassignedCheckbox.checked = false;
-    updateEmployeeUnassignedToggleUI();
-    applyEmployeeTableFilter();
-  });
   // 店舗タブの変更を従業員タブの所属店舗プルダウンに即反映（設定モーダル内で完結させる）
   let __storeChangeRaf = null;
   const __onStoreChange = ()=>{
@@ -1717,8 +2130,18 @@ dom.supportStoreSelect=document.getElementById("supportStoreSelect");
 
   dom.workCodeTableBody=document.getElementById("workCodeTableBody");
   dom.leaveCodeTableBody=document.getElementById("leaveCodeTableBody");
+  dom.holidayYearInput=document.getElementById("holidayYearInput");
+  dom.holidayFetchButton=document.getElementById("holidayFetchButton");
+  dom.holidayTableBody=document.getElementById("holidayTableBody");
+  dom.addHolidayButton=document.getElementById("addHolidayButton");
   dom.addStoreButton=document.getElementById("addStoreButton");
   dom.addEmployeeButton=document.getElementById("addEmployeeButton");
+  dom.employeeUnassignedOnlyToggle=document.getElementById("employeeUnassignedOnlyToggle");
+  dom.employeeUnassignedHint=document.getElementById("employeeUnassignedHint");
+  dom.employeeUnassignedOnlyToggle?.addEventListener("click", ()=>{
+    dom.employeeUnassignedOnlyToggle.classList.toggle("on");
+    applyEmployeeLeftFilter();
+  });
   dom.addLeaveCodeButton=document.getElementById("addLeaveCodeButton");
 
   dom.unsavedModalBackdrop=document.getElementById("unsavedModalBackdrop");
@@ -1743,6 +2166,8 @@ dom.supportStoreSelect=document.getElementById("supportStoreSelect");
   dom.dbgCopyState=document.getElementById("dbgCopyState");
   dom.dbgFixSnapshot=document.getElementById("dbgFixSnapshot");
   dom.dbgReset=document.getElementById("dbgReset");
+  dom.dbgClickInspectToggle=document.getElementById("dbgClickInspectToggle");
+  dom.debugClickInfo=document.getElementById("debugClickInfo");
 }
 
 function initState(){
@@ -1754,6 +2179,9 @@ function initState(){
     appState=createDefaultState();
   }
   if(!appState.pendingNightCarryovers) appState.pendingNightCarryovers={};
+  // v68: 入力モードの既定（クリックで切替 + Ctrlで一時切替）
+  if(!appState.settings) appState.settings={};
+  if(!("inputModeBase" in appState.settings)) appState.settings.inputModeBase="work";
   persistState();
 }
 
@@ -1770,12 +2198,13 @@ function createDefaultState(){
     {code:"特",key:"7"},{code:"調",key:"8"},{code:"公",key:"9"},{code:"年",key:"4"},{code:"病気",key:"5"},{code:"休",key:"6"},
   ];
   return {
-    settings:{ autoSave:true, lastStoreId:null, lastYearMonth:null },
+    settings:{ autoSave:true, lastStoreId:null, lastYearMonth:null, inputModeBase:"work" },
     templateMaster:{
       nextStoreId:1,nextEmployeeId:1,
       stores:[],
       employees:[],
-      workCodes, leaveCodes
+      workCodes, leaveCodes,
+      holidays:{}
     },
     schedules:{},
     pendingNightCarryovers:{}
@@ -1840,7 +2269,28 @@ function initSidebar(){
   });
 
   
-  // WS_SHIFT_ARROW_WINDOW: Shift+矢印を最優先で捕捉（他のkeydownハンドラに奪われないよう window/capture で処理）
+  
+  // v68: サイドバー「コード種別」をクリックで切替（Ctrl長押しの一時切替と共存）
+  try{
+    dom.modeBadge?.setAttribute("role","button");
+    dom.modeBadge?.setAttribute("tabindex","0");
+    dom.modeBadge?.addEventListener("click",(e)=>{
+      // Ctrl/Meta押下中は「一時切替」用なので、クリック切替は無効にして衝突を防ぐ
+      if(e.ctrlKey || e.metaKey || ctrlDown) return;
+      const cur=getBaseInputMode();
+      const next=(cur==="work") ? "leave" : "work";
+      appState.settings.inputModeBase=next;
+      persistState();
+      renderKeypad();
+    });
+    dom.modeBadge?.addEventListener("keydown",(e)=>{
+      if(e.key!=="Enter" && e.key!==" ") return;
+      e.preventDefault();
+      dom.modeBadge.click();
+    });
+  }catch(_e){}
+
+// WS_SHIFT_ARROW_WINDOW: Shift+矢印を最優先で捕捉（他のkeydownハンドラに奪われないよう window/capture で処理）
   window.addEventListener("keydown",(e)=>{
     dbgKey("wshift-enter", e, null);
     if(e.isComposing || e.key==="Process"){ dbgKey("wshift-exit", e, {reason:"composing"}); return; }
@@ -2221,6 +2671,14 @@ renderKeypad();
 
   // 開始（セル上）
   document.addEventListener("mousedown",(e)=>{
+    // 設定モーダル等のUI上では勤務表セルのドラッグ選択を開始しない（selectが開かない等の干渉を防ぐ）
+    if(dom.settingsModalBackdrop && dom.settingsModalBackdrop.classList.contains("visible") && dom.settingsModalBackdrop.contains(e.target)){
+      return;
+    }
+    // フォーム要素上も干渉回避（ネイティブ挙動優先）
+    const t = e.target;
+    if(t && t.closest && t.closest("select, input, textarea, button, label")) return;
+
     if(e.button!==0) return;
     const td = resolveCellAtPoint(e.clientX, e.clientY);
     if(!td) return;
@@ -2241,7 +2699,12 @@ renderKeypad();
 }
 
 
-function getInputMode(){ return ctrlDown ? "leave" : "work"; }
+function getBaseInputMode(){ return (appState?.settings?.inputModeBase==="leave") ? "leave" : "work"; }
+function getInputMode(){
+  const base=getBaseInputMode();
+  if(ctrlDown) return base==="work" ? "leave" : "work";
+  return base;
+}
 
 // テンキー/数字キー入力を安定して拾う（NumLock OFF のナビゲーションキーも対応）
 function normalizeDigitKey(e){
@@ -2307,6 +2770,20 @@ function initModals(){
   dom.settingsCancelButton.addEventListener("click", closeSettingsModal);
   dom.settingsSaveButton.addEventListener("click", ()=>{
     saveSettingsFromUI();
+
+    // 追加: 「この変更を新規作成時にも反映」がONなら、現在年月のマスタをテンプレにも反映する
+    try{
+      const schedule = getCurrentSchedule();
+      const propagateCb = document.getElementById("propagateToTemplateCheckbox");
+      const canPropagate = !!schedule && isCurrentYearMonthLatest() && propagateCb && !propagateCb.disabled && propagateCb.checked;
+      if(canPropagate){
+        appState.templateMaster = deepClone(schedule.masterSnapshot);
+        console.log("[settings] propagate current masterSnapshot -> templateMaster");
+      }
+    }catch(e){
+      console.warn("[settings] propagate failed", e);
+    }
+
     persistState();
     refreshAfterMasterChange();
     closeSettingsModal();
@@ -2321,6 +2798,25 @@ function initModals(){
   dom.addStoreButton.addEventListener("click", ()=>addStoreRow());
   dom.addEmployeeButton.addEventListener("click", ()=>addEmployeeRow());
   dom.addLeaveCodeButton.addEventListener("click", ()=>addLeaveCodeRow());
+
+  // Holidays settings
+  if(dom.addHolidayButton){
+    dom.addHolidayButton.addEventListener("click", ()=>addHolidayRow());
+  }
+  if(dom.holidayYearInput){
+    dom.holidayYearInput.addEventListener("change", ()=>{ renderHolidaySettingsTable(); });
+  }
+  if(dom.holidayFetchButton){
+    dom.holidayFetchButton.addEventListener("click", async ()=>{
+      const year = Number(dom.holidayYearInput?.value)||null;
+      if(!year){ alert("年を入力してください"); return; }
+      const master=getSettingsMasterTarget();
+      if(!master){ alert('この年月の勤務表が未作成です。'); return; }
+      await ensureHolidayMasterForYear(master, year, {forceFetch:true});
+      renderHolidaySettingsTable();
+    });
+  }
+
 
   dom.unsavedDiscardButton.addEventListener("click", ()=>{
     closeUnsavedModal();
@@ -2346,13 +2842,13 @@ function initModals(){
     pendingNavigationTarget=null;
   });
 
-  dom.newScheduleWithSettingsButton.addEventListener("click", ()=>{
+  dom.newScheduleWithSettingsButton.addEventListener("click", async ()=>{
     closeNewScheduleModal();
-    openSettingsModal(()=>{ createScheduleForCurrentYearMonth(); renderAll(); }, "template");
+    openSettingsModal(async ()=>{ await createScheduleForCurrentYearMonth(); renderAll(); }, "template");
   });
-  dom.newScheduleDirectButton.addEventListener("click", ()=>{
+  dom.newScheduleDirectButton.addEventListener("click", async ()=>{
     closeNewScheduleModal();
-    createScheduleForCurrentYearMonth();
+    await createScheduleForCurrentYearMonth();
     renderAll();
   });
   dom.newScheduleCancelButton.addEventListener("click", ()=>{
@@ -2399,12 +2895,166 @@ function initDebugTools(){
   };
 
   setInterval(()=>{ if(debugVisible) renderDebugInfo(); }, 200);
+  initClickInspector();
 }
 
 function toggleDebugPanel(){
   debugVisible=!debugVisible;
   if(dom.debugSection) dom.debugSection.style.display = debugVisible ? "block" : "none";
+  if(!debugVisible) clearClickHighlight();
   if(debugVisible) renderDebugInfo();
+}
+
+/* Debug: Click Inspector */
+let clickInspectEnabled=true;
+let __dbgClickBox=null;
+let __dbgClickBox2=null;
+let __dbgClickLabel=null;
+function initClickInspector(){
+  // UI toggle
+  if(dom.dbgClickInspectToggle){
+    clickInspectEnabled = dom.dbgClickInspectToggle.classList.contains("on");
+    dom.dbgClickInspectToggle.addEventListener("click",(e)=>{
+      e.preventDefault();
+      dom.dbgClickInspectToggle.classList.toggle("on");
+      clickInspectEnabled = dom.dbgClickInspectToggle.classList.contains("on");
+      if(!clickInspectEnabled) clearClickHighlight();
+    });
+  }
+  // capture click anywhere (so we can see if something is overlaying)
+  document.addEventListener("click", onDebugDocumentClick, true);
+}
+
+function onDebugDocumentClick(e){
+  if(!debugVisible || !clickInspectEnabled) return;
+
+  // allow interacting with debug panel itself without noise
+  const inDebug = dom.debugSection && dom.debugSection.contains(e.target);
+  if(inDebug) return;
+
+  const x=e.clientX, y=e.clientY;
+  const stack = (document.elementsFromPoint ? document.elementsFromPoint(x,y) : [document.elementFromPoint(x,y)]).filter(Boolean);
+  const top = stack[0] || null;
+  const second = stack[1] || null;
+
+  // Update panel text
+  if(dom.debugClickInfo){
+    const lines=[];
+    lines.push(`<div style="margin:2px 0 6px 0;"><b>クリック解析</b>（${Math.round(x)}, ${Math.round(y)}）</div>`);
+    lines.push(`<div style="margin:0 0 6px 0;">上に乗っている順（最大5件）:</div>`);
+    for(let i=0;i<Math.min(stack.length,5);i++){
+      const el=stack[i];
+      lines.push(renderElementLine(el,i));
+    }
+    dom.debugClickInfo.innerHTML = lines.join("");
+  }
+
+  // Highlight top + second to see overlays
+  highlightElement(top, false, x, y);
+  if(second) highlightElement(second, true);
+
+  // prevent accidental actions when debugging (optional): keep default behavior
+}
+
+function renderElementLine(el, idx){
+  const cs = getComputedStyle(el);
+  const id = el.id ? `#${escapeHtml(el.id)}` : "";
+  const cls = (el.className && typeof el.className==="string") ? "."+el.className.trim().replace(/\s+/g,".") : "";
+  const tag = (el.tagName||"").toLowerCase();
+  const pe = cs.pointerEvents;
+  const zi = cs.zIndex==="auto" ? "auto" : cs.zIndex;
+  const pos = cs.position;
+  const op = cs.opacity;
+  return `<div style="margin:2px 0;"><code>${idx+1}</code> <b>${escapeHtml(tag+id+cls)}</b> <span style="color:var(--text-muted);">pos:${pos} z:${escapeHtml(String(zi))} pe:${escapeHtml(String(pe))} op:${escapeHtml(String(op))}</span></div>`;
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"]/g, c=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
+}
+
+
+// 祝日の日付入力表示: "YYYY/MM/DD (曜)"（内部保存は ISO: YYYY-MM-DD）
+function formatHolidayDateDisplay(isoYmd){
+  const iso = normalizeIsoDate(isoYmd);
+  if(!iso) return "";
+  const dt = new Date(iso + "T00:00:00");
+  const w = ["日","月","火","水","木","金","土"][dt.getDay()];
+  return iso.replaceAll("-","/") + " (" + w + ")";
+}
+
+// 入力（"YYYY/MM/DD", "YYYY-MM-DD", 末尾に"(曜)"付きも可）→ ISO "YYYY-MM-DD" / 失敗なら ""
+function parseHolidayDateDisplay(s){
+  if(!s) return "";
+  const t = String(s).trim()
+    .replace(/\s*\([日月火水木金土]\)\s*$/,""); // 末尾の(曜)を除去
+  // YYYY/MM/DD or YYYY-MM-DD
+  const m = t.match(/^(\d{4})[\/-](\d{1,2})[\/-](\d{1,2})$/);
+  if(!m) return "";
+  const y = Number(m[1]), mo = Number(m[2]), d = Number(m[3]);
+  if(!(y>=1900 && mo>=1 && mo<=12 && d>=1 && d<=31)) return "";
+  const iso = String(y).padStart(4,"0")+"-"+String(mo).padStart(2,"0")+"-"+String(d).padStart(2,"0");
+  // 実在日チェック
+  const dt = new Date(iso+"T00:00:00");
+  if(dt.getFullYear()!==y || (dt.getMonth()+1)!==mo || dt.getDate()!==d) return "";
+  return iso;
+}
+
+function normalizeIsoDate(v){
+  if(!v) return "";
+  // すでにISOならそれ、そうでなければ parseHolidayDateDisplay で吸収
+  const s = String(v).trim();
+  if(/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+  return parseHolidayDateDisplay(s);
+}
+function ensureClickOverlays(){
+  if(!__dbgClickBox){
+    __dbgClickBox=document.createElement("div");
+    __dbgClickBox.className="debug-click-box";
+    document.body.appendChild(__dbgClickBox);
+  }
+  if(!__dbgClickBox2){
+    __dbgClickBox2=document.createElement("div");
+    __dbgClickBox2.className="debug-click-box secondary";
+    document.body.appendChild(__dbgClickBox2);
+  }
+  if(!__dbgClickLabel){
+    __dbgClickLabel=document.createElement("div");
+    __dbgClickLabel.className="debug-click-label";
+    document.body.appendChild(__dbgClickLabel);
+  }
+}
+
+function clearClickHighlight(){
+  if(__dbgClickBox) __dbgClickBox.style.width="0px";
+  if(__dbgClickBox2) __dbgClickBox2.style.width="0px";
+  if(__dbgClickLabel) __dbgClickLabel.style.display="none";
+  if(dom.debugClickInfo) dom.debugClickInfo.innerHTML="";
+}
+
+function highlightElement(el, isSecondary, x, y){
+  ensureClickOverlays();
+  const box = isSecondary ? __dbgClickBox2 : __dbgClickBox;
+  if(!el || !box) return;
+  const r = el.getBoundingClientRect();
+  box.style.left = `${Math.max(0, r.left)}px`;
+  box.style.top = `${Math.max(0, r.top)}px`;
+  box.style.width = `${Math.max(0, r.width)}px`;
+  box.style.height = `${Math.max(0, r.height)}px`;
+
+  if(!isSecondary && __dbgClickLabel){
+    const tag = (el.tagName||"").toLowerCase();
+    const id = el.id ? `#${el.id}` : "";
+    const cls = (el.className && typeof el.className==="string") ? "."+el.className.trim().replace(/\s+/g,".") : "";
+    __dbgClickLabel.textContent = `${tag}${id}${cls}`;
+    __dbgClickLabel.style.display="block";
+    const pad=12;
+    const lx = (x!=null?x:r.left) + pad;
+    const ly = (y!=null?y:r.top) + pad;
+    // keep on-screen
+    const vw = window.innerWidth, vh = window.innerHeight;
+    __dbgClickLabel.style.left = `${Math.min(lx, vw-560)}px`;
+    __dbgClickLabel.style.top = `${Math.min(ly, vh-40)}px`;
+  }
 }
 
 function getDebugState(){
@@ -2584,6 +3234,11 @@ function openSettingsModal(afterSaveCb){
     propagateCb.disabled = !canPropagate;
   }
   populateSettingsFromState();
+  // 仕様: 設定画面を開いたら常に「店舗」タブを初期表示する（前回の表示状態は引き継がない）
+  try{
+    const storesTab=document.querySelector('.modal-tab[data-target="settingsStores"]');
+    if(storesTab) switchSettingsTab(storesTab);
+  }catch(_e){}
   dom.settingsModalBackdrop.classList.add("visible");
 }
 function closeSettingsModal(){ dom.settingsModalBackdrop.classList.remove("visible"); }
@@ -2599,6 +3254,7 @@ function switchSettingsTab(tabElem){
     // 従業員タブを開いたタイミングで右側（店舗別リスト）を必ず再描画し、
     // DnDのwireも確実に初期化する。
     try{ refreshEmployeeOrderPanel(); }catch(_e){}
+    try{ applyEmployeeLeftFilter(); }catch(_e){}
   }
 }
 function openUnsavedModal(){ dom.unsavedModalBackdrop.classList.add("visible"); }
@@ -2714,7 +3370,11 @@ function renderSupportStoreOptions(){
 
 function renderKeypad(){
   const mode=getInputMode();
-  const master=appState.templateMaster;
+  // 設定（マスタ）は「現在開いている年月にだけ反映」されるケースがあるため、
+  // パレットは必ず “現在の勤務表があればそのスナップショット” を参照する。
+  // （未作成の場合のみテンプレートマスタを参照）
+  const schedule=getCurrentSchedule();
+  const master=(schedule? schedule.masterSnapshot : appState.templateMaster);
   const workContextStoreId=getWorkContextStoreId();
   const mapping={};
   if(mode==="work"){
@@ -2748,33 +3408,54 @@ function renderKeypad(){
   const layout=["7","8","9","4","5","6","1","2","3"];
   layout.forEach(num=>{
     const btn=document.createElement("button");
+    btn.type="button";
+    btn.className="kp-key";
+
+    // 左上にテンキー番号（コード有無で統一）
+    const numTag=document.createElement("span");
+    numTag.className="kp-num";
+    numTag.textContent=num;
+    btn.appendChild(numTag);
+
     const info=mapping[num];
     if(info){
+      const leftWrap=document.createElement("span");
+      leftWrap.className="key-left";
+
+      if(info.type==="work"){
+        const dot=document.createElement("span");
+        dot.className="status-dot "+(info.shiftType==="day"?"dot-day":(info.shiftType==="night"?"dot-night":"dot-disabled"));
+        dot.title = (info.shiftType==="day"?"日勤":(info.shiftType==="night"?"夜勤":"無効"));
+        leftWrap.appendChild(dot);
+      }
+
       const spanCode=document.createElement("span");
       spanCode.className="code-label";
       spanCode.textContent=info.code;
-      const spanNum=document.createElement("span");
-      spanNum.textContent=`(${num})`;
-      btn.appendChild(spanCode);
-      btn.appendChild(spanNum);
+      leftWrap.appendChild(spanCode);
+
+      btn.appendChild(leftWrap);
       btn.addEventListener("click",()=>{
         if(!activeCell) return;
         if(activeCell.dataset.rowType!=="main") return;
         handleNumericInput(num);
       });
     }else{
-      btn.textContent=num;
       btn.disabled=true;
     }
     dom.keypad.appendChild(btn);
   });
 
-  if(mode==="leave"){
-    dom.modeBadge.textContent="休暇コード（Ctrl）";
-    dom.modeBadge.className="badge leave";
-  }else{
-    dom.modeBadge.textContent = isSupportMode ? "業務コード（応援）" : "業務コード";
-    dom.modeBadge.className="badge "+(isSupportMode?"support":"work");
+  {
+    const base=getBaseInputMode();
+    const isTemp = ctrlDown && (mode!==base);
+    if(mode==="leave"){
+      dom.modeBadge.textContent = "休暇コード" + (isTemp?"（Ctrl）":"");
+      dom.modeBadge.className = "badge leave";
+    }else{
+      dom.modeBadge.textContent = (isSupportMode ? "業務コード（応援）" : "業務コード") + (isTemp?"（Ctrl）":"");
+      dom.modeBadge.className = "badge "+(isSupportMode?"support":"work");
+    }
   }
 }
 
@@ -2863,9 +3544,21 @@ function buildScheduleTable(schedule, storeId){
   thCorner.className="col-employee-header namecol";
   thCorner.textContent="従業員";
   tr1.appendChild(thCorner);
+  const master = schedule.masterSnapshot || {};
   for(let d=1; d<=daysInMonth; d++){
+    const date=new Date(schedule.year, schedule.month-1, d);
+    const w=date.getDay();
+    const hol=getHolidayInfoFromMaster(master, date);
+    const isHol=!!hol;
     const th=document.createElement("th");
     th.textContent=d;
+    if(isHol){ th.classList.add("day-holiday"); th.title = hol.name || ""; }
+    else if(w===0) th.classList.add("day-sun");
+    else if(w===6) th.classList.add("day-sat");
+    th.dataset.day=String(d);
+    if(isHol) th.classList.add("day-holiday");
+    else if(w===0) th.classList.add("day-sun");
+    else if(w===6) th.classList.add("day-sat");
     tr1.appendChild(th);
   }
   thead.appendChild(tr1);
@@ -2876,10 +3569,14 @@ function buildScheduleTable(schedule, storeId){
   for(let d=1; d<=daysInMonth; d++){
     const date=new Date(schedule.year, schedule.month-1, d);
     const w=date.getDay();
+    const hol=getHolidayInfoFromMaster(master, date);
+    const isHol=!!hol;
     const th=document.createElement("th");
     th.textContent=weekDays[w];
-    if(w===0) th.classList.add("day-sun");
-    if(w===6) th.classList.add("day-sat");
+    th.dataset.day=String(d);
+    if(isHol){ th.classList.add("day-holiday"); th.title = hol.name || ""; }
+    else if(w===0) th.classList.add("day-sun");
+    else if(w===6) th.classList.add("day-sat");
     tr2.appendChild(th);
   }
   thead.appendChild(tr2);
@@ -2974,14 +3671,16 @@ function buildScheduleTable(schedule, storeId){
 }
 
 /* ===== New schedule create ===== */
-function createScheduleForCurrentYearMonth(){
+async function createScheduleForCurrentYearMonth(){
   const [year,month]=currentYearMonth.split("-").map(v=>parseInt(v,10));
   const template=appState.templateMaster;
+  await ensureHolidayMasterForYear(template, year);
   const snapshot={
     stores:deepClone(template.stores),
     employees:deepClone(template.employees),
     workCodes:deepClone(template.workCodes),
     leaveCodes:deepClone(template.leaveCodes),
+    holidays:deepClone(template.holidays||{}),
   };
   const schedule={ year,month, masterSnapshot:snapshot, byStore:{} };
   const daysInMonth=getDaysInMonth(year,month);
@@ -4220,13 +4919,12 @@ function populateSettingsFromState(){
 
   dom.storeTableBody.innerHTML="";
   master.stores.slice().sort((a,b)=>(a.order||0)-(b.order||0)).forEach(store=>addStoreRow(store));
+  updateStoreReorderButtons();
 
   dom.employeeTableBody.innerHTML="";
   master.employees.forEach(emp=>addEmployeeRow(emp));
   refreshEmployeeStoreOptionsFromSettings();
   refreshEmployeeOrderPanel();
-  resetEmployeeUnassignedFilter();
-  applyEmployeeTableFilter();
 
   dom.workCodeTableBody.innerHTML="";
   master.workCodes.forEach(wc=>{
@@ -4242,51 +4940,14 @@ function populateSettingsFromState(){
 
   dom.leaveCodeTableBody.innerHTML="";
   master.leaveCodes.forEach(lc=>addLeaveCodeRow(lc));
-}
 
-function resetEmployeeUnassignedFilter(){
-  employeeUnassignedOnly=false;
-  if(dom.employeeUnassignedCheckbox) dom.employeeUnassignedCheckbox.checked=false;
-  updateEmployeeUnassignedToggleUI();
-}
-
-function updateEmployeeUnassignedToggleUI(){
-  const on=!!employeeUnassignedOnly;
-  dom.employeeUnassignedToggle?.classList.toggle("on", on);
-  if(dom.employeeUnassignedLabel){
-    dom.employeeUnassignedLabel.textContent = on ? "未所属のみ表示中" : "全従業員を表示";
+  // Holidays
+  if(!master.holidays) master.holidays={};
+  if(dom.holidayYearInput){
+    const y=(getCurrentSchedule()?.year) || (currentYearMonth?Number(currentYearMonth.split("-")[0]):null) || new Date().getFullYear();
+    dom.holidayYearInput.value = String(y);
   }
-}
-
-function applyEmployeeTableFilter(){
-  if(!dom.employeeTableBody) return;
-  const keywordRaw = dom.employeeSearchInput ? String(dom.employeeSearchInput.value||"") : "";
-  const keyword = keywordRaw.trim().toLowerCase();
-  let visibleUnassignedCount=0;
-  let totalCount=0;
-
-  dom.employeeTableBody.querySelectorAll("tr").forEach(tr=>{
-    totalCount++;
-    const last=(tr.querySelector(".emp-last")?.value||"").trim();
-    const first=(tr.querySelector(".emp-first")?.value||"").trim();
-    const storeVal=(tr.querySelector("select.emp-store")?.value||"");
-    const isUnassigned = !String(storeVal||"");
-    const matchesKeyword = !keyword || (last+first).toLowerCase().includes(keyword);
-    const shouldShow = (!employeeUnassignedOnly || isUnassigned) && matchesKeyword;
-    tr.style.display = shouldShow ? "" : "none";
-    if(shouldShow && isUnassigned) visibleUnassignedCount++;
-  });
-
-  if(dom.employeeUnassignedInfo){
-    dom.employeeUnassignedInfo.style.display = employeeUnassignedOnly ? "flex" : "none";
-  }
-  if(dom.employeeUnassignedCount){
-    dom.employeeUnassignedCount.textContent = `${visibleUnassignedCount}名`;
-  }
-  if(dom.employeeTotalCount){
-    dom.employeeTotalCount.textContent = String(totalCount);
-  }
-  updateEmployeeUnassignedToggleUI();
+  renderHolidaySettingsTable();
 }
 
 function saveSettingsFromUI(){
@@ -4329,17 +4990,33 @@ function saveSettingsFromUI(){
 
   const employees=[];
   Array.from(dom.employeeTableBody.querySelectorAll("tr")).forEach(tr=>{
-    const id=Number(tr.dataset.id)||master.nextEmployeeId++;
+    // data-id が欠けている場合でも、連番で補完して必ずIDを持たせる
+    let idRaw = (tr.getAttribute("data-id") || "").trim();
+    let idNum = Number(idRaw);
+    const id = Number.isFinite(idNum) && idNum > 0 ? idNum : (master.nextEmployeeId++);
+
     const lastName=tr.querySelector(".emp-last").value.trim();
     const firstName=tr.querySelector(".emp-first").value.trim();
-    const storeIdStr=tr.querySelector(".emp-store").value||"";
-    let storeId = storeIdStr ? Number(storeIdStr) : null;
+
+    const storeSel = tr.querySelector(".emp-store");
+    const storeIdStr = ((storeSel && storeSel.value) ? String(storeSel.value) : "").trim();
+    // "__none__" は未所属
+    let storeId = (!storeIdStr || storeIdStr==="__none__") ? null : Number(storeIdStr);
     if(storeId!=null && storeId<=0 && storeIdMap.has(String(storeId))){
       storeId = Number(storeIdMap.get(String(storeId)));
     }
-    const orderInStore = (Number(tr.querySelector(".emp-order").value)||9999) * 10; // 表示(1刻み)→内部(10刻み)
+    if(!Number.isFinite(storeId)) storeId = null;
+
+    // 店舗内順：未所属は常に0。所属ありは数値以外/空は0として後段で正規化
+    const orderStr = (tr.querySelector(".emp-order")?.value ?? "").trim();
+    let orderVal = Number(orderStr);
+    if(!Number.isFinite(orderVal)) orderVal = 0;
+    if(storeId==null) orderVal = 0;
+
+    const orderInStore = Math.max(0, orderVal) * 10; // 表示(1刻み)→内部(10刻み)
     employees.push({id,lastName,firstName,storeId,orderInStore});
   });
+
 
   const fullSet=new Set();
   for(const e of employees){
@@ -4370,6 +5047,23 @@ function saveSettingsFromUI(){
     leaveCodes.push({code,key});
   });
   master.leaveCodes=leaveCodes;
+
+  // Holidays
+  const holidays={};
+  Array.from(dom.holidayTableBody?.querySelectorAll("tr")||[]).forEach(tr=>{
+    const dateEl = tr.querySelector(".hol-date-display");
+    let date = (dateEl?.dataset?.iso || "").trim();
+    if(!date){
+      // fallback: try parse from visible "YYYY/MM/DD" at start
+      const v = (dateEl?.value || "").trim();
+      const m = v.match(/^(\d{4})[\/\-](\d{2})[\/\-](\d{2})/);
+      if(m) date = `${m[1]}-${m[2]}-${m[3]}`;
+    }
+    const name=tr.querySelector(".hol-name")?.value?.trim()||"";
+    if(!date) return;
+    holidays[date]={n:name};
+  });
+  master.holidays = holidays;
 
 
   // この月（勤務表スナップショット）を編集している場合：勤務表データ構造（byStore.assignments）をスナップショットに合わせて補正する
@@ -4402,10 +5096,11 @@ function addStoreRow(store){
   tr.dataset.id = store ? store.id : String(settingsTempStoreId--);
 
   const tdMove=document.createElement("td");
+  tdMove.className="reorder-cell";
   tdMove.style.whiteSpace="nowrap";
-  const up=document.createElement("button"); up.textContent="↑"; up.className="icon"; up.style.padding="6px 10px";
+  const up=document.createElement("button"); up.textContent="▲"; up.className="icon reorder-btn";
   up.addEventListener("click",()=>moveRow(tr,-1));
-  const down=document.createElement("button"); down.textContent="↓"; down.className="icon"; down.style.padding="6px 10px";
+  const down=document.createElement("button"); down.textContent="▼"; down.className="icon reorder-btn";
   down.addEventListener("click",()=>moveRow(tr,1));
   tdMove.appendChild(up); tdMove.appendChild(down);
 
@@ -4480,9 +5175,31 @@ function addStoreRow(store){
   tr.appendChild(tdDelete);
 
   dom.storeTableBody.appendChild(tr);
+  updateStoreReorderButtons();
   // 追加直後でも従業員タブの所属店舗候補に反映する
   refreshEmployeeStoreOptionsFromSettings();
   refreshEmployeeStoreOptionsFromSettings();
+}
+
+function updateStoreReorderButtons(){
+  try{
+    const tbody=dom.storeTableBody;
+    if(!tbody) return;
+    const rows=Array.from(tbody.querySelectorAll("tr"));
+    rows.forEach((tr,i)=>{
+      const btns=tr.querySelectorAll("button.reorder-btn");
+      if(btns.length<2) return;
+      const up=btns[0], down=btns[1];
+      const isFirst=(i===0);
+      const isLast=(i===rows.length-1);
+      up.disabled=isFirst;
+      down.disabled=isLast;
+      up.setAttribute("aria-disabled", isFirst ? "true":"false");
+      down.setAttribute("aria-disabled", isLast ? "true":"false");
+    });
+  }catch(e){
+    console.warn("[settings] updateStoreReorderButtons failed:", e);
+  }
 }
 
 function moveRow(tr, dir){
@@ -4493,6 +5210,7 @@ function moveRow(tr, dir){
   if(newIdx<0 || newIdx>=rows.length) return;
   if(dir<0) tbody.insertBefore(tr, rows[newIdx]);
   else tbody.insertBefore(rows[newIdx], tr);
+  updateStoreReorderButtons();
 }
 
 function storeHasScheduleData(storeId){
@@ -4549,12 +5267,12 @@ function refreshEmployeeStoreOptionsFromSettings(){
   });
 
   dom.employeeTableBody.querySelectorAll("select.emp-store").forEach(sel=>{
-    const current = sel.value;
+    const current = sel.dataset.desired || sel.value;
     sel.innerHTML = "";
 
     // 未所属
     const opt0=document.createElement("option");
-    opt0.value="";
+    opt0.value="__none__";
     opt0.textContent="（未所属）";
     sel.appendChild(opt0);
 
@@ -4580,10 +5298,28 @@ function refreshEmployeeStoreOptionsFromSettings(){
       sel.value = current || "";
     }
   });
-  applyEmployeeTableFilter();
 }
 
 
+
+
+function applyEmployeeLeftFilter(){
+  // 左表の「未所属のみ表示」トグルに応じて行を表示/非表示
+  if(!dom.employeeTableBody) return;
+  const on = !!dom.employeeUnassignedOnlyToggle && dom.employeeUnassignedOnlyToggle.classList.contains("on");
+  let visibleCount = 0;
+  dom.employeeTableBody.querySelectorAll("tr").forEach(tr=>{
+    const sel = tr.querySelector("select.emp-store");
+    const v = sel ? String(sel.value||"").trim() : "";
+    const assigned = !!(v && v!=="__none__");
+    const show = !(on && assigned);
+    tr.style.display = show ? "" : "none";
+    if(show) visibleCount++;
+  });
+  if(dom.employeeUnassignedHint){
+    dom.employeeUnassignedHint.style.display = (on && visibleCount===0) ? "" : "none";
+  }
+}
 
 
 function refreshEmployeeOrderPanel(){
@@ -4630,7 +5366,8 @@ function refreshEmployeeOrderPanel(){
     const id = tr.dataset.id || "";
     const last = (tr.querySelector(".emp-last")?.value || "").trim();
     const first = (tr.querySelector(".emp-first")?.value || "").trim();
-    const store = (tr.querySelector("select.emp-store")?.value || "");
+    const selStore = tr.querySelector("select.emp-store");
+    const store = (selStore?.dataset?.desired || selStore?.value || "");
     const order = Number(tr.querySelector(".emp-order")?.value || "0") || 0;
     return {id,last,first,storeId:store,order};
   });
@@ -4652,7 +5389,7 @@ function refreshEmployeeOrderPanel(){
     : ((stores.find(s=>String(s.id)===String(storeId))?.name) || "");
   const items = employees
     .filter(e=>{
-      if(String(storeId)==="__none__") return !String(e.storeId||"");
+      if(String(storeId)==="__none__") return (!e.storeId || String(e.storeId)==="__none__");
       return String(e.storeId||"")===String(storeId);
     })
     .sort((a,b)=> (a.order||0)-(b.order||0) || (a.last+a.first).localeCompare(b.last+b.first,'ja'));
@@ -4722,7 +5459,11 @@ function ensureEmployeeOrderDnDInitialized(){
     empId:null,
     fromStoreId:null,
     placeholder:null,
-    placeholderIndex:null
+    placeholderIndex:null,
+    moved:false,
+    startTs:0,
+    sourceEl:null,
+    sourceStyle:null
   };
 
   // ===== drag UX helpers =====
@@ -4754,13 +5495,144 @@ function ensureEmployeeOrderDnDInitialized(){
       dom.employeeOrderList.classList.toggle("drop-over", !!isOver);
     }catch(_e){}
   }
+  window.setDropOver = setDropOver;
+
 
   // 左テーブル：行ドラッグ開始
-  dom.employeeTableBody.addEventListener("dragstart", (ev)=>{
-    const tr = ev.target && ev.target.closest ? ev.target.closest("tr[data-id]") : null;
-    if(!tr) return;
+  // ---- left table pointer tracking (v91): remember the row the user actually grabbed (and log it) ----
+  if(!window.__empDnDLeftPointerInstalled){
+    window.__empDnDLeftPointerInstalled = true;
+    window.__empDnDLastLeftPointer = { id:null, ts:0, x:0, y:0, tag:"", cls:"" };
+    employeeTableBody.addEventListener("mousedown", (ev)=>{
+      try{
+        const interactive = ev.target && ev.target.closest ? ev.target.closest("input,select,textarea,button,a,label") : null;
+        if(interactive) return;
 
-    // v201: 行のどこからでもドラッグ開始OK（ただし入力・ボタン等のコントロール上は除外）
+        const trFromTarget = ev.target && ev.target.closest ? ev.target.closest("tr[data-id]") : null;
+
+        let trFromPoint = null;
+        try{
+          const elAtPoint = document.elementFromPoint(ev.clientX||0, ev.clientY||0);
+          trFromPoint = elAtPoint && elAtPoint.closest ? elAtPoint.closest("tr[data-id]") : null;
+        }catch(_e){}
+
+        // Prefer the row under the pointer (more reliable than event.target in some browsers/layouts)
+        const tr = trFromPoint || trFromTarget;
+        if(!tr) return;
+
+        const id = tr.getAttribute("data-id");
+        window.__empDnDLastLeftPointer = {
+          id: id ? String(id) : null,
+          ts: Date.now(),
+          x: ev.clientX||0,
+          y: ev.clientY||0,
+          tag: String(ev.target && ev.target.tagName || ""),
+          cls: String(ev.target && ev.target.className || "")
+        };
+        try{
+          console.log("[settings-dnd] left mousedown", {
+            rowId: window.__empDnDLastLeftPointer.id,
+            // debug: what did we think was the row from each method?
+            rowIdFromTarget: trFromTarget ? String(trFromTarget.getAttribute("data-id")||"") : null,
+            rowIdFromPoint: trFromPoint ? String(trFromPoint.getAttribute("data-id")||"") : null,
+            rowIndexInView: (function(){
+              const tr = trFromPoint || trFromTarget;
+              if(!tr || !dom || !dom.employeeTableBody) return null;
+              const rows = Array.from(dom.employeeTableBody.querySelectorAll("tr[data-id]"));
+              const i = rows.indexOf(tr);
+              return i>=0 ? (i+1) : null;
+            })(),
+            nameAtPointer: (function(){
+              const tr = trFromPoint || trFromTarget;
+              if(!tr) return null;
+              const last = (tr.querySelector(".emp-last")?.value || "").trim();
+              const first = (tr.querySelector(".emp-first")?.value || "").trim();
+              const label = (last || first) ? (last + " " + first).trim() : "(空欄)";
+              return label;
+            })(),
+            pickedBy: trFromPoint ? "point" : "target",
+            targetTag: window.__empDnDLastLeftPointer.tag,
+            targetCls: window.__empDnDLastLeftPointer.cls,
+            x: window.__empDnDLastLeftPointer.x,
+            y: window.__empDnDLastLeftPointer.y
+          });
+        }catch(_e){}
+      }catch(_e){}
+    }, true);
+  }
+
+employeeTableBody.addEventListener("dragstart", (ev)=>{
+    // v91: 行特定を安定化 + 操作ログを追加
+    let tr = null;
+    let chosenBy = "";
+    const now = Date.now();
+    const lp = window.__empDnDLastLeftPointer;
+
+    const eventTr = (ev.target && ev.target.closest) ? ev.target.closest("tr[data-id]") : null;
+
+    // 1) 直前mousedownで記録した行（最優先）
+    try{
+      if(lp && lp.id && (now - (lp.ts||0) < 1200)){
+        const cand = employeeTableBody.querySelector(`tr[data-id="${lp.id}"]`);
+        if(cand && cand.style && cand.style.display!=="none"){
+          tr = cand;
+          chosenBy = "lastPointer";
+        }
+      }
+    }catch(_e){}
+
+    // v92: if the stored pointer row looks wrong, re-check by current pointer position
+    if(tr && chosenBy==="lastPointer"){
+      try{
+        const x = (lp && lp.x) ? lp.x : (ev.clientX||0);
+        const y = (lp && lp.y) ? lp.y : (ev.clientY||0);
+        const elAtPoint = document.elementFromPoint(x, y);
+        const trP = elAtPoint && elAtPoint.closest ? elAtPoint.closest("tr[data-id]") : null;
+        const idP = trP ? String(trP.getAttribute("data-id")||"") : null;
+        const idT = tr ? String(tr.getAttribute("data-id")||"") : null;
+        if(trP && idP && idT && idP !== idT){
+          tr = trP;
+          chosenBy = "lastPointer->pointFix";
+        }
+      }catch(_e){}
+    }
+
+    // 2) event.target から辿れる行
+    if(!tr && eventTr){
+      tr = eventTr;
+      chosenBy = "eventTarget";
+    }
+
+    // 3) ポイント位置からも特定（環境によってtargetがズレる対策）
+    if(!tr){
+      try{
+        const x = (lp && lp.x) ? lp.x : (ev.clientX||0);
+        const y = (lp && lp.y) ? lp.y : (ev.clientY||0);
+        const elAtPoint = document.elementFromPoint(x, y);
+        const tr2 = elAtPoint && elAtPoint.closest ? elAtPoint.closest("tr[data-id]") : null;
+        if(tr2 && tr2.style && tr2.style.display!=="none"){
+          tr = tr2;
+          chosenBy = "elementFromPoint";
+        }
+      }catch(_e){}
+    }
+
+    // ログ：直前に何を掴んだか / dragstartでどの行が選ばれたか
+    try{
+      console.log("[settings-dnd] left dragstart pick", {
+        chosenBy,
+        chosenRowId: tr ? String(tr.getAttribute("data-id")||"") : null,
+        eventTargetRowId: eventTr ? String(eventTr.getAttribute("data-id")||"") : null,
+        lastPointer: lp ? {id: lp.id, ts: lp.ts, ageMs: (lp.ts? (now-lp.ts): null), x: lp.x, y: lp.y, tag: lp.tag, cls: lp.cls} : null,
+        eventTargetTag: String(ev.target && ev.target.tagName || ""),
+        eventTargetCls: String(ev.target && ev.target.className || "")
+      });
+    }catch(_e){}
+
+    // 次のdragstartに古い情報を使わない（ワンショット）
+    try{ if(lp) lp.ts = 0; }catch(_e){}
+
+// v201: 行のどこからでもドラッグ開始OK（ただし入力・ボタン等のコントロール上は除外）
     const interactive = ev.target && ev.target.closest ? ev.target.closest("input,select,textarea,button,a,label") : null;
     if(interactive){
       // コントロールの操作（選択/クリック）を邪魔しない
@@ -4768,16 +5640,84 @@ function ensureEmployeeOrderDnDInitialized(){
       return;
     }
 
-    const empId = tr.dataset.id;
+    
+    // v9: つかんだ感を「行全体」で統一（1列目から掴んでも同じ）
+    try{
+      __empDnD.sourceEl = tr;
+      __empDnD.sourceStyle = {
+        opacity: tr.style.opacity,
+        transform: tr.style.transform,
+        boxShadow: tr.style.boxShadow,
+        filter: tr.style.filter
+      };
+      tr.classList.add("dragging-row");
+      // 左テーブルは「薄くしない」：見た目は変えず、drag image（影付き）だけを強化する
+
+      // drag image を行全体にする（ブラウザがセル/テキストだけ掴む挙動を防ぐ）
+      const rect = tr.getBoundingClientRect();
+      const ox = Math.max(0, Math.min(rect.width, (ev.clientX || rect.left) - rect.left));
+      const oy = Math.max(0, Math.min(rect.height, (ev.clientY || rect.top) - rect.top));
+
+      // ghostを作ってsetDragImage（影を強くして視認性UP）
+      const pad = 8; // 影の見切れ防止
+      const ghostWrap = document.createElement("div");
+      ghostWrap.style.position = "fixed";
+      ghostWrap.style.left = "-9999px";
+      ghostWrap.style.top = "-9999px";
+      ghostWrap.style.padding = pad + "px";
+      ghostWrap.style.background = "transparent";
+      ghostWrap.style.pointerEvents = "none";
+      ghostWrap.style.filter = "drop-shadow(0 14px 26px rgba(0,0,0,.40)) drop-shadow(0 4px 10px rgba(0,0,0,.25))";
+
+      const ghostTable = document.createElement("table");
+      ghostTable.className = "employee-table-fixed";
+      ghostTable.style.borderCollapse = "collapse";
+      ghostTable.style.width = rect.width + "px";
+      ghostTable.style.pointerEvents = "none";
+      ghostTable.style.background = "var(--panel-bg, #fff)";
+      ghostTable.style.borderRadius = "10px";
+      ghostTable.style.overflow = "hidden";
+
+      const ghostBody = document.createElement("tbody");
+      const ghostRow = tr.cloneNode(true);
+      // clone内のフォーム類は見た目だけにする
+      ghostRow.querySelectorAll("input,select,textarea,button,a").forEach(el=>{ el.setAttribute("disabled",""); });
+      ghostBody.appendChild(ghostRow);
+      ghostTable.appendChild(ghostBody);
+
+      ghostWrap.appendChild(ghostTable);
+      document.body.appendChild(ghostWrap);
+      __empDnD.ghostEl = ghostWrap;
+
+      try{ ev.dataTransfer.setDragImage(ghostWrap, ox + pad, oy + pad); }catch(_e){}
+      // ghostはcleanupで撤去
+    }catch(_e){}
+let empId = (tr && tr.dataset) ? (tr.dataset.id || "") : "";
+    if(!empId){
+      try{
+        const handleEl = tr ? (tr.querySelector(".emp-drag-cell") || tr.querySelector("[data-emp-id]")) : null;
+        const h = handleEl && handleEl.dataset ? (handleEl.dataset.empId || handleEl.dataset.empId0 || "") : "";
+        if(h) empId = h;
+      }catch(_e){}
+    }
+
+
+    if(!empId){
+      // idが取れない場合はDnDを開始しない（誤った行が動く事故防止）
+      try{ ev.preventDefault(); }catch(_e){}
+      cleanupEmpDnDVisual();
+      return;
+    }
 
     __empDnD.active = true;
     __empDnD.from = "left";
     __empDnD.empId = String(empId);
     __empDnD.fromStoreId = (tr.querySelector("select.emp-store")?.value || "") || "";
+    if(__empDnD.fromStoreId==="__none__") __empDnD.fromStoreId="";
     __empDnD.placeholderIndex = null;
 
     setDraggingUi(true);
-    setDropOver(false);
+    window.setDropOver(false);
 
     try{
       ev.dataTransfer.effectAllowed = "move";
@@ -4811,9 +5751,9 @@ function ensureEmployeeOrderDnDInitialized(){
           // v117: placeholderが出ている時だけ move を表示
           if(ev.dataTransfer){
             const hasPlaceholder = !!(__empDnD.placeholder && __empDnD.placeholder.isConnected);
-            ev.dataTransfer.dropEffect = hasPlaceholder ? "move" : "none";
+            ev.dataTransfer.dropEffect = "move";
           }
-          setDropOver(true);
+          window.setDropOver(true);
     }, true);
 
     document.addEventListener("drop", (ev)=>{
@@ -4869,11 +5809,14 @@ function ensureEmployeeOrderDnDInitialized(){
       
           cleanupEmpDnDVisual();
           try{ if(typeof refreshEmployeeStoreOptionsFromSettings==='function') refreshEmployeeStoreOptionsFromSettings(); }catch(_e){}
-          try{ if(typeof refreshEmployeeOrderPanel==='function') refreshEmployeeOrderPanel(); }catch(_e){}
+          try{ if(typeof refreshEmployeeOrderPanel==='function') setTimeout(()=>refreshEmployeeOrderPanel(),0); }catch(_e){}
     }, true);
   }
 dom.employeeOrderList.addEventListener("dragover", (ev)=>{
     if(!__empDnD.active) return;
+
+    // ドラッグが実際に動いたことを記録（即キャンセル時に外ドロップ扱いしないため）
+    __empDnD.moved = true;
     ev.preventDefault();
     ev.stopPropagation();
     if(ev.stopImmediatePropagation) ev.stopImmediatePropagation();
@@ -4881,9 +5824,9 @@ dom.employeeOrderList.addEventListener("dragover", (ev)=>{
     // v117: placeholderが出ている時だけ move を表示
     if(ev.dataTransfer){
       const hasPlaceholder = !!(__empDnD.placeholder && __empDnD.placeholder.isConnected);
-      ev.dataTransfer.dropEffect = hasPlaceholder ? "move" : "none";
+      ev.dataTransfer.dropEffect = "move";
     }
-    setDropOver(true);
+    window.setDropOver(true);
   }, true);
 
   dom.employeeOrderList.addEventListener("drop", (ev)=>{
@@ -4948,23 +5891,81 @@ dom.employeeOrderList.addEventListener("dragover", (ev)=>{
     __empDnD.empId = String(empId);
     __empDnD.fromStoreId = String(storeId);
     __empDnD.placeholderIndex = null;
-
+      __empDnD.dropCommitted = false;
+      __empDnD.moved = false;
+      __empDnD.startTs = Date.now();
     setDraggingUi(true);
-    setDropOver(false);
+    window.setDropOver(false);
 
-    item.classList.add("dragging-row");
+    // --- v8: 「つかんだ感」(見た目のみ) ＋ドラッグ画像(ghost) ---
+    try{
+      // 二重dragstart防止（ブラウザがdragをキャンセル→別要素でdragstart連発する対策）
+      if(__empDnD && __empDnD.active && __empDnD.empId && String(__empDnD.empId)!==String(empId)){
+        cleanupEmpDnDVisual();
+      }
+    }catch(_e){}
 
     try{
-      ev.dataTransfer.effectAllowed = "move";
-      ev.dataTransfer.setData("text/plain", JSON.stringify({type:"emp", id:String(empId), from:"right", storeId:String(storeId)}));
-      try{ ev.dataTransfer.setData("text/uri-list",""); }catch(_e){}
+      __empDnD.sourceEl = item;
+      __empDnD.sourceStyle = {
+        opacity: item.style.opacity,
+        transform: item.style.transform,
+        boxShadow: item.style.boxShadow,
+        filter: item.style.filter
+      };
+      item.classList.add("dragging-row");
+      item.style.opacity = "0.35";
+      item.style.transform = "scale(0.985)";
+      item.style.boxShadow = "0 8px 20px rgba(0,0,0,0.14)";
+      item.style.filter = "saturate(0.9)";
+
+      // 既定のドラッグ画像が取りづらい環境向けに ghost を明示（DOM/レイアウトは壊さない）
+      try{
+        const g = item.cloneNode(true);
+        g.classList.add("employee-order-ghost");
+        g.style.position = "fixed";
+        g.style.left = "-2000px";
+        g.style.top = "-2000px";
+        g.style.pointerEvents = "none";
+        g.style.margin = "0";
+        g.style.opacity = "0.85";
+        document.body.appendChild(g);
+        __empDnD.ghostEl = g;
+        if(ev && ev.dataTransfer && ev.dataTransfer.setDragImage){
+          ev.dataTransfer.setDragImage(g, 16, 16);
+        }
+      }catch(_e){}
     }catch(_e){}
+
     ensureEmpDnDPlaceholder();
     logSettingsDnD(`ドラッグ開始（右）: ${String(empId)} / store=${String(storeId)}`);
   }, true);
 
-  dom.employeeOrderList.addEventListener("dragend", ()=>{
+  dom.employeeOrderList.addEventListener("dragend", (ev)=>{
+    // 右リストから「ドロップ可能な領域の外」へ落とした場合：
+    // HTML5 DnD では drop イベントは“どこにも”発火しないため、dragend で検知して未所属へ戻す。
+    try{
+      if(__empDnD && __empDnD.active && __empDnD.from==="right" && !__empDnD.dropCommitted && __empDnD.moved && (Date.now()-(__empDnD.startTs||0) > 60)){
+        const empId = String(__empDnD.empId||"");
+        if(empId){
+          console.debug("[settings-dnd] 右→外ドロップ（drop未発火）: 未所属へ戻す", {empId, fromStoreId: __empDnD.fromStoreId});
+          try{ setEmployeeStore(empId, "", true); }catch(_e){}
+          // 未所属へ移動する際は店舗内順=0（仕様）
+          try{ setEmployeeOrder(empId, 0, true); }catch(_e){}
+          try{ if(typeof refreshEmployeeStoreOptionsFromSettings==='function') refreshEmployeeStoreOptionsFromSettings(); }catch(_e){}
+          try{ if(typeof renderEmployeeSettingsTables==='function') renderEmployeeSettingsTables(); }catch(_e){}
+          try{ if(typeof refreshEmployeeOrderPanel==='function') refreshEmployeeOrderPanel(); }catch(_e){}
+        }
+      }
+    }catch(_e){}
     cleanupEmpDnDVisual();
+  }, true);
+
+  // v8: 一部環境で dragend が source/list に届かない場合があるため、document でも後始末
+  document.addEventListener("dragend", (ev)=>{
+    if(!__empDnD || !__empDnD.active) return;
+    cleanupEmpDnDVisual();
+    try{ __setUnassignHint(false); }catch(_e){}
   }, true);
 
   // ページ遷移/ファイルオープン防止
@@ -4977,22 +5978,46 @@ dom.employeeOrderList.addEventListener("dragover", (ev)=>{
     const ok = isInEmployeeOrderArea(ev.target);
     if(!ok){
       try{ if(ev.dataTransfer) ev.dataTransfer.dropEffect = "none"; }catch(_e){}
-      setDropOver(false);
+      window.setDropOver(false);
+      // v12: リスト外に出たら「ここに挿入」placeholderを消す（残像防止）
+      try{
+        if(__empDnD.placeholder && __empDnD.placeholder.parentNode){
+          __empDnD.placeholder.parentNode.removeChild(__empDnD.placeholder);
+        }
+        __empDnD.placeholderIndex = null;
+      }catch(_e){}
       return;
     }
     // 右パネル内でも、placeholderが出ない状況（=ドロップ不可能）は none
     try{
       const hasPlaceholder = !!(__empDnD.placeholder && __empDnD.placeholder.isConnected);
-      if(ev.dataTransfer) ev.dataTransfer.dropEffect = hasPlaceholder ? "move" : "none";
+      if(ev.dataTransfer) ev.dataTransfer.dropEffect = "move";
     }catch(_e){}
   }, true);
 
   document.addEventListener("drop", (ev)=>{
     if(!__empDnD.active) return;
-    // どこで落としてもファイルが開かないようにする（dragover は触らない）
+    // どこで落としてもブラウザ既定の挙動（ファイルを開く等）を抑止
     ev.preventDefault();
     ev.stopPropagation();
-    setDropOver(false);
+    window.setDropOver(false);
+
+    // vXXX: 右（店舗内一覧）から外へドロップしたら「未所属」に戻す
+    try{
+      const payload = readEmpDnDPayload(ev);
+      const inOrderArea = ev.target && ev.target.closest
+        ? ev.target.closest("#employeeOrderList, .employee-order-head, .employee-order-dropzone, .employee-order-item, #employeeOrderStoreSelect")
+        : null;
+
+      if(payload && payload.type==="emp" && payload.from==="right" && !inOrderArea){
+        // 外側に落とした＝未所属へ戻す
+        try{ console.debug("[settings-dnd] drop outside -> unassign", {empId: payload.id, fromStore: payload.storeId}); }catch(_e){}
+        applyEmpDnDDrop(payload, "", null);
+        try{ if(typeof refreshEmployeeStoreOptionsFromSettings==='function') refreshEmployeeStoreOptionsFromSettings(); }catch(_e){}
+        try{ if(typeof refreshEmployeeOrderPanel==='function') refreshEmployeeOrderPanel(); }catch(_e){}
+      }
+    }catch(_e){}
+
     cleanupEmpDnDVisual();
   }, true);
 
@@ -5027,6 +6052,45 @@ dom.employeeOrderList.addEventListener("dragover", (ev)=>{
     const items = Array.from(dom.employeeOrderList.querySelectorAll('.employee-order-item[data-store-id="'+String(storeId)+'"][data-emp-id]'));
     return items.map(el=>String(el.dataset.empId));
   }
+
+  function getEmpIdsInStoreFromTable(storeId){
+    const sid = String(storeId||"__none__").trim() || "__none__";
+    const rows = Array.from(dom.employeeTableBody.querySelectorAll('tr[data-id]')).filter(tr=>{
+      const sel = tr.querySelector('select.emp-store');
+      // option未生成/再構築の瞬間は value が空になることがあるため、dataset.desired を優先して読む
+      const raw = (sel && (sel.dataset?.desired || sel.value)) ? (sel.dataset.desired || sel.value) : "__none__";
+      const v = String(raw || "__none__").trim() || "__none__";
+      return v === sid;
+    });
+    const getNameKey = (tr)=>{
+      const last = (tr.querySelector(".emp-last")?.value || "").trim();
+      const first = (tr.querySelector(".emp-first")?.value || "").trim();
+      return (last + " " + first).trim();
+    };
+    rows.sort((a,b)=>{
+      const oa = Number(a.querySelector(".emp-order")?.value || "0") || 0;
+      const ob = Number(b.querySelector(".emp-order")?.value || "0") || 0;
+      if(oa!==ob) return oa-ob;
+      return getNameKey(a).localeCompare(getNameKey(b), "ja");
+    });
+    return rows.map(tr=>String(tr.dataset.id||"")).filter(Boolean);
+  }
+
+// v79: 店舗内順の正規化/末尾追加を DOM順や既存値の揺れに依存せず「確定的」に行う
+function normalizeEmployeeOrdersForStoreSilent(storeId){
+  const sid = String(storeId||"__none__");
+  const ids = getEmpIdsInStoreFromTable(sid).map(String);
+  ids.forEach((id,i)=>{ try{ setEmployeeOrder(String(id), (i+1), true); }catch(_e){} });
+}
+function appendEmployeeToStoreEnd(empId, storeId){
+  const sid = String(storeId||"__none__");
+  let ids = getEmpIdsInStoreFromTable(sid).map(String).filter(Boolean);
+  const eid = String(empId||"");
+  ids = ids.filter(id=>id!==eid);
+  ids.push(eid);
+  ids.forEach((id,i)=>{ try{ setEmployeeOrder(String(id), (i+1), true); }catch(_e){} });
+}
+
 
   function updateEmpDnDPlaceholder(clientY){
     ensureEmpDnDPlaceholder();
@@ -5073,110 +6137,427 @@ dom.employeeOrderList.addEventListener("dragover", (ev)=>{
   }
 
   function applyEmpDnDDrop(payload, storeId, targetIndex){
-    const empId = String(payload.id);
-    const ids = getCurrentOrderIds(storeId);
+    try{ __empDnD.dropCommitted = true; }catch(_e){}
+    try{ __empDnD.isReordering = true; }catch(_e){}
 
-    // 右→右：同一店舗内の移動
-    const fromSameStore = (payload.from==="right" && String(payload.storeId||"")===String(storeId));
-    let list = ids.slice();
+    const empId = String(payload?.id ?? "");
+    if(!empId) return;
 
-    // 左→右、または別店舗へ移動する場合は所属店舗を更新する（右リストは所属店舗で表示を決める）
+	    const toStoreId = String(storeId ?? "");
+    const from = String(__empDnD?.from ?? payload?.from ?? "");
+    const fromStoreId = String(__empDnD?.fromStoreId ?? payload?.storeId ?? "");
+
+	    // === 未所属へ移動（仕様：店舗内順=0） ===
+	    // storeId が空（""）のときは未所属扱い。
+	    if(!toStoreId){
+	      try{ setEmployeeStore(empId, "", true); }catch(_e){}
+	      try{ setEmployeeOrder(empId, 0, true); }catch(_e){}
+	      // 元店舗の並び順は欠番が出るので詰め直す（未所属側は採番しない）
+	      try{ if(fromStoreId) normalizeEmployeeOrdersForStoreSilent(fromStoreId); }catch(_e){}
+	      try{ __empDnD.isReordering = false; }catch(_e){}
+	      try{ refreshEmployeeOrderPanel(); }catch(_e){}
+	      return;
+	    }
+
+    // 同一店舗内の並び替え（右→右 & 店舗一致）なら「所属変更」は不要
+    const fromSameStore = (from === "right" && fromStoreId && fromStoreId === toStoreId);
+
+    // 他店舗からの移動 / 左→右 は、まず所属店舗を更新
     if(!fromSameStore){
-      try{ setEmployeeStore(empId, storeId); }catch(_e){}
-      // 元店舗の並び順も詰め直す（見た目とデータの不整合防止）
+      try{ setEmployeeStore(empId, toStoreId, true); }catch(_e){}
+      // 右→右で別店舗から移動した場合は、元店舗の並び順を詰め直す
       try{
-        const fromStore = String(payload.storeId||"");
-        if(fromStore && fromStore!==String(storeId)){
-          const fromIds = getCurrentOrderIds(fromStore).filter(id=>String(id)!==empId);
-          fromIds.forEach((id,i)=>{ setEmployeeOrder(String(id),(i+1)*10); });
+        if(from === "right" && fromStoreId){
+          const fromIds = getCurrentOrderIds(fromStoreId);
+          fromIds.forEach((id,i)=>{ try{ setEmployeeOrder(String(id), (i+1)); }catch(_e){} });
         }
       }catch(_e){}
     }
 
-
-    // まずドラッグ対象がリスト内にいるなら取り除く
-    const curPos = list.indexOf(empId);
-    if(curPos>=0) list.splice(curPos,1);
-
-    // 左→右 or 他店舗→右：この店舗へ所属変更
-    setEmployeeStore(empId, storeId);
+    // 目的店舗の現在順を取得（ドラッグ対象は除外）
+    // 同一店舗内の並び替えは右パネルの表示順を使う。
+    // 新規割当/別店舗移動は左テーブル（実データ）側から作る（右パネルDOMが古い/空のケース対策）。
+    let list = (fromSameStore ? getCurrentOrderIds(toStoreId) : getEmpIdsInStoreFromTable(toStoreId)).map(String).filter(id => id !== empId);
 
     // 挿入位置
-    let idx = (typeof targetIndex==="number" && targetIndex>=0) ? targetIndex : list.length;
-    if(idx>list.length) idx=list.length;
-    list.splice(idx,0,empId);
+    // - 右リスト内の並び替えはもちろん、
+    // - 左→右の新規割当や店舗間移動でも、ドロップ位置（placeholder）を尊重する。
+    //   targetIndex が取れない場合のみ末尾に入れる。
+    let idx = Number.isFinite(targetIndex) ? Number(targetIndex) : list.length;
+    if(idx < 0) idx = 0;
+    if(idx > list.length) idx = list.length;
 
-    // order採番（10刻み）
-    list.forEach((id, i)=>{
-      setEmployeeOrder(id, (i+1)*10);
-    });
+    list.splice(idx, 0, empId);
 
-    // v120: DnD後に右パネルが更新されない問題を修正（所属/並び替え反映）
-    try{ if(typeof markDirty==='function') markDirty(); }catch(_e){}
-    // refreshEmployeeOrderPanel は drop ハンドラ側で1回だけ呼ぶ
+    // 1..n を採番（重複を作らない）
+    // 途中でinput/changeが走ると並びが揺れるので、まずはsilentで一括更新し、最後に一度だけ整形＆再描画する
+    list.forEach((id,i)=>{ try{ setEmployeeOrder(String(id), (i+1), true); }catch(_e){} });
 
-    // 同一店舗の他従業員の順番も確実に更新（表の入力値を単一真実に）
-    // ※ listに含まれないが同店舗扱いのものがある場合（無効店舗等）への保険
-    dom.employeeTableBody.querySelectorAll("tr[data-id]").forEach(tr=>{
-      const id = String(tr.dataset.id||"");
-      const sel = tr.querySelector("select.emp-store");
-      if(!sel) return;
-      if(String(sel.value||"")===String(storeId)){
-        const ord = Number(tr.querySelector(".emp-order")?.value||"0")||0;
-        // listにないものは末尾へ
-        if(!list.includes(id)){
-          setEmployeeOrder(id, (list.length+1)*10);
-          list.push(id);
-        }
-      }
-    });
-  }
+    // 最終的に対象店舗の店舗内順を 1..n に正規化（保険：重複や欠番を潰す）
+    try{ __empDnD.isReordering = false; }catch(_e){}
+    try{ recalcEmployeeOrdersForStore(toStoreId); }catch(_e){}
 
-  function setEmployeeStore(empId, storeId){
+    // 右パネル表示を更新（ここで一度だけ）
+    try{ refreshEmployeeOrderPanel(); }catch(_e){}
+    // 左テーブルのフィルタ（未所属のみ表示）を即時反映させる
+    try{ if(typeof renderEmployeeSettingsTables==='function') renderEmployeeSettingsTables(); }catch(_e){}
+}
+
+  function setEmployeeStore(empId, storeId, silent){
     const tr = dom.employeeTableBody.querySelector('tr[data-id="'+String(empId)+'"]');
     if(!tr) return;
     const sel = tr.querySelector("select.emp-store");
-    if(sel){
-      sel.value = String(storeId);
+    if(!sel) return;
+
+    // 重要: option再構築の瞬間など、valueにセットしても空になる場合がある。
+    // その場合でも所属が失われないよう、意図した値を dataset.desired に必ず保持する。
+    const intended = (storeId!==undefined && storeId!==null && String(storeId).trim()!=="") ? String(storeId) : "__none__";
+    sel.dataset.desired = intended;
+
+    // 可能なら表示上のvalueも合わせる（optionが無い場合は空のままでもOK。desiredが真実）
+    try{ sel.value = intended; }catch(_e){}
+
+    if(!silent){
       // changeイベントを起こして未保存判定を正しくする（既存実装に合わせる）
       sel.dispatchEvent(new Event("change", {bubbles:true}));
     }
   }
+  }
 
-  function setEmployeeOrder(empId, order){
+  function setEmployeeOrder(empId, order, silent){
     const tr = dom.employeeTableBody.querySelector('tr[data-id="'+String(empId)+'"]');
     if(!tr) return;
     const input = tr.querySelector(".emp-order");
-    if(input){
-      // order は内部(10刻み)。表示は 1刻みなので /10。
-      input.value = String(Math.round((Number(order)||0)/10));input.dispatchEvent(new Event("input", {bubbles:true}));
+    if(!input) return;
+    // order は表示値（1..n）。readonlyだがプログラムからは更新できる。
+    input.value = String(Number(order)||0);
+    if(!silent){
+      input.dispatchEvent(new Event("input", {bubbles:true}));
       input.dispatchEvent(new Event("change", {bubbles:true}));
     }
   }
 
+  // ===== GLOBAL DnD UI helpers (v84) =====
+  // 一部の関数がスコープ外から参照されるケースがあり、ReferenceError になることがあったため
+  // グローバルに同名のフォールバック実装を用意する。
+  function setDraggingUi(isOn){
+    try{ document.documentElement.classList.toggle("is-dragging", !!isOn); }catch(_e){}
+    try{
+      const list = document.getElementById("employeeOrderList");
+      if(list){
+        list.classList.toggle("drop-allowed", !!isOn);
+        const dz = list.querySelector(".employee-order-dropzone");
+        if(dz) dz.classList.toggle("drop-allowed", !!isOn);
+      }
+    }catch(_e){}
+  }
+
   function cleanupEmpDnDVisual(){
+    try{ __empDnD.isReordering = false; }catch(_e){}
     __empDnD.active = false;
     __empDnD.from = null;
     __empDnD.empId = null;
     __empDnD.fromStoreId = null;
     __empDnD.placeholderIndex = null;
 
-    document.querySelectorAll(".dragging-row").forEach(el=>el.classList.remove("dragging-row"));
+        // v6: 元要素の復帰とスペーサの撤去
+    try{
+      const el = __empDnD.sourceEl || __empDnD.dragItem;
+      const st = __empDnD.sourceStyle || null;
+      if(el){
+        el.classList.remove("dragging-row");
+        // つかんだ感のために一時的に入れたインラインスタイルを復元
+        if(st){
+          el.style.opacity = st.opacity || "";
+          el.style.transform = st.transform || "";
+          el.style.boxShadow = st.boxShadow || "";
+          el.style.filter = st.filter || "";
+        }else{
+          // 保険
+          el.style.opacity = "";
+          el.style.transform = "";
+          el.style.boxShadow = "";
+          el.style.filter = "";
+        }
+      }
+      if(__empDnD.dragSpacer && __empDnD.dragSpacer.parentNode){
+        __empDnD.dragSpacer.parentNode.removeChild(__empDnD.dragSpacer);
+      }
+      // ghost drag image の撤去
+      if(__empDnD.ghostEl && __empDnD.ghostEl.parentNode){ __empDnD.ghostEl.parentNode.removeChild(__empDnD.ghostEl); }
+    }catch(_e){}
+    __empDnD.sourceEl = null;
+    __empDnD.sourceStyle = null;
+    __empDnD.dragItem = null;
+    __empDnD.dragSpacer = null;
+    __empDnD.ghostEl = null;
+
+document.querySelectorAll(".dragging-row").forEach(el=>el.classList.remove("dragging-row"));
     if(__empDnD.placeholder && __empDnD.placeholder.parentNode){
       __empDnD.placeholder.parentNode.removeChild(__empDnD.placeholder);
     }
-    setDropOver(false);
+    window.setDropOver(false);
     setDraggingUi(false);
+  }
+
+  // === v4: 右リストから外へドラッグしたときも「ドロップ可能」にして禁止カーソルを消し、ヒントを出す ===
+  const __unassignHintEl = document.getElementById("unassignHintOverlay");
+  function __setUnassignHint(on, x, y){
+    if(!__unassignHintEl) return;
+    if(on){
+      __unassignHintEl.classList.add("show");
+      if(typeof x==="number" && typeof y==="number"){
+        __unassignHintEl.style.setProperty("--x", x + "px");
+        __unassignHintEl.style.setProperty("--y", y + "px");
+      }
+    }else{
+      __unassignHintEl.classList.remove("show");
+    }
+  }
+
+  // 右リスト外は「未所属へ戻す」扱い：document をドロップ可能にする（cursor: not-allowed を回避）
+  document.addEventListener("dragover", (ev)=>{
+    if(!__empDnD || !__empDnD.active) return;
+    if(__empDnD.from !== "right") return;
+
+    __empDnD.moved = true;
+
+    const overOrderList = ev.target && ev.target.closest ? ev.target.closest("#employeeOrderList") : null;
+    if(overOrderList){
+      __setUnassignHint(false);
+      return; // 通常の並び替え/挿入
+    }
+
+    // ここをドロップ可能にして、禁止カーソルを「移動」に変える
+    ev.preventDefault();
+    try{ ev.dataTransfer.dropEffect = "move"; }catch(_e){}
+    __setUnassignHint(true, ev.clientX, ev.clientY);
+  }, true);
+
+  document.addEventListener("drop", (ev)=>{
+    if(!__empDnD || !__empDnD.active) return;
+    if(__empDnD.from !== "right") return;
+
+    const overOrderList = ev.target && ev.target.closest ? ev.target.closest("#employeeOrderList") : null;
+    if(overOrderList){
+      __setUnassignHint(false);
+      return; // 通常の drop ハンドラに任せる
+    }
+
+    // 外に落とした＝未所属へ戻す
+    ev.preventDefault();
+    ev.stopPropagation();
+    if(ev.stopImmediatePropagation) ev.stopImmediatePropagation();
+
+    __empDnD.dropCommitted = true;
+    __setUnassignHint(false);
+    const payload = { type:"emp", from:"right", id: __empDnD.empId, storeId: __empDnD.fromStoreId };
+    try{ console.debug("[settings-dnd] drop(outside) -> unassign", payload); }catch(_e){}
+    try{
+      applyEmpDnDDrop(payload, "", null);
+      if(typeof refreshEmployeeStoreOptionsFromSettings === "function") refreshEmployeeStoreOptionsFromSettings();
+      if(typeof refreshEmployeeOrderPanel === "function") refreshEmployeeOrderPanel();
+      if(typeof renderEmployeeTablesInSettings === "function") renderEmployeeTablesInSettings();
+    }catch(_e){
+      console.error("[settings-dnd] unassign failed:", _e);
+    }
+  }, true);
+
+  document.addEventListener("dragend", ()=>{
+    __setUnassignHint(false);
+  }, true);
+
+
+
+
+
+
+
+
+
+// ===== 従業員タブ：店舗内順の採番/割当（グローバル補助）=====
+// 右パネルDnD実装が内部スコープ化されている場合でも、左の所属店舗変更や「外ドロップで未所属」など
+// 仕様上必須の挙動が常に動くように、最低限の処理をグローバル関数として提供する。
+function getEmpIdsInStoreFromTable(storeId){
+  if(!dom || !dom.employeeTableBody) return [];
+  const sid = String(storeId||"__none__").trim() || "__none__";
+  const rows = Array.from(dom.employeeTableBody.querySelectorAll('tr[data-id]')).filter(tr=>{
+    const sel = tr.querySelector('select.emp-store');
+    const raw = (sel && (sel.dataset?.desired || sel.value)) ? (sel.dataset.desired || sel.value) : "__none__";
+    const v = String(raw || "__none__").trim() || "__none__";
+    return v === sid;
+  });
+  const nameKey = (tr)=>{
+    const last = (tr.querySelector(".emp-last")?.value || "").trim();
+    const first = (tr.querySelector(".emp-first")?.value || "").trim();
+    return (last + " " + first).trim();
+  };
+  rows.sort((a,b)=>{
+    const oa = Number(a.querySelector(".emp-order")?.value || "0") || 0;
+    const ob = Number(b.querySelector(".emp-order")?.value || "0") || 0;
+    if(oa!==ob) return oa-ob;
+    return nameKey(a).localeCompare(nameKey(b), "ja");
+  });
+  return rows.map(tr=>String(tr.dataset.id||"")).filter(Boolean);
+}
+
+function setEmployeeOrder(empId, order, silent){
+  if(!dom || !dom.employeeTableBody) return;
+  const tr = dom.employeeTableBody.querySelector('tr[data-id="'+String(empId)+'"]');
+  if(!tr) return;
+  const input = tr.querySelector(".emp-order");
+  if(!input) return;
+  input.value = String(Number(order)||0);
+  if(!silent){
+    input.dispatchEvent(new Event("input", {bubbles:true}));
+    input.dispatchEvent(new Event("change", {bubbles:true}));
+  }
+}
+function setEmployeeStore(empId, storeId, silent){
+  if(!dom || !dom.employeeTableBody) return;
+  const tr = dom.employeeTableBody.querySelector('tr[data-id="'+String(empId)+'"]');
+  if(!tr) return;
+  const sel = tr.querySelector("select.emp-store");
+  if(!sel) return;
+  const intended = (storeId!==undefined && storeId!==null && String(storeId).trim()!=="") ? String(storeId) : "__none__";
+  sel.dataset.desired = intended;
+  try{ sel.value = intended; }catch(_e){}
+  if(!silent){
+    sel.dispatchEvent(new Event("change", {bubbles:true}));
   }
 }
 
+// 欠番/重複を潰して 1..n を振り直す（静かに）
+function normalizeEmployeeOrdersForStoreSilent(storeId){
+  const sid = String(storeId||"__none__");
+  const ids = getEmpIdsInStoreFromTable(sid);
+  ids.forEach((id,i)=>{ try{ setEmployeeOrder(id, i+1, true); }catch(_e){} });
+}
+// 指定従業員を末席に移動してから 1..n 採番（静かに）
+function appendEmployeeToStoreEnd(empId, storeId){
+  const sid = String(storeId||"__none__");
+  const eid = String(empId||"");
+  let ids = getEmpIdsInStoreFromTable(sid).filter(id=>id!==eid);
+  ids.push(eid);
+  ids.forEach((id,i)=>{ try{ setEmployeeOrder(id, i+1, true); }catch(_e){} });
+}
+
+// drop適用（左→右の割当 / 右→右の並び替え / 右→外の未所属化）
+// toStoreId: "" または "__none__" を未所属扱い
+function applyEmpDnDDrop(payload, toStoreId, targetIndex){
+  if(!payload || payload.type!=="emp") return;
+  const empId = String(payload.id||"");
+  if(!empId) return;
+
+  // mark committed (for right-dragend fallback)
+  try{ if(window.__empDnD){ __empDnD.dropCommitted = true; } }catch(_e){}
+
+  const toSid = (toStoreId && String(toStoreId).trim() && String(toStoreId)!=="__none__") ? String(toStoreId) : "";
+  const from = String(payload.from||"");
+  const fromSid = (payload.storeId && String(payload.storeId)!=="__none__") ? String(payload.storeId) : "";
+
+  // === 未所属へ（仕様：店舗内順=0） ===
+  if(!toSid){
+    try{ setEmployeeStore(empId, "", true); }catch(_e){}
+    try{ setEmployeeOrder(empId, 0, true); }catch(_e){}
+    try{ if(fromSid) normalizeEmployeeOrdersForStoreSilent(fromSid); }catch(_e){}
+    try{ refreshEmployeeOrderPanel(); }catch(_e){}
+    try{ applyEmployeeLeftFilter(); }catch(_e){}
+    return;
+  }
+
+  // 同一店舗内の並び替え？
+  const sameStoreReorder = (from==="right" && fromSid && fromSid===toSid);
+
+  // 所属を更新（左→右 / 別店舗移動）
+  if(!sameStoreReorder){
+    try{ setEmployeeStore(empId, toSid, true); }catch(_e){}
+    // 元店舗の欠番を詰める（右→右で別店舗移動したケース）
+    try{ if(from==="right" && fromSid) normalizeEmployeeOrdersForStoreSilent(fromSid); }catch(_e){}
+  }
+
+  // 対象店舗の現状（実データ=左テーブルDOM）を取得し、ドラッグ対象は除外
+  let ids = getEmpIdsInStoreFromTable(toSid).map(String).filter(id=>id!==empId);
+
+  // 挿入位置：左→右の新規割当でも targetIndex（=placeholder）を尊重。取れなければ末尾。
+  let idx = Number.isFinite(targetIndex) ? Number(targetIndex) : ids.length;
+  if(idx < 0) idx = 0;
+  if(idx > ids.length) idx = ids.length;
+
+  ids.splice(idx, 0, empId);
+  ids.forEach((id,i)=>{ try{ setEmployeeOrder(id, i+1, true); }catch(_e){} });
+
+  try{ refreshEmployeeOrderPanel(); }catch(_e){}
+  try{ applyEmployeeLeftFilter(); }catch(_e){}
+}
 
 
+/* v71: 従業員タブ（左表）の所属店舗変更時も店舗内順を再計算 */
+function recalcEmployeeOrdersForStore(storeId){
+  try{ if(window.__empDnD && __empDnD.isReordering) return; }catch(_e){}
+  if(!dom || !dom.employeeTableBody) return;
+  const sid = String(storeId||"__none__");
+
+  // 対象店舗の行を集める
+  const rows = Array.from(dom.employeeTableBody.querySelectorAll("tr[data-id]")).filter(tr=>{
+    const sel = tr.querySelector("select.emp-store");
+    if(!sel) return false;
+    const v = String(sel.value||"__none__");
+    return v===sid;
+  });
+
+  if(rows.length===0) return;
+
+  // 現在の表示順(=店舗内順)を尊重しつつ、欠番を詰めて 1..n にする
+  // 同順の場合は姓+名で安定ソート
+  const getNameKey = (tr)=>{
+    const last = (tr.querySelector(".emp-last")?.value || "").trim();
+    const first = (tr.querySelector(".emp-first")?.value || "").trim();
+    return (last + " " + first).trim();
+  };
+  rows.sort((a,b)=>{
+    const oa = Number(a.querySelector(".emp-order")?.value || "0") || 0;
+    const ob = Number(b.querySelector(".emp-order")?.value || "0") || 0;
+    if(oa!==ob) return oa-ob;
+    return getNameKey(a).localeCompare(getNameKey(b), "ja");
+  });
+
+  rows.forEach((tr, i)=>{
+    const input = tr.querySelector(".emp-order");
+    if(!input) return;
+    const next = String(i+1);
+    if(input.value !== next){
+      input.value = next;
+      // 既存の「右パネルへ即反映」ハンドラを活かす
+      input.dispatchEvent(new Event("input", {bubbles:true}));
+      input.dispatchEvent(new Event("change", {bubbles:true}));
+    }
+  });
+
+  try{ if(typeof markDirty==="function") markDirty(); }catch(_e){}
+}
 
 function addEmployeeRow(emp){
   const master=getSettingsMasterTarget() || appState.templateMaster;
+  // 追加ボタンからの新規作成時は、この場でIDを確定させる（DnD等で即時に参照できるように）
+  // ※保存時に採番する方式だと dataset.id が空のままになり、左→右DnDが成立しない。
+  if(!emp){
+    if(!master.nextEmployeeId){
+      master.nextEmployeeId = (master.employees||[]).reduce((mx,e)=>Math.max(mx, Number(e.id)||0),0) + 1;
+    }
+    emp = {
+      id: master.nextEmployeeId++,
+      lastName: "",
+      firstName: "",
+      storeId: null,
+      orderInStore: 0
+    };
+  }
+  if(emp.id==null || String(emp.id).trim()===""){
+    emp.id = master.nextEmployeeId++;
+  }
   const tr=document.createElement("tr");
-  tr.dataset.id = emp ? emp.id : "";
+  tr.setAttribute("data-id", String(emp.id));
   // Safari/Chromium系で td.draggable だけだと dragstart が発火しないケースがあるため、
   // 行(tr)自体も draggable にしておく（ただし開始判定はハンドル列で絞る）。
   tr.draggable = true;
@@ -5192,7 +6573,7 @@ function addEmployeeRow(emp){
   // 実際のドラッグ対象は tr だが、UX的にハンドル列も draggable にしておく
   tdHandle.draggable = true;
   // 新規作成時(empが未指定)は id が無いので空文字にする（ここで例外が出ると追加できなくなる）
-  tdHandle.dataset.empId = emp ? emp.id : "";
+  tdHandle.dataset.empId = emp.id;
   // ハンドル自体でもドラッグ開始できるようにする
   handle.draggable = true;
   tdHandle.appendChild(handle);
@@ -5202,8 +6583,8 @@ function addEmployeeRow(emp){
   inputLast.type="text"; inputLast.className="emp-last"; inputLast.value=emp?emp.lastName:"";
   tdLast.appendChild(inputLast);
   // 左の編集（姓）を右パネルへ即反映
-  inputLast.addEventListener("input", ()=>{ refreshEmployeeOrderPanel(); applyEmployeeTableFilter(); });
-  inputLast.addEventListener("change", ()=>{ refreshEmployeeOrderPanel(); applyEmployeeTableFilter(); });
+  inputLast.addEventListener("input", ()=>{ refreshEmployeeOrderPanel(); });
+  inputLast.addEventListener("change", ()=>{ refreshEmployeeOrderPanel(); });
 
   tr.appendChild(tdHandle);
 
@@ -5212,17 +6593,65 @@ function addEmployeeRow(emp){
   inputFirst.type="text"; inputFirst.className="emp-first"; inputFirst.value=emp?emp.firstName:"";
   tdFirst.appendChild(inputFirst);
   // 左の編集（名）を右パネルへ即反映
-  inputFirst.addEventListener("input", ()=>{ refreshEmployeeOrderPanel(); applyEmployeeTableFilter(); });
-  inputFirst.addEventListener("change", ()=>{ refreshEmployeeOrderPanel(); applyEmployeeTableFilter(); });
+  inputFirst.addEventListener("input", ()=>{ refreshEmployeeOrderPanel(); });
+  inputFirst.addEventListener("change", ()=>{ refreshEmployeeOrderPanel(); });
 
   const tdStore=document.createElement("td");
   const selectStore=document.createElement("select"); selectStore.className="emp-store";
-  selectStore.addEventListener("change", ()=>{ refreshEmployeeOrderPanel(); applyEmployeeTableFilter(); });
-  const optNone=document.createElement("option"); optNone.value=""; optNone.textContent="(未所属)";
+  // 既存データの所属店舗を保持（refreshEmployeeStoreOptionsFromSettings で確定反映）
+  if(emp){
+    selectStore.dataset.desired = (emp.storeId!==undefined && emp.storeId!==null && emp.storeId!=="" ) ? String(emp.storeId) : "__none__";
+  }
+  selectStore.addEventListener("focus", ()=>{ 
+    // 変更前の所属を保持（change時の再採番に使う）
+    selectStore.dataset.prevStore = String(selectStore.value||"__none__");
+  });
+  selectStore.addEventListener("mousedown", ()=>{ 
+    // focusが飛ばないブラウザ対策
+    selectStore.dataset.prevStore = String(selectStore.value||"__none__");
+  });
+  selectStore.addEventListener("change", ()=>{
+    const tr0 = selectStore.closest("tr");
+    const empId0 = tr0 ? String(tr0.dataset.id||"") : "";
+
+    const prev = String(selectStore.dataset.prevStore || "__none__");
+    const next = String(selectStore.value||"__none__");
+    // keep desired in sync so rebuild won't revert
+    selectStore.dataset.desired = next;
+
+
+// ★要望: 既存店舗へ「新規割当」したときは「必ず末席」に入れる（パターン依存を排除）
+// DnD中は applyEmpDnDDrop 側で順番を決めるので、ここでは一切触らない（干渉防止）
+const isDnD = !!(window.__empDnD && (__empDnD.isReordering || __empDnD.active));
+if(!isDnD && empId0){
+  try{
+    // 元店舗（prev）は欠番が出るので詰め直し
+    if(prev && prev!=="__none__") normalizeEmployeeOrdersForStoreSilent(prev);
+
+    if(next && next!=="__none__"){
+      // 新店舗（next）は「末席に追加」を確定させてから 1..n を振り直す
+      appendEmployeeToStoreEnd(empId0, next);
+    }else{
+      // 未所属へ移動する際は店舗内順=0（仕様）
+      setEmployeeOrder(empId0, 0, true);
+    }
+  }catch(_e){}
+}else{
+  // DnD中（またはempIdなし）は従来通り、必要なら別処理側で整形される
+}// 次回の差分計算用
+    selectStore.dataset.prevStore = next;
+
+    refreshEmployeeOrderPanel();
+    applyEmployeeLeftFilter();
+  });
+  const optNone=document.createElement("option"); optNone.value="__none__"; optNone.textContent="（未所属）";
   selectStore.appendChild(optNone);
     // 店舗候補は設定モーダル内の店舗タブDOM（未保存追加を含む）から都度反映する
   // （ここでは最低限の選択肢だけ作り、後で refreshEmployeeStoreOptionsFromSettings() で埋める）
   if(emp && emp.storeId) selectStore.value=String(emp.storeId);
+  // option再構築で value が空になる瞬間があるため、desired を常に持たせておく
+  try{ selectStore.dataset.desired = String(selectStore.value||"__none__"); }catch(_e){}
+  try{ selectStore.dataset.prevStore = String(selectStore.value||"__none__"); }catch(_e){}
   tdStore.appendChild(selectStore);
 
   const tdOrder=document.createElement("td");
@@ -5232,11 +6661,14 @@ function addEmployeeRow(emp){
   inputOrder.readOnly = true;
   inputOrder.tabIndex = -1;
   // 内部は10刻みだが、ユーザー表示は1刻み（表示=内部/10）。入力は不要なのでreadonly。
-  inputOrder.value = emp && Number.isFinite(emp.orderInStore) ? String(Math.round((emp.orderInStore||0)/10)) : "";
+  // 新規追加（empなし）の初期値は 0（仕様）
+  inputOrder.value = emp && Number.isFinite(emp.orderInStore)
+    ? String(Math.round((emp.orderInStore||0)/10))
+    : "0";
   tdOrder.appendChild(inputOrder);
   // 左の編集（店舗内順）を右パネルへ即反映
-  inputOrder.addEventListener("input", ()=>{ refreshEmployeeOrderPanel(); applyEmployeeTableFilter(); });
-  inputOrder.addEventListener("change", ()=>{ refreshEmployeeOrderPanel(); applyEmployeeTableFilter(); });
+  inputOrder.addEventListener("input", ()=>{ refreshEmployeeOrderPanel(); });
+  inputOrder.addEventListener("change", ()=>{ refreshEmployeeOrderPanel(); });
 
   const tdDelete=document.createElement("td");
   const btnDel=document.createElement("button"); btnDel.className="btn-delete"; btnDel.textContent="削除";
@@ -5249,7 +6681,6 @@ function addEmployeeRow(emp){
     tr.remove();
     refreshEmployeeStoreOptionsFromSettings();
     refreshEmployeeOrderPanel();
-    applyEmployeeTableFilter();
   });
   tdDelete.appendChild(btnDel);
 
@@ -5258,7 +6689,6 @@ function addEmployeeRow(emp){
   // 店舗タブの編集内容（未保存店舗追加/無効化など）を即反映
   refreshEmployeeStoreOptionsFromSettings();
   refreshEmployeeOrderPanel();
-  applyEmployeeTableFilter();
 }
 
 function employeeHasScheduleData(empId){
@@ -5417,7 +6847,7 @@ function buildPrintHtml(schedule, storeIds){
       th,td{border:1px solid #d1d5db;text-align:center;padding:2mm 1mm;font-size:8.6pt}
       thead th{background:#f3f4f6;font-weight:800}
       .weekday{font-size:8pt;color:#6b7280;font-weight:800}
-      .sun{color:#d32f2f}.sat{color:#1976d2}
+      .sun{color:#d32f2f}.sat{color:#1976d2}.hol{color:#d32f2f}
       .namecol{width:24mm;font-weight:800}
       .noteRow td{border-top-style:dashed;border-top-color:#9ca3af}
       .supportHead{background:#f9fafb;font-weight:800}
@@ -5682,13 +7112,22 @@ function buildPrintHtml(schedule, storeIds){
       <thead>
         <tr>
           <th class="namecol" rowspan="2">従業員</th>
-          ${Array.from({length:daysInMonth},(_,i)=>`<th>${i+1}</th>`).join("")}
+          ${Array.from({length:daysInMonth},(_,i)=>{
+            const d=i+1;
+            const date=new Date(year,month-1,d);
+            const w=date.getDay();
+            const isHol=isJapaneseHoliday(date);
+            const cls = isHol ? "hol" : (w===0 ? "sun" : w===6 ? "sat" : "");
+            return `<th class="${cls}">${d}</th>`;
+          }).join("")}
         </tr>
         <tr>
           ${Array.from({length:daysInMonth},(_,i)=>{
             const d=i+1;
-            const w=new Date(year,month-1,d).getDay();
-            const cls = w===0 ? "sun" : w===6 ? "sat" : "";
+            const date=new Date(year,month-1,d);
+            const w=date.getDay();
+            const isHol=isJapaneseHoliday(date);
+            const cls = isHol ? "hol" : (w===0 ? "sun" : w===6 ? "sat" : "");
             return `<th class="weekday ${cls}">${weekDays[w]}</th>`;
           }).join("")}
         </tr>
@@ -5772,7 +7211,10 @@ function buildPrintHtml(schedule, storeIds){
   font-size: 12px !important;
 }
 </style>
-</head><body>${pages}</body></html>`;
+</head><body>${pages}
+  <div id="unassignHintOverlay" class="unassign-hint" style="--x:0px;--y:0px" aria-hidden="true"><span class="unassign-hint-dot"></span><span><b>外に放す</b>と未所属へ戻します</span></div>
+
+</body></html>`;
 }
 
 /* ===== IME alert ===== */
@@ -5798,6 +7240,504 @@ function formatEmployeeName(lastName, firstName){
   return (lastName||"")+(firstName||"");
 }
 function getDaysInMonth(year, month){ return new Date(year, month, 0).getDate(); }
+
+/* ===== Japanese holiday (簡易) =====
+   対応範囲: 2000年以降を主対象（令和中心）。2020/2021の五輪特例も考慮。
+   ※ 法改正が入る年は都度アップデートが必要。
+*/
+const __JP_HOLIDAY_CACHE__ = new Map();
+function pad2(n){ return String(n).padStart(2,"0"); }
+function ymdKey(y,m,d){ return `${y}-${pad2(m)}-${pad2(d)}`; }
+function nthMonday(year, month, nth){
+  // month: 1-12
+  const first = new Date(year, month-1, 1);
+  const firstDow = first.getDay(); // 0 Sun
+  const offset = (8 - firstDow) % 7; // days to first Monday
+  const day = 1 + offset + (nth-1)*7;
+  return day;
+}
+function vernalEquinoxDay(year){
+  // 1980-2099 近似式
+  return Math.floor(20.8431 + 0.242194*(year-1980) - Math.floor((year-1980)/4));
+}
+function autumnEquinoxDay(year){
+  return Math.floor(23.2488 + 0.242194*(year-1980) - Math.floor((year-1980)/4));
+}
+function getJapaneseHolidays(year){
+  if(__JP_HOLIDAY_CACHE__.has(year)) return __JP_HOLIDAY_CACHE__.get(year);
+
+  const set = new Set();
+  const add = (m,d)=>set.add(ymdKey(year,m,d));
+
+  // Fixed
+  add(1,1);   // 元日
+  add(2,11);  // 建国記念の日
+  if(year>=2020) add(2,23); // 天皇誕生日（令和）
+  else if(year>=1989 && year<=2018) add(12,23); // 参考（平成）
+  add(4,29);  // 昭和の日
+  add(5,3); add(5,4); add(5,5); // 憲法/みどり/こども
+  if(year>=2016) add(8,11); // 山の日（通常）
+  add(11,3); add(11,23); // 文化/勤労感謝
+
+  // Variable (Happy Monday)
+  if(year>=2000) add(1, nthMonday(year,1,2)); // 成人の日
+  if(year>=2003) add(7, nthMonday(year,7,3)); // 海の日
+  if(year>=2003) add(9, nthMonday(year,9,3)); // 敬老の日
+  if(year>=2000) add(10, nthMonday(year,10,2)); // スポーツの日
+
+  // Equinox
+  add(3, vernalEquinoxDay(year));
+  add(9, autumnEquinoxDay(year));
+
+  // 2020/2021 五輪特例（祝日移動）
+  if(year===2020){
+    set.delete(ymdKey(2020,7,nthMonday(2020,7,3)));
+    set.delete(ymdKey(2020,10,nthMonday(2020,10,2)));
+    set.delete(ymdKey(2020,8,11));
+    add(7,23); add(7,24); add(8,10);
+  }else if(year===2021){
+    set.delete(ymdKey(2021,7,nthMonday(2021,7,3)));
+    set.delete(ymdKey(2021,10,nthMonday(2021,10,2)));
+    set.delete(ymdKey(2021,8,11));
+    add(7,22); add(7,23); add(8,8);
+  }
+
+  // Substitute holiday (振替休日)
+  const keys = Array.from(set).sort();
+  for(const k of keys){
+    const [y,m,d] = k.split("-").map(n=>parseInt(n,10));
+    if(new Date(y, m-1, d).getDay()!==0) continue; // Sunday only
+    let dt = new Date(y, m-1, d+1);
+    while(true){
+      const kk = ymdKey(dt.getFullYear(), dt.getMonth()+1, dt.getDate());
+      if(!set.has(kk)){ set.add(kk); break; }
+      dt = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()+1);
+    }
+  }
+
+  // Citizens holiday (国民の休日)
+  for(let month=1; month<=12; month++){
+    const dim = new Date(year, month, 0).getDate();
+    for(let day=1; day<=dim; day++){
+      const k=ymdKey(year,month,day);
+      if(set.has(k)) continue;
+      const dow=new Date(year,month-1,day).getDay();
+      if(dow===0 || dow===6) continue;
+      const prev=new Date(year,month-1,day-1);
+      const next=new Date(year,month-1,day+1);
+      const pk=ymdKey(prev.getFullYear(), prev.getMonth()+1, prev.getDate());
+      const nk=ymdKey(next.getFullYear(), next.getMonth()+1, next.getDate());
+      if(set.has(pk) && set.has(nk)) set.add(k);
+    }
+  }
+
+  __JP_HOLIDAY_CACHE__.set(year,set);
+  return set;
+}
+
+/* ===== Holidays (master + auto-fetch) ===== */
+function toYmd(date){
+  const y=date.getFullYear();
+  const m=String(date.getMonth()+1).padStart(2,"0");
+  const d=String(date.getDate()).padStart(2,"0");
+  return `${y}-${m}-${d}`;
+}
+function getHolidayInfoFromMaster(master, date){
+  const key = (date instanceof Date) ? toYmd(date) : String(date||"");
+  const holMap = master?.holidays || null;
+  if(!holMap) return null;
+  const ent = holMap[key];
+  if(!ent) return null;
+  return { date:key, name: ent.name||"", kind: ent.kind||"custom" };
+}
+async function fetchHolidaysFromHolidaysJP(year){
+  // Prefer year-specific endpoint if available.
+  const urlYear = `https://holidays-jp.github.io/api/v1/${year}/date.json`;
+  const urlDefault = `https://holidays-jp.github.io/api/v1/date.json`;
+  const controller = new AbortController();
+  const t=setTimeout(()=>controller.abort(), 8000);
+  try{
+    let res = await fetch(urlYear, {signal: controller.signal, cache:"no-cache"});
+    if(!res.ok) res = await fetch(urlDefault, {signal: controller.signal, cache:"no-cache"});
+    if(!res.ok) throw new Error("holiday fetch failed");
+    const data = await res.json();
+    // data: { "YYYY-MM-DD": "name", ... }
+    const map = {};
+    Object.keys(data||{}).forEach(k=>{
+      if(!k || !String(k).startsWith(String(year)+"-")) return;
+      map[k]=String(data[k]||"");
+    });
+    return map;
+  }finally{
+    clearTimeout(t);
+  }
+}
+function mergeHolidaysIntoMaster(master, year, fetchedMap){
+  if(!master.holidays) master.holidays={};
+  const hol = master.holidays;
+  Object.keys(fetchedMap||{}).forEach(date=>{
+    if(!String(date).startsWith(String(year)+"-")) return;
+    const name=fetchedMap[date]||"";
+    const existing=hol[date];
+    if(existing && (existing.kind==="custom")) return; // user's custom wins
+    if(existing && existing.name && existing.name.trim()) return; // don't overwrite edited name
+    hol[date]={name, kind:"official"};
+  });
+}
+async function ensureHolidayMasterForYear(master, year, opt){
+  const forceFetch=!!(opt&&opt.forceFetch);
+  if(!master.holidays) master.holidays={};
+  const already = Object.keys(master.holidays).some(k=>String(k).startsWith(String(year)+"-"));
+  if(already && !forceFetch) return;
+  try{
+    const fetched = await fetchHolidaysFromHolidaysJP(year);
+    mergeHolidaysIntoMaster(master, year, fetched);
+  }catch(e){
+    console.warn("[holiday] fetch failed; fallback to local calc", e);
+    // Fallback: use local calc for the year (existing isJapaneseHoliday)
+    // We'll add only if there is no data for that year at all.
+    const still = Object.keys(master.holidays).some(k=>String(k).startsWith(String(year)+"-"));
+    if(!still){
+      for(let m=0;m<12;m++){
+        for(let d=1;d<=31;d++){
+          const dt=new Date(year,m,d);
+          if(dt.getMonth()!==m) continue;
+          if(isJapaneseHoliday(dt)){
+            const k=toYmd(dt);
+            if(!master.holidays[k]) master.holidays[k]={name:"(祝日)", kind:"official"};
+          }
+        }
+      }
+    }
+  }
+}
+
+/* ===== Holidays Settings UI ===== */
+
+/* v55: Custom Modern Date Picker (Holiday tab)
+   - display input holds ISO in data-iso for saving
+   - visible .hol-date-display shows "YYYY/MM/DD (曜)"
+*/
+const __mdp = (() => {
+  const weekdays = ["日","月","火","水","木","金","土"];
+  const state = { pop:null, active:null, viewY:null, viewM:null };
+
+  const pad2 = (n)=>String(n).padStart(2,"0");
+  const toIso = (y,m,d)=>`${y}-${pad2(m)}-${pad2(d)}`;
+  const toDisp = (iso)=>{
+    if(!iso) return "";
+    const [y,m,d]=iso.split("-").map(Number);
+    const dt=new Date(y, (m||1)-1, d||1);
+    const wd=weekdays[dt.getDay()]||"";
+    return `${y}/${pad2(m)}/${pad2(d)} (${wd})`;
+  };
+  const clampPos = (x,y,w,h)=>{
+    const vw = Math.max(320, window.innerWidth||320);
+    const vh = Math.max(320, window.innerHeight||320);
+    const nx = Math.min(Math.max(8, x), vw - w - 8);
+    const ny = Math.min(Math.max(8, y), vh - h - 8);
+    return {x:nx,y:ny};
+  };
+
+  function ensurePop(){
+    if(state.pop) return state.pop;
+    const pop=document.createElement("div");
+    pop.className="mdp-pop";
+    pop.style.display="none";
+    pop.innerHTML = `
+      <div class="mdp-head">
+        <button type="button" class="mdp-nav" data-nav="prev" aria-label="前の月">‹</button>
+        <div class="mdp-month" data-role="monthLabel"></div>
+        <button type="button" class="mdp-nav" data-nav="next" aria-label="次の月">›</button>
+      </div>
+      <div class="mdp-grid" data-role="grid"></div>
+      <div class="mdp-foot">
+        <span class="mdp-mini" data-role="mini"></span>
+        <button type="button" class="mdp-today" data-action="today">今日</button>
+      </div>
+    `;
+    document.body.appendChild(pop);
+
+    pop.addEventListener("click", (e)=>{
+      const t=e.target;
+      if(!(t instanceof HTMLElement)) return;
+      const nav=t.closest("[data-nav]")?.getAttribute("data-nav");
+      if(nav){
+        if(nav==="prev"){
+          state.viewM--; if(state.viewM<1){ state.viewM=12; state.viewY--; }
+        }else{
+          state.viewM++; if(state.viewM>12){ state.viewM=1; state.viewY++; }
+        }
+        render();
+        return;
+      }
+      const todayBtn=t.closest('[data-action="today"]');
+      if(todayBtn){
+        const now=new Date();
+        state.viewY = now.getFullYear();
+        state.viewM = now.getMonth()+1;
+        render();
+        return;
+      }
+      const dayBtn=t.closest("[data-iso]");
+      if(dayBtn && state.active){
+        const iso=dayBtn.getAttribute("data-iso")||"";
+        state.active.display.dataset.iso = iso;
+        state.active.display.value = toDisp(iso);
+        close();
+        markDirtyIfNeeded();
+      }
+    });
+
+    // close on outside click
+    document.addEventListener("pointerdown",(e)=>{
+      if(!state.active) return;
+      const target=e.target;
+      if(!(target instanceof Node)) return;
+      const inPop = pop.contains(target);
+      const inAnchor = state.active.wrap.contains(target);
+      if(!inPop && !inAnchor) close();
+    }, true);
+
+    // close on esc
+    document.addEventListener("keydown",(e)=>{
+      if(e.key==="Escape") close();
+    });
+
+    state.pop=pop;
+    return pop;
+  }
+
+  function markDirtyIfNeeded(){
+    try{
+      // keep existing "dirty" flow without new dependencies
+      if(typeof markDirty==="function") markDirty();
+    }catch(_){}
+  }
+
+  function render(){
+    const pop=ensurePop();
+    if(!state.active) return;
+
+    const y=state.viewY, m=state.viewM;
+    pop.querySelector('[data-role="monthLabel"]').textContent = `${y}年 ${m}月`;
+
+    const grid=pop.querySelector('[data-role="grid"]');
+    grid.innerHTML="";
+    // weekday header
+    for(const wd of weekdays){
+      const el=document.createElement("div");
+      el.className="mdp-wd";
+      el.textContent=wd;
+      grid.appendChild(el);
+    }
+    const first=new Date(y,m-1,1);
+    const firstW=first.getDay(); // 0..6
+    const daysInMonth=new Date(y,m,0).getDate();
+    const daysPrevMonth=new Date(y,m-1,0).getDate();
+    const selIso=(state.active.display.dataset.iso||"");
+    const today=new Date();
+    const todayIso=toIso(today.getFullYear(), today.getMonth()+1, today.getDate());
+
+    // 6 weeks * 7 = 42 cells
+    for(let i=0;i<42;i++){
+      const cell=document.createElement("div");
+      cell.className="mdp-day";
+      const col=i%7;
+      if(col===0) cell.classList.add("is-sun");
+      if(col===6) cell.classList.add("is-sat");
+
+      let dNum, iso, out=false;
+      const dayIndex=i-firstW+1; // 1..daysInMonth within month
+      if(dayIndex<=0){
+        // prev month
+        dNum = daysPrevMonth + dayIndex;
+        const pm = m-1<=0 ? 12 : m-1;
+        const py = m-1<=0 ? y-1 : y;
+        iso = toIso(py, pm, dNum);
+        out=true;
+      }else if(dayIndex>daysInMonth){
+        // next month
+        dNum = dayIndex - daysInMonth;
+        const nm = m+1>12 ? 1 : m+1;
+        const ny = m+1>12 ? y+1 : y;
+        iso = toIso(ny, nm, dNum);
+        out=true;
+      }else{
+        dNum = dayIndex;
+        iso = toIso(y,m,dNum);
+      }
+
+      cell.textContent=String(dNum);
+      cell.dataset.iso=iso;
+      if(out) cell.classList.add("is-out");
+      if(iso===todayIso) cell.classList.add("is-today");
+      if(selIso && iso===selIso) cell.classList.add("is-selected");
+
+      grid.appendChild(cell);
+    }
+
+    const mini=pop.querySelector('[data-role="mini"]');
+    mini.textContent = state.active.display.dataset.iso ? toDisp(state.active.display.dataset.iso) : "未選択";
+  }
+
+  function openFor(wrap, display){
+    const pop = ensurePop();
+    state.active = { wrap, display };
+
+    const selected = (display.dataset.iso || "").trim();
+    const base = selected ? new Date(selected + "T00:00:00") : new Date();
+    // manual parse for safety
+    let y, m;
+    if(selected && /^\d{4}-\d{2}-\d{2}$/.test(selected)){
+      const a = selected.split("-").map(Number);
+      y = a[0]; m = a[1];
+    }else{
+      y = base.getFullYear(); m = base.getMonth() + 1;
+    }
+    state.viewY = y; state.viewM = m;
+
+    // show (hidden) first, render to get correct size, then position on next frame
+    const r = display.getBoundingClientRect();
+    pop.style.display = "block";
+    pop.style.visibility = "hidden";
+    pop.style.left = "0px"; pop.style.top = "0px";
+
+    render();
+
+    const gap = 6;
+
+    // IMPORTANT: First open can mis-measure height unless we wait a frame (layout not committed yet).
+    requestAnimationFrame(() => {
+      const pw = pop.offsetWidth || 0;
+      const ph = pop.offsetHeight || 0;
+
+      let left = Math.round(r.left);
+      let topBelow = Math.round(r.bottom + gap);
+      let topAbove = Math.round(r.top - ph - gap);
+      let top = topBelow;
+
+      // flip above if overflowing below
+      if(ph && (topBelow + ph > window.innerHeight - 4) && topAbove >= 4) top = topAbove;
+
+      // clamp to viewport
+      if(pw) left = Math.min(Math.max(left, 4), window.innerWidth - pw - 4);
+      if(ph) top  = Math.min(Math.max(top, 4), window.innerHeight - ph - 4);
+
+      pop.style.left = left + "px";
+      pop.style.top  = top  + "px";
+      pop.style.visibility = "visible";
+      pop.style.display = "block";
+    });
+  }
+
+
+  function close(){
+    if(!state.pop) return;
+    state.pop.style.display="none";
+    state.active=null;
+  }
+
+  function attach(wrap){
+    const display=wrap.querySelector(".hol-date-display");
+    if(!display) return;
+
+    // Ensure initial display from data-iso (preferred) or current value
+    if(!display.dataset.iso){
+      const v=(display.value||"").trim();
+      const m=v.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/);
+      if(m){
+        const y=Number(m[1]), mo=Number(m[2]), d=Number(m[3]);
+        const dt=new Date(y, mo-1, d);
+        if(dt.getFullYear()===y && (dt.getMonth()+1)===mo && dt.getDate()===d){
+          display.dataset.iso = toIso(y,mo,d);
+        }
+      }
+    }
+    display.value = toDisp(display.dataset.iso || "");
+
+    const toggleOpen = (e)=>{
+      e?.preventDefault?.();
+      if(state.active && state.active.wrap===wrap){
+        close();
+        return;
+      }
+      openFor(wrap, display);
+    };
+
+    // click toggles open/close
+    display.addEventListener("click", toggleOpen);
+
+    // keyboard support
+    display.addEventListener("keydown", (e)=>{
+      if(e.key==="Enter" || e.key===" "){
+        toggleOpen(e);
+      }else if(e.key==="Escape"){
+        if(state.active && state.active.wrap===wrap){
+          e.preventDefault();
+          close();
+        }
+      }
+    });
+  }
+
+  return { attach };
+})();
+
+
+function addHolidayRow(entry){
+  const tr=document.createElement("tr");
+  const dateVal = entry?.date || "";
+  const nameVal = entry?.name || "";
+
+  tr.innerHTML = `
+    <td>
+      <div class="hol-date-field mdp-field">
+        <input class="hol-date-display mdp-display" type="text" value="${escapeHtml(formatHolidayDateDisplay(dateVal))}" readonly aria-label="日付" data-iso="${escapeHtml(dateVal)}">
+        <svg class="calendar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+      </div>
+    </td>
+    <td><input class="hol-name" type="text" value="${escapeHtml(nameVal)}" placeholder="例：臨時休業"></td>
+    <td class="hol-del-cell"><button class="btn-delete" type="button" data-action="delete-holiday">削除</button></td>
+  `;
+
+  tr.querySelector('button[data-action="delete-holiday"]').addEventListener("click", ()=>{
+    tr.remove();
+    try{ if(typeof markDirty==="function") markDirty(); }catch(_){}
+  });
+
+  dom.holidayTableBody.appendChild(tr);
+
+  // attach custom picker
+  const wrap = tr.querySelector(".mdp-field");
+  if(wrap) __mdp.attach(wrap);
+}
+function renderHolidaySettingsTable(){
+  const master=getSettingsMasterTarget();
+  if(!master || !dom.holidayTableBody) return;
+  if(!master.holidays) master.holidays={};
+  const year = Number(dom.holidayYearInput?.value)||null;
+  dom.holidayTableBody.innerHTML="";
+  if(!year) return;
+  const rows = Object.keys(master.holidays)
+    .filter(k=>String(k).startsWith(String(year)+"-"))
+    .sort()
+    .map(k=>({date:k, name:(master.holidays[k]?.n ?? master.holidays[k]?.name ?? master.holidays[k] ?? "")}));
+  rows.forEach(r=>addHolidayRow(r));
+}
+
+function isJapaneseHoliday(date){
+  const y=date.getFullYear();
+  const m=date.getMonth()+1;
+  const d=date.getDate();
+  return getJapaneseHolidays(y).has(ymdKey(y,m,d));
+}
+
 function toWareki(year, month){
   if(year>2019 || (year===2019 && month>=5)){
     const n=year-2019+1;
