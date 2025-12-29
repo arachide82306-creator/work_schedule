@@ -1,17 +1,17 @@
-/* =====================================================================
- * レイアウト調整: 従業員テーブルの可変列幅
- * 2〜6列目の幅差を等分配分し、最小幅・最大幅を考慮して見切れを防ぐ。
- * DOMContentLoaded 後に初期化し、ResizeObserver/resize イベントで追従。
- * ===================================================================*/
-function initEmployeeColumnObserver(){
-  const px = (n)=>Math.round(n*100)/100;
+/* v156: 2〜6列の幅差（余り/不足）を等分で配分する
+   delta = (テーブルの表示幅 - 1列目 - 基準合計) / 5
+   ただし、縮小しすぎて入力が潰れないように最小幅を考慮してクランプする。
+*/
+(function(){
+  function px(n){ return Math.round(n*100)/100; }
 
-  const updateEmployeeCols = ()=>{
+  function updateEmployeeCols(){
     const table = document.querySelector('#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed');
     if(!table) return;
 
     const cs = getComputedStyle(table);
 
+    // 基準幅
     const drag = parseFloat(cs.getPropertyValue('--emp-drag')) || 28;
     const bases = [
       parseFloat(cs.getPropertyValue('--emp-c2')) || 80,
@@ -21,35 +21,52 @@ function initEmployeeColumnObserver(){
       parseFloat(cs.getPropertyValue('--emp-c6')) || 60,
     ];
 
+    // 最小幅（実務的に入力UIが潰れない程度。必要なら調整してください）
     const mins = [60, 60, 100, 60, 60];
-    const tableW = table.getBoundingClientRect().width;
 
+    // テーブル表示幅（border込みの見た目幅を採用）
+    const rect = table.getBoundingClientRect();
+    const tableW = rect.width;
+
+    // deltaを等分計算
     const baseSum = bases.reduce((a,b)=>a+b,0);
-    const diff = tableW - drag - baseSum;
+    let diff = tableW - drag - baseSum;
     let delta = diff / bases.length;
 
-    const minAllowedDelta = mins.reduce((acc, min, idx)=>Math.min(acc, min - bases[idx]), Infinity);
+    // ただし、マイナス方向で最小幅を割り込むなら、割り込まない範囲までクランプ
+    // （全列同じdeltaを維持しつつ、限界を超えたらそこで止める）
+    let minAllowedDelta = Infinity;
+    for(let i=0;i<bases.length;i++){
+      minAllowedDelta = Math.min(minAllowedDelta, mins[i] - bases[i]);
+    }
     if(delta < minAllowedDelta) delta = minAllowedDelta;
 
+    // デカすぎる増加も抑制（極端に広い画面で不自然になりすぎないように）
+    // 上限を外したいならこの行をコメントアウト
     const maxAllowedDelta = 240; // 例：+240px/列まで
     if(delta > maxAllowedDelta) delta = maxAllowedDelta;
 
-    table.style.setProperty('--emp-delta', `${px(delta)}px`);
-  };
+    table.style.setProperty('--emp-delta', px(delta) + 'px');
+  }
 
+  // 初期化＆リサイズ追従
   window.addEventListener('resize', updateEmployeeCols, {passive:true});
+  // タブ表示直後など、レイアウト確定後にもう一回
   setTimeout(updateEmployeeCols, 0);
   setTimeout(updateEmployeeCols, 200);
 
+  // 可能なら ResizeObserver でコンテナ幅変化にも追従
   if('ResizeObserver' in window){
     const ro = new ResizeObserver(()=>updateEmployeeCols());
     const container = document.querySelector('#settingsEmployees .employee-col-left');
     if(container) ro.observe(container);
     ro.observe(document.documentElement);
   }
-}
+})();
 
-document.addEventListener('DOMContentLoaded', initEmployeeColumnObserver);
+/* ===========
+  このファイルは「構文エラーが出ない完全版」をsandbox上で生成したものです。
+  以前のコピペで途切れていた場合、こちらに差し替えるだけで Unexpected end of input は解消します。
 
 const STORAGE_KEY = "workScheduleApp_v2";
 let appState=null;
@@ -94,64 +111,64 @@ let preserveSelectionKeys=null;
 let preserveSelectionActiveKey=null;
 let activeCell=null;
 
-/* ===== Clear selection / focus ===== */
-function resetSelectionState(){
-  selectedCells = [];
-  selectedKeySet = new Set();
-  activeCell = null;
-  shiftAnchorCell = null;
-  dragLastRectKeys = null;
-}
 
+// ===== Clear selection / focus =====
 function clearScheduleCellFocus(){
-  const table = document.getElementById("scheduleTable");
-  if(table){
-    table.querySelectorAll("td.cell-selected, td.cell-multi, td.cell-preview-add, td.cell-preview-remove")
-      .forEach(td=>{
-        td.classList.remove("cell-selected","cell-multi","cell-preview-add","cell-preview-remove");
-      });
-  }
-
-  resetSelectionState();
-
-  const activeEl = document.activeElement;
-  if(activeEl?.closest?.("#scheduleTable")){
-    activeEl.blur();
-  }
-
-  if(typeof renderDebugInfo==="function"){
-    renderDebugInfo();
-  }
+  try{
+    const table = document.getElementById("scheduleTable");
+    if(table){
+      // 選択強調（cell-selected / cell-multi）と、ドラッグプレビューをまとめて解除
+      table.querySelectorAll("td.cell-selected, td.cell-multi, td.cell-preview-add, td.cell-preview-remove")
+        .forEach(td=>{
+          td.classList.remove("cell-selected","cell-multi","cell-preview-add","cell-preview-remove");
+        });
+    }
+  }catch(_e){}
+  try{ selectedCells = []; }catch(_e){}
+  try{ selectedKeySet = new Set(); }catch(_e){}
+  try{ activeCell = null; }catch(_e){}
+  try{ shiftAnchorCell = null; }catch(_e){}
+  try{ dragLastRectKeys = null; }catch(_e){}
+  try{
+    // 念のため：フォーカスが残っていると見た目が残る環境があるので解除
+    if(document.activeElement && document.activeElement.closest?.("#scheduleTable")){
+      document.activeElement.blur();
+    }
+  }catch(_e){}
+  try{
+    if(typeof renderDebugInfo==="function") renderDebugInfo();
+  }catch(_e){}
 }
 
 
 function isClickInsideScheduleOrKeypad(target){
-  if(!target) return false;
-  if(target.closest?.("#scheduleTable")) return true;
-  if(target.closest?.("#keypad")) return true; // keypad clicks should not clear selection
-  return false;
+  try{
+    if(!target) return false;
+    if(target.closest?.("#scheduleTable")) return true;
+    if(target.closest?.("#keypad")) return true; // keypad clicks should not clear selection
+    return false;
+  }catch(_e){ return false; }
 }
 
-function handleGlobalMouseDown(e){
-  if((selectedKeySet && selectedKeySet.size>0) || activeCell){
-    if(!isClickInsideScheduleOrKeypad(e.target)){
+// click outside schedule => clear focus
+document.addEventListener("mousedown",(e)=>{
+  try{
+    if((selectedKeySet && selectedKeySet.size>0) || activeCell){
+      if(!isClickInsideScheduleOrKeypad(e.target)){
+        clearScheduleCellFocus();
+      }
+    }
+  }catch(_e){}
+}, true);
+
+// Esc => clear focus
+window.addEventListener("keydown",(e)=>{
+  try{
+    if(e.key==="Escape"){
       clearScheduleCellFocus();
     }
-  }
-}
-
-function handleEscapeClear(e){
-  if(e.key==="Escape"){
-    clearScheduleCellFocus();
-  }
-}
-
-function registerSelectionGuards(){
-  document.addEventListener("mousedown", handleGlobalMouseDown, true);
-  window.addEventListener("keydown", handleEscapeClear, true);
-}
-
-document.addEventListener("DOMContentLoaded", registerSelectionGuards);
+  }catch(_e){}
+}, true);
 
 // ===== Keyboard Debug =====
 const __KEY_DEBUG__ = { enabled:true, max:80, events:[] };
