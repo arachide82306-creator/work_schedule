@@ -1,0 +1,1850 @@
+:root{
+      --bg-body:#f4f5f7;--bg-header:#fff;--bg-sidebar:#fff;--bg-main:#fff;
+      --border-soft:#e0e3e7;--border-strong:#c1c7d0;
+      --text-main:#1f2933;--text-muted:#6b7280;
+      --accent:#1976d2;--accent-soft:#e3f2fd;--accent-strong:#0d47a1;
+      --danger:#d32f2f;--danger-soft:#fdecea;
+      --success:#2e7d32;--success-soft:#e8f5e9;
+      --warning:#f9a825;
+      --shadow-soft:0 1px 3px rgba(15,23,42,.12);
+      --radius:6px;--transition-fast:.15s ease;
+      --sidebar-width:268px;--header-height:64px;
+      --font-jp:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Yu Gothic UI","Meiryo",sans-serif;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;height:100%;font-family:var(--font-jp);color:var(--text-main);background:var(--bg-body)}
+    body{display:flex;flex-direction:column}
+    header{height:var(--header-height);background:var(--bg-header);box-shadow:var(--shadow-soft);
+      display:flex;align-items:center;justify-content:space-between;padding:8px 16px;gap:16px;position:sticky;top:0;z-index:10}
+    .header-left,.header-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .app-title{font-weight:650;letter-spacing:.08em;font-size:14px;color:var(--text-muted);margin-right:6px}
+    .field-group{display:flex;flex-direction:column;gap:2px;font-size:11px;color:var(--text-muted)}
+    select,input[type="month"]{padding:5px 10px;border-radius:8px;border:1px solid var(--border-soft);background:#fff;font-size:13px;min-width:160px;outline:none;
+      transition:border-color var(--transition-fast),box-shadow var(--transition-fast)}
+    select:focus,input[type="month"]:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(25,118,210,.15)}
+    .toggle{display:inline-flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;padding:6px 10px;border-radius:999px;border:1px solid transparent;background:#fff;
+      transition:box-shadow var(--transition-fast),border-color var(--transition-fast);user-select:none}
+    .toggle input{display:none}
+    .toggle:hover{color:var(--accent)}
+    .toggle-pill{width:34px;height:18px;border-radius:999px;background:#e5e7eb;position:relative;transition:background-color var(--transition-fast)}
+    .toggle-thumb{width:16px;height:16px;border-radius:50%;background:#fff;position:absolute;top:1px;left:1px;box-shadow:0 1px 2px rgba(0,0,0,.18);transition:transform var(--transition-fast)}
+    .toggle.on .toggle-pill{background:var(--accent)} .toggle.on .toggle-thumb{transform:translateX(16px)}
+    .toggle.on{border-color:transparent;box-shadow:none}
+
+    /* Debug: click inspector highlight */
+    .debug-click-box{position:absolute;left:0;top:0;width:0;height:0;pointer-events:none;z-index:999999;border:2px solid var(--accent);border-radius:8px;box-sizing:border-box;background:transparent}
+    .debug-click-box.secondary{border-style:dashed;border-color:rgba(239,68,68,.75)}
+    .debug-click-label{position:absolute;left:0;top:0;pointer-events:none;z-index:1000000;font-size:11px;line-height:1.3;color:#111827;background:#fff;border:1px solid rgba(0,0,0,.12);border-radius:8px;padding:6px 8px;box-shadow:none;max-width:520px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    button{border:none;border-radius:999px;padding:8px 12px;font-weight:650;font-size:13px;cursor:pointer;background:#fff;color:var(--text-main);display:inline-flex;align-items:center;gap:6px;transition:background-color var(--transition-fast),color var(--transition-fast);user-select:none}
+    button.primary{background:var(--accent);color:#fff}
+    button.primary:hover:not(:disabled){background:var(--accent-strong)}
+    button.icon{padding:7px 10px;border-radius:12px}
+    /* Stores tab: reorder (sort) buttons styled like textbox (gray outline) */
+    #settingsStores button.reorder-btn{
+      border:1px solid var(--border-soft);
+      background:#fff;
+      border-radius:10px;
+      /* square size */
+      width:30px;
+      height:30px;
+      padding:0;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      line-height:1;
+      color:var(--text-muted);
+    }
+.reorder-btn:disabled{opacity:.35;cursor:not-allowed;}
+
+    #settingsStores button.reorder-btn:hover:not(:disabled){
+      background:#f9fafb;
+      border-color:var(--border-strong);
+      color:var(--text-main);
+    }
+    #settingsStores button.reorder-btn:active:not(:disabled){
+      background:#f3f4f6;
+    }
+
+    /* Stores tab: reorder cell alignment + spacing */
+    #settingsStores td.reorder-cell{
+      text-align:center;
+      vertical-align:middle;
+    }
+    #settingsStores td.reorder-cell .reorder-btn + .reorder-btn{
+      margin-left:6px;
+    }
+
+
+    button:hover:not(:disabled){background:#f3f4f6}
+    button:active:not(:disabled){background:#e5e7eb}
+    button:disabled{opacity:.55;cursor:default}
+    .app-main{flex:1;display:flex;min-height:0;overflow:hidden}
+    aside.sidebar{width:var(--sidebar-width);min-width:var(--sidebar-width);background:var(--bg-sidebar);box-shadow:1px 0 0 var(--border-soft);
+      padding:12px 12px 16px;display:flex;flex-direction:column;gap:12px}
+    .sidebar-section{border-radius:var(--radius);border:1px solid var(--border-soft);padding:10px;background:#fff}
+    .sidebar-section h3{margin:0 0 8px;font-size:12px;font-weight:700;color:var(--text-muted);letter-spacing:.08em;text-transform:uppercase}
+    .sidebar-row{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:12px}
+    .badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font-size:11px;border:1px solid transparent;gap:6px;font-weight:650}
+    #modeBadge{cursor:pointer; user-select:none;}
+.badge.work{background:var(--accent-soft);color:var(--accent-strong);border-color:rgba(25,118,210,.2)}
+    .badge.leave{background:var(--success-soft);color:var(--success);border-color:rgba(46,125,50,.2)}
+    .badge.support{background:#eef2ff;color:#3730a3;border-color:rgba(55,48,163,.2)}
+    .keypad{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:6px}
+    .keypad button{position:relative;height:38px;box-sizing:border-box;border-radius:10px;border:1px solid var(--border-soft);background:var(--bg);display:flex;align-items:center;justify-content:center;padding:0;gap:6px;font-size:12px;cursor:pointer}
+    .keypad button:hover:not(:disabled){background:var(--bg-2)}
+    .keypad button:active:not(:disabled){background:var(--bg-3)}
+    .keypad button:disabled{opacity:.45;cursor:not-allowed}
+    .keypad button .kp-num{position:absolute;top:4px;left:6px;font-size:10px;color:var(--text-muted);opacity:.75;font-weight:600;line-height:1}
+    .keypad button .key-left{display:inline-flex;align-items:center;gap:6px;min-width:0}
+    .keypad .code-label{font-weight:800;min-width:1.6em}
+.sidebar-section small{font-size:11px;color:var(--text-muted);display:block;margin-top:6px;line-height:1.35}
+    .alert-list{max-height:200px;overflow:auto;margin-top:6px}
+    .alert-item{font-size:11px;padding:6px 8px;border-radius:10px;background:var(--danger-soft);color:var(--danger);margin-bottom:6px;border:1px solid rgba(211,47,47,.15);line-height:1.35}
+    .alert-item.good{background:var(--success-soft);color:var(--success);border-color:rgba(46,125,50,.15)}
+    .ime-alert{font-size:11px;color:#7c5b00;background:#fff8e1;border-radius:10px;padding:8px 10px;margin-top:6px;border:1px solid rgba(249,168,37,.25);display:none;line-height:1.35}
+    .ime-alert.visible{display:block}
+    main{flex:1;padding:12px 12px 16px;min-width:0;display:flex;flex-direction:column;gap:10px}
+    .schedule-header{display:flex;justify-content:center;align-items:center;padding:3px 0 2px;min-height:34px}
+    .schedule-title{font-weight:750;font-size:15px;letter-spacing:.06em}
+    .schedule-wrapper{flex:0 1 auto;max-height:100%;border-radius:var(--radius);border:1px solid var(--border-soft);background:var(--bg-main);display:flex;flex-direction:column;min-height:0;
+      box-shadow:0 1px 0 rgba(15,23,42,.02)}
+    .schedule-inner{flex:0 1 auto;max-height:100%;overflow:auto;position:relative;overscroll-behavior:contain}
+    table.schedule{border-collapse:collapse;width:max-content;min-width:100%;font-size:12px}
+    table.schedule th,table.schedule td{border:1px solid var(--border-soft);padding:3px 4px;text-align:center;white-space:nowrap;min-width:34px;max-width:44px;height:24px}
+
+table.schedule thead th{position:sticky;top:0;z-index:10;background:#fafafa;font-weight:600}
+        .weekday-row th{font-size:11px;color:var(--text-muted);font-weight:650}
+    .day-sat{color:#1976d2}.day-sun{color:#d32f2f}.day-holiday{color:#d32f2f}
+    /* weekday row color overrides (higher specificity than .weekday-row th) */
+    .weekday-row th.day-sat{color:#1976d2}
+    .weekday-row th.day-sun{color:#d32f2f}
+    .weekday-row th.day-holiday{color:#d32f2f}
+
+    .cell-emp-name{font-weight:650;text-align:center;vertical-align:middle;padding:4px 6px}
+    .employee-main-row td{border-bottom:1px dashed var(--border-strong)!important}
+    .employee-main-row td,.employee-note-row td{border-top:1px dashed var(--border-strong)!important}
+    .employee-note-row td{border-top:1px dashed var(--border-strong)!important}
+    .support-row td{background:#f9fafb;font-size:11px}
+    .support-first th,.support-first td{border-top:3px double var(--border-strong)!important}
+    .cell-support-header{font-weight:650}
+    .cell-selected{box-shadow:inset 0 0 0 2px #1976D2;}
+    .cell-multi{box-shadow:inset 0 0 0 2px #1976D2;}
+
+
+    /* ドラッグ範囲選択中はテキスト選択を抑止して視認性を上げる */
+    .drag-selecting, .drag-selecting *{
+      -webkit-user-select:none!important;
+      user-select:none!important;
+    }
+    .cell-error{box-shadow:inset 0 0 0 2px var(--danger);background:#fff0f0!important}
+    .cell-readonly{background:#f3f4f6!important;color:var(--text-muted)!important;cursor:default!important}
+    .cell-bg-colored{color:#111827;font-weight:800}
+    .cell-work-text{font-weight:800}
+    .notice{font-size:12px;color:var(--text-muted);padding:10px 12px}
+
+    .modal-backdrop{position:absolute;inset:0;background:rgba(15,23,42,.34);display:none;align-items:center;justify-content:center;z-index:100;padding:16px}
+    .modal-backdrop.visible{display:flex}
+    .modal{background:#fff;border-radius:16px;box-shadow:0 18px 40px rgba(15,23,42,.28);max-width:980px;width:100%;max-height:92vh;display:flex;flex-direction:column;overflow:hidden}
+    .modal-header{padding:12px 16px;border-bottom:1px solid var(--border-soft);display:flex;justify-content:space-between;align-items:center;gap:10px;background:#fff}
+    .modal-header h2{margin:0;font-size:15px;font-weight:800;letter-spacing:.04em}
+    .modal-body{padding:12px 16px 14px;overflow:auto;font-size:13px}
+    .modal-footer{padding:10px 16px;border-top:1px solid var(--border-soft);display:flex;justify-content:flex-end;gap:8px;align-items:center;background:#fff}
+    .modal-tabs{display:flex;border-bottom:1px solid var(--border-soft);margin-bottom:10px;gap:6px}
+    .modal-tab{padding:8px 12px;font-size:13px;cursor:pointer;border-radius:12px 12px 0 0;border-bottom:2px solid transparent;color:var(--text-muted);
+      transition:color var(--transition-fast),border-color var(--transition-fast),background-color var(--transition-fast);user-select:none}
+    .modal-tab.active{border-bottom-color:var(--accent);color:var(--accent-strong);background:#f3f8ff}
+    .modal-tab:hover{color:var(--accent-strong)}
+    .modal-tab:focus-visible{outline:2px solid rgba(25,118,210,.35);outline-offset:2px}
+    .modal-tab:active{transform:translateY(1px)}
+    .settings-panel{display:none}.settings-panel.active{display:block}
+    .settings-table{width:100%;border-collapse:collapse;margin-bottom:10px;border-radius:12px;overflow:hidden}
+.employee-table-fixed{table-layout:fixed}
+.employee-table-fixed th,.employee-table-fixed td{border:1px solid var(--border-soft);padding:6px 8px;font-size:12px;vertical-align:middle}
+.employee-table-fixed th{background:#f9fafb;font-weight:800}
+.employee-drag-handle{cursor:grab;user-select:none;text-align:center;color:#6b7280;font-weight:900}
+.employee-drag-handle:active{cursor:grabbing}
+.employee-table-fixed input,.employee-table-fixed select{width:100%;box-sizing:border-box}
+
+    .settings-table th,.settings-table td{border:1px solid var(--border-soft);padding:6px 8px;font-size:12px;text-align:left;vertical-align:top}
+    
+/* Stores tab: center controls (name / short / enabled) inside cells
+   NOTE: keep <td> as table-cell (no flex) to avoid breaking table layout. */
+#settingsStores .settings-table tbody td:nth-child(2),
+#settingsStores .settings-table tbody td:nth-child(3),
+#settingsStores .settings-table tbody td:nth-child(4){
+  vertical-align:middle;        /* vertical center within tall rows */
+}
+#settingsStores .settings-table tbody td:nth-child(4){ text-align:center; } /* checkbox */
+#settingsStores .settings-table tbody td:nth-child(2) input[type="text"],
+#settingsStores .settings-table tbody td:nth-child(3) input[type="text"]{
+  display:block;
+  margin:0 auto;
+  width:100%;
+}
+#settingsStores .settings-table tbody td:nth-child(4) input[type="checkbox"]{
+  display:block;
+  margin:0 auto;
+}
+
+.settings-table th{background:#f9fafb;font-weight:800}
+    .settings-table input[type="text"],.settings-table input[type="number"],.settings-table input[type="date"],.settings-table select{width:100%;font-size:12px;padding:6px 8px;border-radius:10px;border:1px solid var(--border-soft);outline:none}
+
+    
+    
+    /* Holiday tab: date input + formatted hint (clean & stable) */
+.hol-date-field{position:relative;display:block;width:100%}
+.hol-date-field /* v55: Custom modern date picker (for holidays) */
+.mdp-field{position:relative !important;display:block;width:100%}
+.mdp-display{
+  width:100%;
+  height:28px;
+  padding:6px 34px 6px 8px;
+  border-radius:10px;
+  border:1px solid var(--border-soft);
+  font-size:12px;
+  outline:none;
+  background:#fff;
+  cursor:pointer;
+
+  position:relative;
+  z-index:1;}
+
+.calendar-icon{
+  position:absolute;
+  right:10px;
+  top:50%;
+  transform:translateY(-50%);
+  width:18px;
+  height:18px;
+  color:rgba(0,0,0,.35);
+  pointer-events:none;
+  z-index:2;
+}
+.mdp-display:focus-visible{outline:2px solid rgba(25,118,210,.35);outline-offset:2px}
+.mdp-pop{
+  position:absolute;
+  z-index:99999;
+  background:#fff;
+  border:1px solid var(--border-soft);
+  border-radius:14px;
+  box-shadow:0 12px 30px rgba(0,0,0,.16);
+  padding:8px 8px 6px;
+  width:268px;
+  user-select:none;
+}
+.mdp-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+.mdp-month{font-weight:900;font-size:13px;color:#111827;letter-spacing:.02em}
+.mdp-nav{
+  width:28px;height:28px;border-radius:8px;border:0;
+  background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;
+}
+.mdp-nav:hover{background:#f3f4f6}
+.mdp-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.mdp-wd{font-size:11px;color:#6b7280;text-align:center;padding:3px 0}
+.mdp-day{
+  height:30px;border-radius:10px;border:1px solid transparent;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:12px;color:#111827;
+}
+.mdp-day:hover{background:#f3f4f6}
+.mdp-day.is-out{color:#9ca3af}
+.mdp-day.is-out.is-sun{color:rgba(220,38,38,.35)}
+.mdp-day.is-out.is-sat{color:rgba(37,99,235,.35)}
+.mdp-day.is-today{
+  background:var(--accent);
+  color:#fff;
+  border-color:transparent;
+  font-weight:900;
+  border-radius:999px;
+}
+.mdp-day.is-selected{
+  background:#dbeafe;
+  border-color:#60a5fa;
+  font-weight:900;
+}
+.mdp-day.is-today.is-selected{
+  border-radius:10px;
+  color:var(--accent);
+}
+.mdp-day:not(.is-today):not(.is-selected):hover{background:#dbeafe}
+.mdp-day.is-selected:hover{background:#dbeafe}
+.mdp-day.is-sun{color:#dc2626}
+.mdp-day.is-sat{color:#2563eb}
+.mdp-foot{display:flex;justify-content:space-between;align-items:center;margin-top:6px;gap:8px}
+.mdp-mini{font-size:11px;color:#6b7280}
+.mdp-today{border:0;background:transparent;color:var(--accent);font-size:12px;font-weight:400;cursor:pointer;padding:4px 6px;border-radius:8px}
+.mdp-today:hover{background:#eff6ff}
+.mdp-clear:hover{background:#fef2f2}
+
+#holidayTable td.hol-del-cell{vertical-align:middle;padding:6px 0}
+#settingsHolidays #holidayTable th:last-child,#settingsHolidays #holidayTable td:last-child{width:56px;text-align:center}
+.settings-table /* Holiday tab: year input matches other number controls + shows unit suffix */
+    .holiday-year-field{display:flex;align-items:center;gap:6px}
+    .holiday-year-field .unit{font-size:12px;color:var(--text-muted)}
+    .holiday-year-input{
+      height:28px;
+      padding:6px 10px;
+      font-size:12px;
+      border-radius:10px;
+      border:1px solid var(--border-soft);
+      background:#fff;
+      color:var(--text);
+      outline:none;
+    }
+    .holiday-year-input:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(25,118,210,.12)}
+    /* Make spinner less visually noisy, consistent with other numeric controls */
+    .holiday-year-input::-webkit-outer-spin-button,
+    .holiday-year-input::-webkit-inner-spin-button{opacity:.65}
+
+    .settings-table input[type="text"]:focus,.settings-table input[type="number"]:focus,.settings-table select:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(25,118,210,.12)}
+    .settings-table input[type="color"]{padding:0;border:none;background:transparent;width:38px;height:28px}
+    .settings-inline-controls{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+    .pill{padding:6px 10px;border-radius:999px;font-size:11px;border:1px solid var(--border-soft);background:#f9fafb;display:inline-flex;align-items:center;gap:6px}
+/* v193: 店舗タブ 業務コードの状態を「ドット＋テキスト」で視認性UP（ごちゃごちゃさせない） */
+#settingsStores .status-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  display:inline-block;
+  flex:0 0 auto;
+}
+#settingsStores .status-dot.dot-day{ background:#f59e0b; }      /* 日勤 */
+#settingsStores .status-dot.dot-night{ background:#7c3aed; }    /* 夜勤（青系） */
+#settingsStores .status-dot.dot-disabled{ background:#9ca3af; } /* 無効 */
+
+/* vXXX: サイドバーのパレットボタンにも「日勤/夜勤」ドットを表示 */
+.keypad .status-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  display:inline-block;
+  flex:0 0 auto;
+  margin-right:6px;
+}
+.keypad .status-dot.dot-day{ background:#f59e0b; }      /* 日勤 */
+.keypad .status-dot.dot-night{ background:#7c3aed; }    /* 夜勤 */
+.keypad .status-dot.dot-disabled{ background:#9ca3af; } /* 無効 */
+
+
+    .pill select{min-width:72px;padding:4px 8px;border-radius:999px}
+    .text-danger{color:var(--danger)}.text-muted{color:var(--text-muted)}
+    .divider{height:1px;background:var(--border-soft);margin:8px 0}
+    .unsaved-body{font-size:13px;padding:12px 16px 4px}
+    .unsaved-body p{margin:0 0 8px}
+    .unsaved-body ul{padding-left:18px;margin:6px 0 0}
+    .unsaved-body li{margin:4px 0}
+    @media(max-width:980px){header{flex-direction:column;align-items:flex-start;height:auto}.header-left,.header-right{width:100%;justify-content:space-between}aside.sidebar{display:flex}}
+    @media print{
+      @page{size:A4 landscape;margin:8mm}
+      header,aside.sidebar{display:none!important}
+      body{background:#fff!important}
+      main{padding:0!important}
+      .schedule-wrapper{border:none!important}
+      .schedule-inner{flex:0 1 auto;max-height:100%;overflow:auto;position:relative;overscroll-behavior:contain}
+      table.schedule thead th{position:sticky;top:0;z-index:10;background:#fafafa;font-weight:600}
+      .cell-emp-name,.col-employee-header,.cell-support-header{position:static!important}
+    }
+  
+    .cell-preview-add{
+    outline: 2px dashed #1976D2 !important;
+    outline-offset: -2px !important;
+    box-shadow: none !important;
+  }
+    .cell-preview-remove{
+    outline: 2px dashed rgba(120, 120, 120, .55) !important;
+    outline-offset: -2px !important;
+    box-shadow: none !important;
+  }
+  .drag-hint{
+    margin-top:10px;
+    padding:8px 10px;
+    border-radius:10px;
+    background: rgba(33,115,255,.06);
+    border: 1px solid rgba(33,115,255,.18);
+    color: var(--text);
+    font-size:12px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+  }
+  .drag-hint.hidden{ display:none; }
+  .drag-hint .pill{
+    font-weight:800;
+    padding:4px 8px;
+    border-radius:999px;
+    background: rgba(0,0,0,.04);
+    border:1px solid rgba(0,0,0,.06);
+    color: var(--text);
+    white-space:nowrap;
+  }
+  .drag-hint.add{ background: rgba(33,115,255,.06); border-color: rgba(33,115,255,.18); }
+  .drag-hint.add .pill{ border-color: rgba(33,115,255,.22); }
+  .drag-hint.remove{ background: rgba(0,0,0,.04); border-color: rgba(0,0,0,.12); }
+  .drag-hint.remove .pill{ border-color: rgba(0,0,0,.18); }
+
+
+  #scheduleTable td:focus{ outline:none; }
+  #scheduleTable td:focus-visible{ outline:none; }
+
+    /* schedule cell focus ring: suppress UA focus outline (prevents black flicker during drag) */
+  #scheduleTable td:focus{ outline:none !important; }
+  #scheduleTable td:focus-visible{ outline:none !important; }
+
+
+  #scheduleTable td.cell-preview-add.cell-selected,
+  #scheduleTable td.cell-preview-add.cell-multi,
+  #scheduleTable td.cell-preview-remove.cell-selected,
+  #scheduleTable td.cell-preview-remove.cell-multi{
+    box-shadow: none !important;
+  }
+
+
+  /* focused cell can be the drag start; keep preview dashed outline visible even on :focus */
+  #scheduleTable td.cell-preview-add:focus,
+  #scheduleTable td.cell-preview-add:focus-visible{
+    outline: 2px dashed #1976D2 !important;
+    outline-offset: -2px !important;
+  }
+  #scheduleTable td.cell-preview-remove:focus,
+  #scheduleTable td.cell-preview-remove:focus-visible{
+    outline: 2px dashed rgba(120, 120, 120, .55) !important;
+    outline-offset: -2px !important;
+  }
+
+
+
+.cell-emp-name, .cell-support-header{
+  background:#fff; /* 透け防止 */
+  box-shadow:none;
+}
+
+
+
+
+
+
+
+table.schedule thead tr:nth-child(1) th{
+  top:0;
+  z-index:10;
+}
+table.schedule thead tr:nth-child(2) th{
+  top:24px; /* 1段目(数字)の高さ */
+  z-index:20;
+}
+/* 左上の「従業員」(rowspan=2) は top+left 両方 sticky で最前面 */
+table.schedule thead th.namecol{
+  position:sticky;
+  top:0;
+  left:0;
+  z-index:9999;
+  background:#fafafa;
+}
+/* 行見出し（従業員名 / 応援行見出し）は left 固定。列見出しより背面 */
+table.schedule tbody th.cell-emp-name,
+table.schedule tbody th.cell-support-header{
+  position:sticky;
+  left:0;
+  z-index:5;
+  background:#fff;
+}
+
+
+
+/* ===== Sticky見出し（2段thead + 左固定列）: overlap防止 & 左上常時表示 ===== */
+/* 2段thead: 1段目(日付)と2段目(曜日)で top を分ける */
+#scheduleTable thead tr:nth-child(1) th{ top:0; z-index:30; }
+#scheduleTable thead tr:nth-child(2) th{ top:24px; z-index:40; } /* 1段目の高さ(24px) */
+
+/* 左上「従業員」: 横スクロールでも絶対に隠れない */
+#scheduleTable thead th.namecol{
+  position: sticky !important;
+  top: 0 !important;
+  left: 0 !important;
+  z-index: 9999 !important;
+  background: #fafafa !important;
+  /* 二重罫線を防ぐため、境界側の線は相手(右/下)に任せる */
+  border-right: 0 !important;
+  border-bottom: 0 !important;
+}
+
+/* 行見出し（従業員名 / 応援行見出し）を left 固定 */
+#scheduleTable tbody th.cell-emp-name,
+#scheduleTable tbody th.cell-support-header{
+  position: sticky !important;
+  left: 0 !important;
+  z-index: 50 !important; /* 本文セルより前面、列見出しより背面 */
+  background: #fff !important;
+  border-right: 0 !important; /* 境界の太線化を防ぐ */
+}
+
+/* 左列の補助ヘッダー背景 */
+#scheduleTable tbody th.cell-support-header{ background:#f9fafb !important; }
+
+/* thead th の基底は schedule の既存を使うが、namecol は left 固定のため別扱い */
+#scheduleTable thead th{ position: sticky; }
+
+/* 「従業員」セルの下(=tbodyの最初の行)との境界線は tbody 側に任せる */
+#scheduleTable tbody tr:first-child th,
+#scheduleTable tbody tr:first-child td{ border-top:1px solid var(--border-soft); }
+
+
+
+
+
+/* ===== 行見出し（従業員列）とコード欄の境界線を 1px で統一 =====
+   二重線化を防ぐため、境界は「行見出し列の右border」を採用し、
+   1日列（最初のコード列）の左borderは消す。
+*/
+#scheduleTable thead th.namecol,
+#scheduleTable tbody th.cell-emp-name,
+#scheduleTable tbody th.cell-support-header{
+  border-right:1px solid var(--border-soft) !important;
+}
+#scheduleTable thead th.namecol{
+  border-bottom:1px solid var(--border-soft) !important;
+}
+#scheduleTable thead th[data-day="1"],
+#scheduleTable tbody td[data-day="1"]{
+  border-left:0 !important;
+}
+
+
+
+/* ===== 列見出し2段（日付/曜日）間の“透け”防止：罫線は必ず見えるようにする =====
+   sticky + border-collapse の組み合わせで、行間の罫線が欠けて背後の値が見えることがあるため、
+   罫線は曜日行(2段目)の上に 1px のinset影で描画し、日付行(1段目)の下罫線は無効化する。
+*/
+#scheduleTable thead th{
+  background:#fff !important;
+  background-clip: padding-box;
+}
+#scheduleTable thead tr:nth-child(1) th{
+  border-bottom:0 !important;
+}
+#scheduleTable thead tr:nth-child(2) th{
+  border-top:0 !important;
+  box-shadow: inset 0 1px 0 var(--border-soft);
+}
+
+
+
+/* ===== スクロール時の“周囲チラつき(セル値の透け)”防止 =====
+   overflow+sticky の合成で、スクロール中に文字がコンテナ外へ一瞬描画されることがあるため、
+   1) 外枠でクリップ(overflow:hidden) 2) スクロール領域を不透明背景 3) paint containment を付与。
+*/
+.schedule-wrapper{
+  overflow:hidden; /* 角丸・外枠の外へはみ出す描画をクリップ */
+}
+.schedule-inner{
+  background:#fff; /* スクロール領域の背後を不透明にして“透け”を防止 */
+  contain: paint;  /* 描画をこの領域に閉じ込める（ちらつき軽減） */
+  isolation: isolate;
+  -webkit-overflow-scrolling: auto;
+}
+table.schedule{
+  background:#fff;
+}
+
+
+    /* v91: 従業員タブ 2カラム（全体一覧 + 店舗別順序） */
+    .employee-two-col{display:flex;gap:12px;align-items:flex-start}
+    .employee-col{background:rgba(255,255,255,.7);border:1px solid var(--line);border-radius:14px;padding:10px}
+    .employee-col-left{flex:1 1 62%;min-width:420px}
+    .employee-col-right{flex:1 1 38%;min-width:280px}
+    .employee-order-head{display:flex;flex-direction:column;gap:6px;margin-bottom:6px}
+    .employee-order-row{display:flex;gap:10px;align-items:center}
+    .employee-order-row .label{font-size:12px;font-weight:800;color:#374151;min-width:40px}
+    .employee-order-row select{width:100%}
+    .employee-order-list{border:1px dashed rgba(0,0,0,.12);border-radius:12px;padding:8px;min-height:120px;background:rgba(255,255,255,.55)}
+    .employee-order-item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;border-radius:10px;border:1px solid rgba(0,0,0,.08);background:rgba(255,255,255,.9);margin-bottom:6px}
+    .employee-order-item:last-child{margin-bottom:0}
+    /* v63: 従業員タブ右リスト（並び替えリスト） hover 応答 */
+    .employee-order-item{
+      transition: box-shadow .12s ease, transform .12s ease;
+      position: relative; /* for focus ring */
+    }
+    .employee-order-item:not(.dragging-row):hover{
+      box-shadow: 0 1px 6px rgba(0,0,0,.08);
+      transform: translateY(-1px);
+    }
+    .employee-order-item:not(.dragging-row):focus-within{
+      outline: 2px solid rgba(45, 130, 255, .30);
+      outline-offset: 2px;
+    }
+
+    .employee-order-item{
+  cursor: grab;
+}
+.employee-order-item:active{
+  cursor: grabbing;
+}
+/* If the row contains interactive controls, keep their native cursors */
+.employee-order-item button,
+.employee-order-item a,
+.employee-order-item [role="button"]{
+  cursor: pointer;
+}
+.employee-order-item input,
+.employee-order-item textarea{
+  cursor: text;
+}
+.employee-order-item select{
+  cursor: default;
+}
+.employee-order-item.dragging-row{cursor:grabbing;opacity:.35;transform:scale(.985);box-shadow:0 8px 20px rgba(0,0,0,.14);filter:saturate(.9)}
+
+.employee-order-item.dragging-row{
+  opacity: .25;
+  filter: grayscale(.2);
+}
+/* v9/v10: left employee table row should NOT fade while dragging */
+#settingsEmployees .employee-col.employee-col-left table.employee-table-fixed tbody tr.dragging-row{
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+#settingsEmployees .employee-col.employee-col-left table.employee-table-fixed tbody tr.dragging-row td{
+  opacity: inherit;
+}
+
+.employee-order-spacer{
+  border: 2px dashed rgba(0,0,0,.25);
+  border-radius: 10px;
+  margin: 6px 0;
+  background: rgba(255,255,255,.35);
+}
+    .employee-order-item .name{font-weight:800}
+    .employee-order-item .meta{font-size:11px;color:#6b7280}
+    .employee-order-handle{font-size:14px;opacity:.6;user-select:none}
+    @media (max-width: 980px){
+      .employee-two-col{flex-direction:column}
+      .employee-col-left,.employee-col-right{min-width:0;width:100%}
+    }
+
+  
+/* v107 layout fix */
+.employee-settings-container{
+  display: grid;
+  grid-template-columns: minmax(420px, 520px) 1fr;
+  gap: 16px;
+  align-items: stretch;
+}
+.employee-left{
+  max-width: 520px;
+  overflow-x: auto;
+}
+.employee-right{
+  min-width: 0;
+}
+
+
+/* v108: ensure left/right never overlap */
+.employee-settings.employee-settings-container{
+  display:flex !important;
+  flex-direction:row !important;
+  gap:16px !important;
+  align-items:stretch !important;
+  width:100% !important;
+  max-width:100% !important;
+  box-sizing:border-box !important;
+}
+.employee-settings.employee-settings-container .employee-left-panel{
+  flex:0 0 520px !important;
+  max-width:520px !important;
+  min-width:420px !important;
+  overflow:auto !important;
+  box-sizing:border-box !important;
+}
+.employee-settings.employee-settings-container .employee-right-panel{
+  flex:1 1 auto !important;
+  min-width:0 !important; /* critical for overflow in flex */
+  overflow:auto !important;
+  box-sizing:border-box !important;
+}
+/* If viewport is narrow, stack panels vertically instead of overlapping */
+@media (max-width: 980px){
+  .employee-settings.employee-settings-container{
+    flex-direction:column !important;
+  }
+  .employee-settings.employee-settings-container .employee-left-panel{
+    flex:0 0 auto !important;
+    max-width:100% !important;
+    min-width:0 !important;
+  }
+}
+
+
+/* v109: prevent left/right overlap in Employee tab */
+.employee-two-col{
+  display:grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 360px) !important;
+  gap:16px !important;
+  align-items:start !important;
+  width:100% !important;
+  max-width:100% !important;
+  box-sizing:border-box !important;
+}
+.employee-col-left, .employee-col-right{
+  min-width:0 !important; /* critical: allow content to shrink within grid */
+  box-sizing:border-box !important;
+}
+.employee-col-left{
+  overflow-x:auto !important; /* wide table scrolls here */
+}
+.employee-col-left table{
+  min-width:680px; /* keeps header/body aligned; scroll instead of pushing right */
+}
+@media (max-width: 980px){
+  .employee-two-col{
+    grid-template-columns: 1fr !important;
+  }
+  .employee-col-left table{
+    min-width:0;
+    width:100%;
+  }
+}
+
+
+/* v110: autofit left employee table (avoid inner horizontal scroll) */
+.employee-col-left{
+  overflow-x:hidden !important;
+}
+.employee-col-left table{
+  width:100% !important;
+  min-width:0 !important;
+  table-layout:fixed !important;
+}
+.employee-col-left th, .employee-col-left td{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.employee-col-left input,
+.employee-col-left select,
+.employee-col-left button{
+  width:100% !important;
+  min-width:0 !important;
+  max-width:100% !important;
+  box-sizing:border-box !important;
+}
+.employee-col-left .drag-handle{
+  width:100%;
+  text-align:center;
+  cursor:grab;
+}
+.employee-col-left .drag-handle:active{ cursor:grabbing; }
+/* Make delete button compact if it's text */
+.employee-col-left .btn-delete,
+.employee-col-left button[data-action="delete-employee"]{
+  width:auto !important;
+  padding-left:10px !important;
+  padding-right:10px !important;
+  white-space:nowrap !important;
+}
+
+
+/* v112: cursor only on row drag handles (not header) */
+th.employee-drag-handle{ cursor:default !important; }
+td .emp-drag-handle{
+  /* v160: match row control height and keep icon centered */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 32px;  /* matches input/select/button height (v158) */
+  line-height: 1;
+  cursor: grab;
+}
+td .emp-drag-handle:active{ cursor:grabbing !important; }
+/* make sure the whole handle cell doesn't imply draggable on header */
+td.emp-drag-cell{ user-select:none; text-align:center; }
+
+/* v201: employee left table rows are draggable anywhere (except controls) */
+#settingsEmployees .employee-col.employee-col-left table.employee-table-fixed tbody tr{
+  cursor: grab;
+}
+#settingsEmployees .employee-col.employee-col-left table.employee-table-fixed tbody tr:active{
+  cursor: grabbing;
+}
+/* controls keep their own cursor */
+#settingsEmployees .employee-col.employee-col-left table.employee-table-fixed tbody tr input,
+#settingsEmployees .employee-col.employee-col-left table.employee-table-fixed tbody tr select,
+#settingsEmployees .employee-col.employee-col-left table.employee-table-fixed tbody tr textarea{
+  cursor: text;
+}
+/* vXXX: Fix cursor on dropdowns in employee left table (keep normal arrow like other dropdowns) */
+#settingsEmployees .employee-col.employee-col-left table.employee-table-fixed tbody tr select{
+  cursor: default;
+}
+
+#settingsEmployees .employee-col.employee-col-left table.employee-table-fixed tbody tr button{
+  cursor: pointer;
+}
+
+
+
+/* v113: right panel drag handle cursor */
+.employee-order-item .drag-handle{
+  cursor:grab !important;
+}
+.employee-order-item .drag-handle:active{
+  cursor:grabbing !important;
+}
+/* safety: if any header uses .drag-handle, don't show grab there */
+th .drag-handle{ cursor:default !important; }
+
+
+/* v114: expand left table draggable area to whole drag cell */
+td.emp-drag-cell{
+  cursor:grab !important;
+}
+td.emp-drag-cell:active{
+  cursor:grabbing !important;
+}
+th.employee-drag-handle{
+  cursor:default !important;
+}
+
+
+/* v116: drag UX - show not-allowed outside droppable zones */
+html.is-dragging, html.is-dragging *{
+  cursor: not-allowed !important;
+}
+
+/* v117: move cursor ONLY when insertion placeholder is shown */
+html.is-dragging .employee-order-placeholder,
+html.is-dragging .employee-order-placeholder *{
+  cursor: move !important;
+}
+
+/* subtle highlight for drop zones while dragging */
+html.is-dragging .drop-allowed{
+  outline: 1px dashed rgba(0,0,0,.22);
+  outline-offset: 2px;
+}
+html.is-dragging .drop-allowed.drop-over{
+  outline: 2px solid rgba(0,0,0,.35);
+  background: rgba(0,0,0,.03);
+}
+
+
+/* v127: 2-step highlight for right drop area
+   Step1 (dragging): show destination (outer frame only)
+   Step2 (over drop area): stronger highlight to indicate you can release
+   Also hide inner dashed/strong lines (placeholders/items) */
+html.is-dragging .drop-allowed:not(#employeeOrderList){
+  outline: none !important;
+  outline-offset: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+html.is-dragging .drop-allowed.drop-over:not(#employeeOrderList){
+  outline: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Step1: destination hint (subtle) */
+html.is-dragging #employeeOrderList{
+  border-color: rgba(25,118,210,.35) !important;
+  box-shadow: 0 0 0 2px rgba(25,118,210,.18);
+  background: rgba(25,118,210,.04);
+}
+
+/* Step2: active target (strong) */
+html.is-dragging #employeeOrderList.drop-over{
+  border-color: rgba(25,118,210,.75) !important;
+  box-shadow: 0 0 0 3px rgba(25,118,210,.28);
+  background: rgba(25,118,210,.08);
+}
+
+
+
+/* === Settings tables: rounded frame (Stores / WorkCodes / LeaveCodes) === */
+.settings-table-frame{
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #fff;
+  isolation: isolate;
+}
+/* Draw outer border inside so corners never look "cut" */
+.settings-table-frame::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:12px;
+  box-shadow: inset 0 0 0 1px var(--border-soft);
+  pointer-events:none;
+  z-index: 3;
+}
+/* Make table flush to frame (avoid orange margin gap in DevTools) */
+.settings-table-frame > table.settings-table{
+  margin:0;
+  width:100%;
+  background: transparent;
+  position: relative;
+  z-index: 1;
+}
+
+/* === Add buttons as link-style with plus prefix === */
+.add-link-btn{
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--accent, #2b6cff);
+  font: inherit;
+  font-weight: 600;
+  padding: 6px 8px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  user-select: none;
+  transition: background-color .15s ease, transform .05s ease, color .15s ease, box-shadow .15s ease;
+}
+.add-link-btn::before{
+  content: "+";
+  font-weight: 800;
+  line-height: 1;
+}
+.add-link-btn:hover{
+  background: color-mix(in srgb, var(--accent, #2b6cff) 10%, transparent);
+}
+.add-link-btn:active{
+  background: color-mix(in srgb, var(--accent, #2b6cff) 18%, transparent);
+  transform: translateY(1px);
+}
+.add-link-btn:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent, #2b6cff) 25%, transparent);
+}
+
+
+/* === Fix: employee add button should not stretch full width === */
+#settingsEmployees .employee-col-left button.add-link-btn{
+  width: auto !important;
+  max-width: none !important;
+  justify-content: flex-start;
+}
+
+
+    /* v191: keep settings modal height stable; scroll inside panels */
+    #settingsModalBackdrop .modal{height:92vh; max-height:92vh;}
+    #settingsModalBackdrop .modal-body{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
+      min-height:0;
+    }
+    #settingsModalBackdrop .modal-tabs{flex:0 0 auto;}
+    #settingsModalBackdrop .settings-panels{
+      flex:1 1 auto;
+      min-height:0;
+      overflow:hidden;
+    }
+    #settingsModalBackdrop .settings-panel{
+      height:100%;
+      overflow:auto;
+      padding-right:2px;
+    }
+    /* reduce vertical jump from margins */
+    #settingsModalBackdrop .settings-table{margin-bottom:0;}
+
+
+/* v200: 従業員タブ 左表フィルター（未所属のみ表示） */
+#settingsEmployees .employee-left-toolbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:6px;
+  flex-wrap:wrap;
+}
+#settingsEmployees .employee-left-toolbar .toggle{ cursor:pointer; }
+#settingsEmployees .employee-left-toolbar .helper{
+  font-size:11px;
+  color: var(--text-muted, #6b7280);
+}
+
+/* === v4: 右リストから外へドラッグ時の「未所属へ戻す」ヒント === */
+.unassign-hint{
+  position: fixed;
+  left: 0;
+  top: 0;
+  transform: translate(calc(var(--x, 0px) + 14px), calc(var(--y, 0px) + 14px));
+  background: rgba(20,20,20,0.92);
+  color: #fff;
+  font-size: 12px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+  display: none;
+  align-items: center;
+  gap: 8px;
+  z-index: 9999;
+  pointer-events: none;
+  user-select: none;
+  max-width: min(320px, calc(100vw - 20px));
+}
+.unassign-hint.show{ display: inline-flex; }
+.unassign-hint-dot{
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #ff4d4f; /* “削除/解除” を想起させる赤 */
+  box-shadow: 0 0 0 3px rgba(255,77,79,0.25);
+  flex: 0 0 auto;
+}
+.unassign-hint b{ font-weight: 700; }
+
+
+    /* v15: サイドバーが縦に収まらない場合はスクロール */
+    .sidebar{overflow-y:auto;max-height:100vh;}
+
+/* v157:
+   1列目（ドラッグ）= 28px 固定
+   2列目（姓）= 80px 固定
+   3列目（名）= 80px 固定
+   5列目（店舗内順）= 80px 固定
+   6列目（削除）= 60px 固定
+   4列目（所属店舗）= 残り幅（自動で伸縮）
+   目的：横スクロールを出さず、列4だけがウィンドウ幅に合わせて伸縮する
+*/
+#settingsEmployees .employee-col-left{
+  overflow-x:hidden !important;
+}
+
+/* 左表テーブルは親幅にフィット。列幅は colgroup で支配（inlineの%指定を上書き） */
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed{
+  width:100% !important;
+  min-width:0 !important;
+  table-layout:fixed !important;
+}
+
+/* colgroup 幅（inline style を確実に上書き） */
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed col.drag-col{
+  width:28px !important;
+  min-width:28px !important;
+  max-width:28px !important;
+}
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed col:nth-child(2){
+  width:80px !important;
+}
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed col:nth-child(3){
+  width:80px !important;
+}
+/* 4列目：残り幅（= 100% - (28+80+80+80+60)px = 100% - 328px） */
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed col:nth-child(4){
+  width:calc(100% - 328px) !important;
+}
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed col:nth-child(5){
+  width:80px !important;
+}
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed col:nth-child(6){
+  width:60px !important;
+}
+
+/* 1列目セルは見た目も 28px に固定（padding 等で太らないように） */
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed thead th:first-child,
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed tbody td:first-child{
+  width:28px !important;
+  min-width:28px !important;
+  max-width:28px !important;
+  padding:0 !important;
+  box-sizing:border-box !important;
+  overflow:hidden !important;
+}
+
+/* 入力UIが列幅を壊さないようにフィットさせる */
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed td > input,
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed td > select,
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed td > button{
+  width:100% !important;
+  max-width:100% !important;
+  box-sizing:border-box !important;
+}
+
+/* v158: align delete button height with inputs/selects in employee table */
+#settingsEmployees table.settings-table.employee-table-fixed input,
+#settingsEmployees table.settings-table.employee-table-fixed select{
+  height:32px !important;
+}
+
+#settingsEmployees table.settings-table.employee-table-fixed button{
+  height:32px !important;
+  padding:0 10px !important;
+  line-height:1 !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  box-sizing:border-box !important;
+}
+
+/* v170: 従業員タブ（左表）の角丸を「欠けずに」表示する
+   方針：外枠はセルborderで作らず、ラッパー(div.employee-col-left)の ::after で内側に1px描画。
+   これにより border-radius + border の欠け/ギザつきを回避する。
+*/
+
+/* 角丸クリップ＋重なり事故防止 */
+/* frame: table only (not the add button) */
+#settingsEmployees .employee-table-frame{
+  position: relative !important;
+  overflow: hidden !important;
+  border-radius: 12px !important;
+  border: 0 !important;
+  background: #fff !important;
+  isolation: isolate;
+}
+
+/* 外枠を内側に1pxで描く（角が欠けない） */
+#settingsEmployees .employee-table-frame::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:12px;
+  box-shadow: inset 0 0 0 1px var(--border-soft);
+  pointer-events:none;
+  z-index: 9999;
+}
+
+/* テーブル側は外枠を持たない（外周borderを落として、外枠は ::after に一任） */
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed{
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  background: transparent !important;
+  border-radius: 0 !important; /* 角丸はframe側で行う */
+  overflow: visible !important;
+}
+
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed thead tr:first-child th{
+  border-top: 0 !important;
+}
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed tbody tr:last-child td{
+  border-bottom: 0 !important;
+}
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed tr > :first-child{
+  border-left: 0 !important;
+}
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed tr > :last-child{
+  border-right: 0 !important;
+}
+
+/* 角丸付近の描画にじみ防止 */
+#settingsEmployees .employee-table-frame th,
+#settingsEmployees .employee-table-frame td{
+  background-clip: padding-box;
+}
+
+/* v181: 休暇コードタブの削除ボタンを従業員タブと同じサイズ感に */
+#settingsLeaveCodes .btn-delete,
+#settingsLeaveCodes button.btn-delete{
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  padding: 4px 10px !important;
+  white-space: nowrap !important;
+}
+
+/* v181: 設定画面の表 行hoverハイライト（薄く、邪魔にならない） */
+.settings-panel .settings-table tbody tr:hover > td{
+  background: rgba(25,118,210,0.06);
+  background: color-mix(in srgb, var(--accent) 7%, transparent);
+}
+.settings-panel .settings-table tbody tr:hover{
+  /* 行の境界が分かりやすいように */
+  box-shadow: inset 0 0 0 9999px rgba(25,118,210,0.00);
+}
+
+/* v172: 従業員タブ（左表）— 縦罫線を復活 + 横罫線を細く（重なり防止） */
+
+/* 罫線の二重見えを防ぐため、セル罫線は collapse で統合する */
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed{
+  border-collapse: collapse !important;
+}
+
+/* 罫線は 1px に統一（縦も横も表示） */
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed th,
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed td{
+  border-width: 1px !important;
+}
+
+/* v173: 最終行の下にできる隙間を消し、縦罫線の途切れを解消する
+   原因：v170で外周セルのborderを0にしていたため、collapse時に縦罫線が下端で途切れて見える。
+   対策：外周セルのborderを復活させ、外枠(::after)は背面に回して二重線を避ける。
+*/
+
+/* 外枠は背面、テーブルは前面（縦罫線の端が隠れないように） */
+#settingsEmployees .employee-table-frame::after{
+  z-index: 0 !important;
+}
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed{
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* v170で落としていた外周borderを復活させる（これで縦罫線が最終行まで繋がる） */
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed thead tr:first-child th{
+  border-top: 1px solid var(--border-soft) !important;
+}
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed tbody tr:last-child td{
+  border-bottom: 1px solid var(--border-soft) !important;
+}
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed tr > :first-child{
+  border-left: 1px solid var(--border-soft) !important;
+}
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed tr > :last-child{
+  border-right: 1px solid var(--border-soft) !important;
+}
+
+/* v174: 上左右の角欠けを解消（外枠を最前面へ戻す）
+   + フッターではなく『最終アイテム行』の角を丸める。
+   + 罫線の太さは『二重』にならないよう separate + 片側罫線方式で1px統一。
+*/
+
+/* 外枠を最前面に（角欠け防止） */
+#settingsEmployees .employee-table-frame::after{
+  z-index: 9999 !important;
+}
+
+/* テーブルは separate に戻し、border二重を根本回避 */
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed{
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+}
+
+/* いったんセルborderをリセットして、右/下だけ描く（=二重にならない） */
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed th,
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed td{
+  border: 0 !important;
+  border-right: 1px solid var(--border-soft) !important;
+  border-bottom: 1px solid var(--border-soft) !important;
+}
+
+/* 外周はoverlay(外枠)に任せるので、外周セルの罫線は落とす */
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed thead tr:first-child th{
+  border-top: 0 !important;
+}
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed tbody tr:last-child td{
+  border-bottom: 0 !important;
+}
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed tr > :first-child{
+  border-left: 0 !important;
+}
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed tr > :last-child{
+  border-right: 0 !important;
+}
+
+/* 角丸は『セル』に付ける（最終アイテム行を丸める） */
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed thead tr:first-child th:first-child{
+  border-top-left-radius: 12px !important;
+}
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed thead tr:first-child th:last-child{
+  border-top-right-radius: 12px !important;
+}
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed tbody tr:last-child td:first-child{
+  border-bottom-left-radius: 12px !important;
+}
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed tbody tr:last-child td:last-child{
+  border-bottom-right-radius: 12px !important;
+}
+
+/* 角丸セルの背景が透けて『欠け』に見えないように */
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed thead th,
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed tbody td{
+  background-clip: padding-box;
+}
+
+/* v175: 最終行の左下/右下の角を“セル”で角丸にする */
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed tbody tr:last-child td:first-child{
+  border-bottom-left-radius: 12px !important;
+  overflow: hidden !important;
+  background: #fff !important;
+}
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed tbody tr:last-child td:last-child{
+  border-bottom-right-radius: 12px !important;
+  overflow: hidden !important;
+  background: #fff !important;
+}
+
+/* v177: 最終行の左下/右下をヘッダー行と同じように“セルで”角丸にする */
+
+/* frame内のtableは余白を持たない（最終行の後の“隙間”に見えるのを防止） */
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed{
+  margin: 0 !important;
+}
+
+/* 最終行の角セルを確実に角丸＋クリップ */
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed tbody tr:last-child td:first-child,
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed tbody tr:last-child td:last-child{
+  position: relative !important;
+  overflow: hidden !important;
+  background: #fff !important; /* 角の欠け/にじみ防止 */
+}
+
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed tbody tr:last-child td:first-child{
+  border-bottom-left-radius: 12px !important;
+}
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed tbody tr:last-child td:last-child{
+  border-bottom-right-radius: 12px !important;
+}
+
+/* セル背景が透明だと角丸が視覚的に出にくいケースがあるため、内側に背景レイヤーを敷く */
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed tbody tr:last-child td:first-child::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-bottom-left-radius:12px;
+  background:#fff;
+  pointer-events:none;
+  z-index:0;
+}
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed tbody tr:last-child td:last-child::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-bottom-right-radius:12px;
+  background:#fff;
+  pointer-events:none;
+  z-index:0;
+}
+
+/* セル内容は背景レイヤーより前に */
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed tbody tr:last-child td:first-child > *,
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed tbody tr:last-child td:last-child > *{
+  position: relative;
+  z-index: 1;
+}
+
+/* v182: 休暇コード(Leave Codes)の削除ボタン高さを従業員タブと同じに寄せる */
+#settingsLeaveCodes .btn-delete,
+#settingsLeaveCodes button.btn-delete{
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+
+  /* ラベル上下の余白をなくして高さを抑える */
+  box-sizing: border-box !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  padding: 0 10px !important;
+  font-size: 12px !important;
+  border-radius: 10px !important;
+  line-height: 1 !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+}
+
+/* v182: 従業員タブの最終行角セルは ::before 背景を敷いているため、
+   行hover時にその背景も一緒に色を変えて、角セルだけハイライトされない問題を解消する */
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed tbody tr:hover td:first-child::before,
+#settingsEmployees .employee-table-frame table.settings-table.employee-table-fixed tbody tr:hover td:last-child::before{
+  background: color-mix(in srgb, var(--accent) 7%, #fff) !important;
+}
+
+/* v154: 従業員タブ 左表
+   目的:
+   - 先頭列(ドラッグ列)は常に 28px（=セルの見た目も28px）
+   - それ以外の列は「残り幅(100% - 28px)」の中で割合配分して伸縮
+   - 横スクロールは発生させない（テーブルを親幅に収める）
+   背景:
+   - v110 の width:100% + table-layout:fixed はOKだが、%列の合計(90%)に 28px を足すと
+     狭い幅で破綻し、28px列まで再配分で太ったり潰れたりする
+   - v153 の max-content/min-width により横スクロールが発生していた
+*/
+
+/* 横スクロール禁止（テーブルを親幅に収める） */
+#settingsEmployees .employee-col-left{
+  overflow-x:hidden !important;
+}
+
+/* テーブルは親幅に合わせ、固定レイアウトで colgroup を確実に反映 */
+#settingsEmployees table.settings-table.employee-table-fixed{
+  width:100% !important;
+  min-width:0 !important;
+  table-layout:fixed !important;
+}
+
+/* 先頭列は 28px 固定（col + セル） */
+#settingsEmployees table.settings-table.employee-table-fixed colgroup col:nth-child(1){
+  width:28px !important;
+  min-width:28px !important;
+  max-width:28px !important;
+}
+#settingsEmployees table.settings-table.employee-table-fixed thead th:first-child,
+#settingsEmployees table.settings-table.employee-table-fixed tbody td:first-child{
+  width:28px !important;
+  min-width:28px !important;
+  max-width:28px !important;
+  box-sizing:border-box !important;
+  padding:0 !important;            /* padding分で太って見えるのを防ぐ */
+  overflow:hidden !important;
+  text-overflow:clip !important;
+  white-space:nowrap !important;
+  text-align:center !important;
+}
+
+/* 残り列は「(100% - 28px)」の中で割合配分
+   ※ col の inline style(18%等) を !important で上書きする
+*/
+#settingsEmployees table.settings-table.employee-table-fixed colgroup col:nth-child(2){
+  width:calc((100% - 28px) * 0.18) !important;
+}
+#settingsEmployees table.settings-table.employee-table-fixed colgroup col:nth-child(3){
+  width:calc((100% - 28px) * 0.18) !important;
+}
+#settingsEmployees table.settings-table.employee-table-fixed colgroup col:nth-child(4){
+  width:calc((100% - 28px) * 0.30) !important;
+}
+#settingsEmployees table.settings-table.employee-table-fixed colgroup col:nth-child(5){
+  width:calc((100% - 28px) * 0.12) !important;
+}
+#settingsEmployees table.settings-table.employee-table-fixed colgroup col:nth-child(6){
+  width:calc((100% - 28px) * 0.12) !important;
+}
+
+/* ドラッグハンドルやセル内要素が列幅を押し広げないようにする */
+#settingsEmployees table.settings-table.employee-table-fixed .emp-drag-cell,
+#settingsEmployees table.settings-table.employee-table-fixed .emp-drag-handle{
+  width:28px !important;
+  min-width:28px !important;
+  max-width:28px !important;
+  box-sizing:border-box !important;
+}
+#settingsEmployees table.settings-table.employee-table-fixed .emp-drag-handle{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  padding:0 !important;
+}
+
+/* 1列目（ドラッグ列）セルを縦中央揃えにする */
+  #settingsEmployees .employee-col-left table.employee-table-fixed td.emp-drag-cell,
+  #settingsEmployees .employee-col-left table.employee-table-fixed th.employee-drag-handle{
+    padding: 0 !important;
+    vertical-align: middle !important;
+  }
+  #settingsEmployees .employee-col-left table.employee-table-fixed td.emp-drag-cell{
+  /* v160: keep table-cell sizing; center content vertically without shrinking the row */
+  padding: 0 !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+  #settingsEmployees .employee-col-left table.employee-table-fixed td.emp-drag-cell .emp-drag-handle{
+  /* v160: match row control height and keep icon centered */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 32px;  /* matches input/select/button height (v158) */
+  line-height: 1;
+  cursor: grab;
+}
+
+/* === v187 override: Employees tab row/input/button height = 28px === */
+#settingsEmployees table.settings-table.employee-table-fixed input,
+#settingsEmployees table.settings-table.employee-table-fixed select{
+  height: 28px !important;
+}
+
+#settingsEmployees table.settings-table.employee-table-fixed button{
+  height: 28px !important;
+  min-height: 28px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  line-height: 1 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+}
+
+/* Drag handle cell height align */
+#settingsEmployees td .emp-drag-handle,
+#settingsEmployees td.employee-drag-handle,
+#settingsEmployees td.emp-drag-cell{
+  min-height: 28px !important;
+}
+
+/* === v187 override: Delete button radius match Holiday tab === */
+#settingsEmployees .btn-delete,
+#settingsEmployees button.btn-delete{
+  border-radius: 10px !important;
+}
+
+/* v189: Stores tab delete button match Leave/Employee (28px + radius 10px) */
+#settingsStores button.btn-delete{
+  height: 28px !important;
+  min-height: 28px !important;
+  padding: 0 10px !important;
+  line-height: 1 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+  border-radius: 10px !important;
+  white-space: nowrap;
+}
+
+
+/* v197: 店舗内順は表示のみ（1刻み） */
+#settingsEmployees .emp-order[readonly]{
+  background: transparent;
+  border-color: transparent;
+  text-align: right;
+  pointer-events: none; /* クリックで編集できない */
+  color: var(--text-muted, #556);
+}
+
+/* v199: 設定画面（店舗/従業員/休暇コード）の表内「削除」をラベルのみ（アクセント色/通常太さ）に統一 */
+#settingsStores button.btn-delete,
+#settingsEmployees button.btn-delete,
+#settingsHolidays button.btn-delete,
+#settingsEmployees .employee-table-frame button[data-action="delete-employee"],
+#settingsLeaveCodes button.btn-delete{
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+
+  /* ラベルのみだが、クリックしやすい当たり判定は確保 */
+  padding: 2px 6px !important;
+
+  height: auto !important;
+  min-height: 0 !important;
+  border-radius: 0 !important;
+
+  color: var(--accent) !important;
+  font-weight: 400 !important; /* 通常 */
+  line-height: 1.2 !important;
+  display: inline-block !important;
+  cursor: pointer !important;
+}
+
+#settingsStores button.btn-delete:hover,
+#settingsEmployees button.btn-delete:hover,
+#settingsEmployees .employee-table-frame button[data-action="delete-employee"]:hover,
+#settingsLeaveCodes button.btn-delete:hover{
+  text-decoration: underline !important;
+  opacity: .9;
+}
+
+#settingsStores button.btn-delete:focus-visible,
+#settingsEmployees button.btn-delete:focus-visible,
+#settingsEmployees .employee-table-frame button[data-action="delete-employee"]:focus-visible,
+#settingsLeaveCodes button.btn-delete:focus-visible{
+  outline: 2px solid rgba(25,118,210,.35) !important;
+  outline-offset: 2px !important;
+}
+
+/* 削除列：セル内の左右/上下中央揃え + テキスト幅想定の固定幅（他タブと統一） */
+#settingsStores table.settings-table th:last-child,
+#settingsStores table.settings-table td:last-child,
+#settingsEmployees table.settings-table.employee-table-fixed th:last-child,
+#settingsEmployees table.settings-table.employee-table-fixed td:last-child,
+#settingsLeaveCodes table.settings-table th:last-child,
+#settingsLeaveCodes table.settings-table td:last-child{
+  text-align: center !important;
+  vertical-align: middle !important;
+  width: 56px !important;
+  white-space: nowrap !important;
+}
+
+@page{size:A4 landscape;margin:8mm}
+      body{font-family:system-ui,-apple-system,"Segoe UI","Yu Gothic UI","Meiryo",sans-serif;color:#111827}
+      .page{page-break-after:always}
+      .page:last-child{page-break-after:auto}
+      .title{text-align:center;font-size:12.5pt;font-weight:800;letter-spacing:.06em;margin:0 0 6mm}
+      .subtitle{text-align:center;font-size:11pt;font-weight:700;margin:-4mm 0 6mm;color:#374151}
+      table{border-collapse:collapse;width:100%;table-layout:fixed}
+      th,td{border:1px solid #d1d5db;text-align:center;padding:2mm 1mm;font-size:8.6pt}
+      thead th{background:#f3f4f6;font-weight:800}
+      .weekday{font-size:8pt;color:#6b7280;font-weight:800}
+      .sun{color:#d32f2f}.sat{color:#1976d2}.hol{color:#d32f2f}
+      .namecol{width:24mm;font-weight:800}
+      .noteRow td{border-top-style:dashed;border-top-color:#9ca3af}
+      .supportHead{background:#f9fafb;font-weight:800}
+      .supportRow td{background:#fafafa}
+      .supportFirst th,.supportFirst td{border-top:3px double #6b7280}
+      .small{font-size:8pt;color:#6b7280;margin-top:2mm}
+    
+/* v107 layout fix */
+.employee-settings-container{
+  display: grid;
+  grid-template-columns: minmax(420px, 520px) 1fr;
+  gap: 16px;
+  align-items: stretch;
+}
+.employee-left{
+  max-width: 520px;
+  overflow-x: auto;
+}
+.employee-right{
+  min-width: 0;
+}
+
+
+/* v128+: left drag handle = 6-dot grip (no icon in column header) */
+.employee-table-fixed td.emp-drag-cell{
+  position:relative;
+  user-select:none;
+  text-align:center;
+}
+.employee-table-fixed .employee-table-fixed td.emp-drag-cell::before{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:14px;
+  height:18px;
+  transform:translate(-50%,-50%);
+  background:
+    radial-gradient(circle, rgba(107,114,128,.95) 1.2px, transparent 1.3px) 0 0 / 6px 6px,
+    radial-gradient(circle, rgba(107,114,128,.95) 1.2px, transparent 1.3px) 3px 3px / 6px 6px;
+  pointer-events:none;
+  opacity:1;
+}
+/* span is kept for accessibility / grab cursor; visual is on the cell */
+.employee-table-fixed td.emp-drag-cell .emp-drag-handle{
+  /* v160: match row control height and keep icon centered */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 32px;  /* matches input/select/button height (v158) */
+  line-height: 1;
+  cursor: grab;
+}
+.employee-table-fixed th:nth-child(1),
+.employee-table-fixed td:nth-child(1){
+  border-right-color: transparent;
+}
+.employee-table-fixed th:nth-child(2),
+.employee-table-fixed td:nth-child(2){
+  border-left-color: transparent;
+}
+}
+
+
+
+/* v150: hard lock drag column to 28px */
+
+#settingsEmployees table.settings-table.employee-table-fixed{
+  table-layout: fixed !important;
+}
+
+/* 1列目 col を直接ロック（class を付与） */
+#settingsEmployees table.settings-table.employee-table-fixed col.drag-col{
+  width: 28px !important;
+  min-width: 28px !important;
+  max-width: 28px !important;
+}
+
+/* ヘッダ/セルも class でロック（列がズレても効く） */
+#settingsEmployees table.settings-table.employee-table-fixed th.employee-drag-handle,
+#settingsEmployees table.settings-table.employee-table-fixed td.emp-drag-cell{
+  width: 28px !important;
+  min-width: 28px !important;
+  max-width: 28px !important;
+
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+
+  /* 何かが flex に変えても列幅計算を壊さない */
+  display: table-cell !important;
+}
+
+/* flex レイアウトに巻き込まれた場合の保険（table外で使われた時も） */
+#settingsEmployees table.settings-table.employee-table-fixed th.employee-drag-handle,
+#settingsEmployees table.settings-table.employee-table-fixed td.emp-drag-cell{
+  flex: 0 0 28px !important;
+}
+
+/* 見た目：セル内のハンドルを中央寄せ */
+#settingsEmployees table.settings-table.employee-table-fixed td.emp-drag-cell .emp-drag-handle,
+#settingsEmployees table.settings-table.employee-table-fixed th.employee-drag-handle .emp-drag-handle{
+  /* v160: match row control height and keep icon centered */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 32px;  /* matches input/select/button height (v158) */
+  line-height: 1;
+  cursor: grab;
+}
+
+
+
+
+/* v162: force thead row/cell height to match body row controls */
+#settingsEmployees table.employee-table-fixed thead tr{
+  height: 32px !important;      /* table row height works more reliably than cell pseudo content */
+}
+#settingsEmployees table.employee-table-fixed thead th{
+  height: 32px !important;
+  vertical-align: middle !important;
+}
+#settingsEmployees table.employee-table-fixed thead th.employee-drag-handle{
+  padding: 0 !important;
+}
+/* keep the header drag cell from collapsing when empty */
+#settingsEmployees table.employee-table-fixed thead th.employee-drag-handle{
+  min-width: 28px !important;
+}
+
+
+/* v164: make header drag-handle cell match other header cell height (padding-driven) */
+#settingsEmployees table.employee-table-fixed thead th.employee-drag-handle{
+  /* other header cells use padding: 6px 10px; match vertical padding but keep horizontal tight */
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  line-height: normal !important;
+  vertical-align: middle !important;
+}
+
+
+/* v165: header drag cell should behave like other header cells (height/padding) */
+#settingsEmployees table.employee-table-fixed thead th.employee-drag-handle{
+  display: table-cell !important;
+  padding: 6px 8px !important;   /* match .employee-table-fixed th,td default */
+  cursor: default !important;
+  user-select: none !important;
+  vertical-align: middle !important;
+}
+
+
+/* v166: round table outer corners (employee tab left table) */
+#settingsEmployees .employee-col-left{
+  border-radius: 12px !important;
+  overflow: hidden !important; /* clip inner borders to rounded corners */
+}
+
+/* border-collapse: separate is needed for border-radius to render reliably */
+#settingsEmployees table.employee-table-fixed{
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  border-radius: 12px !important;
+}
+
+/* top corners */
+#settingsEmployees table.employee-table-fixed thead tr:first-child th:first-child{
+  border-top-left-radius: 12px !important;
+}
+#settingsEmployees table.employee-table-fixed thead tr:first-child th:last-child{
+  border-top-right-radius: 12px !important;
+}
+
+/* bottom corners */
+#settingsEmployees table.employee-table-fixed tbody tr:last-child td:first-child{
+  border-bottom-left-radius: 12px !important;
+}
+#settingsEmployees table.employee-table-fixed tbody tr:last-child td:last-child{
+  border-bottom-right-radius: 12px !important;
+}
+
+/* avoid background bleeding through rounded corners */
+#settingsEmployees table.employee-table-fixed th,
+#settingsEmployees table.employee-table-fixed td{
+  background-clip: padding-box;
+}
+
+
+/* v167: rounded OUTER border via wrapper, avoid relying on cell borders at corners */
+/* frame: table only (not the add button) */
+#settingsEmployees .employee-table-frame{
+  border: 1px solid var(--grid-border, #d7dde6) !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  background: #fff !important;
+}
+
+/* remove the table's own outer border (use wrapper) */
+#settingsEmployees .employee-table-frame table.employee-table-fixed{
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  width: 100% !important;
+}
+
+/* ensure cell borders remain, but drop borders on the outer edge so wrapper border is the outline */
+#settingsEmployees .employee-table-frame table.employee-table-fixed thead tr:first-child th{
+  border-top: 0 !important;
+}
+#settingsEmployees .employee-table-frame table.employee-table-fixed tbody tr:last-child td{
+  border-bottom: 0 !important;
+}
+#settingsEmployees .employee-table-frame table.employee-table-fixed tr > :first-child{
+  border-left: 0 !important;
+}
+#settingsEmployees .employee-table-frame table.employee-table-fixed tr > :last-child{
+  border-right: 0 !important;
+}
+
+
+/* v168: draw rounded outer border as overlay to avoid "missing corner" from cell borders/sticky layers */
+/* frame: table only (not the add button) */
+#settingsEmployees .employee-table-frame{
+  border: 0 !important;                 /* use overlay instead */
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  position: relative !important;
+  background: #fff !important;
+}
+/* overlay border sits above table/cells so corners look rounded even with sticky headers */
+#settingsEmployees .employee-table-frame::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* draw border fully INSIDE to avoid overflow clipping at corners */
+  border-radius: 12px;
+  box-shadow: inset 0 0 0 1px var(--grid-border, #d7dde6);
+  pointer-events: none;
+  z-index: 10;
+}
+/* keep table from painting outside */
+#settingsEmployees .employee-table-frame table.employee-table-fixed{
+  background: transparent !important;
+}
+/* ensure sticky header doesn't cover the border overlay */
+#settingsEmployees .employee-table-frame thead th{
+  z-index: 1 !important;
+}
+
+/* v186: 従業員タブも 28px 高さに統一（休暇コードタブと揃える） */
+#settingsEmployees table.settings-table.employee-table-fixed input,
+#settingsEmployees table.settings-table.employee-table-fixed select{
+  height: 28px !important;
+}
+
+/* 従業員タブのテーブル内ボタンも 28px に（「削除」「追加」等を含む） */
+#settingsEmployees table.settings-table.employee-table-fixed button{
+  height: 28px !important;
+  min-height: 28px !important;
+  padding: 0 10px !important;  /* 上下paddingをゼロにして高さを抑える */
+  line-height: 1 !important;
+  box-sizing: border-box !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* 従業員タブ：ドラッグハンドルの高さも合わせる */
+#settingsEmployees td .emp-drag-handle{
+  min-height: 28px !important;
+}
+
+/* 従業員タブ：削除ボタンの角丸を休暇コードタブ（radius:10px）に合わせる */
+#settingsEmployees .employee-table-frame .btn-delete,
+#settingsEmployees .employee-table-frame button[data-action="delete-employee"]{
+  border-radius: 10px !important;
+  font-size: 12px !important;
+}
