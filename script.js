@@ -67,7 +67,6 @@
 /* ===========
   このファイルは「構文エラーが出ない完全版」をsandbox上で生成したものです。
   以前のコピペで途切れていた場合、こちらに差し替えるだけで Unexpected end of input は解消します。
-=========== */
 
 const STORAGE_KEY = "workScheduleApp_v2";
 let appState=null;
