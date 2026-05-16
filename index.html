@@ -1,258 +1,154 @@
 <!DOCTYPE html>
-
 <html lang="ja">
 <head>
-<meta charset="utf-8"/>
-<title>勤務予定表入力アプリ</title>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<link href="data:," rel="icon"/><!-- favicon 404回避 -->
-<link rel="stylesheet" href="styles.css"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#070b18" />
+  <title>無限三目並べ | Infinite Tic Tac Toe</title>
+  <link href="data:," rel="icon" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-<header>
-<div class="header-left">
-<div class="app-title">勤務予定表 入力アプリ</div>
-<div class="field-group">
-<label for="storeSelect">店舗</label>
-<select id="storeSelect"></select>
-</div>
-<div class="field-group">
-<label for="monthInput">年月</label>
-<input id="monthInput" type="month"/>
-</div>
-</div>
-<div class="header-right">
-<label class="toggle" id="autoSaveToggle">
-<div class="toggle-pill"><div class="toggle-thumb"></div></div>
-<span>自動保存</span>
-</label>
-<button class="primary" disabled="" id="saveButton">保存</button>
-<button id="exportButton">出力</button>
-<button class="icon" id="settingsButton" title="マスタ設定">⚙ 設定</button>
-<button class="icon" id="debugButton" title="デバッグ">🐞</button>
-</div>
-</header>
-<div class="app-main">
-<aside class="sidebar">
-<div class="sidebar-section">
-<h3>入力モード</h3>
-<div class="sidebar-row"><span>コード種別</span><span class="badge work" id="modeBadge">業務コード</span></div>
-<small>Ctrlキーを<strong>押している間だけ</strong>休暇コード入力になります。</small>
-<div class="divider"></div>
-<div class="sidebar-row"><span>応援先</span></div>
-<select id="supportStoreSelect"></select>
-<small>自店舗以外を選択すると「応援入力（先頭に略称）」になります。</small>
-</div>
-<div class="sidebar-section">
-<h3>コード入力パレット</h3>
-<div class="keypad" id="keypad"></div>
-<small>テンキー（1〜9）でも同じ配置で入力できます。</small>
-<div class="ime-alert" id="imeAlert">日本語入力(IME)がオンの可能性があります。英数入力に切り替えてください。</div>
-</div>
-<div class="sidebar-section">
-<h3>夜勤・整合チェック</h3>
-<small>夜勤は「ﾃ（入り）」と「ﾋ（明け）」がセットです。月末ﾃは翌月1日に自動反映（翌月チェックなし）。</small>
-<div class="alert-list" id="alertList"></div>
-</div>
-<div class="sidebar-section" id="debugSection" style="display:none;">
-<h3>デバッグ</h3>
-<small>入力できない原因の切り分け用です（Ctrl+Shift+Dでも表示切替）。</small>
-<div class="divider"></div>
-<div id="debugInfo" style="font-size:11px;line-height:1.45;color:var(--text-muted);"></div>
-<div class="divider"></div>
-<div class="settings-inline-controls" style="justify-content:flex-start;gap:10px;flex-wrap:wrap;">
-<label class="toggle on" id="dbgClickInspectToggle" title="クリックした要素と重なり（上に乗っている要素）を表示します">
-<div class="toggle-pill"><div class="toggle-thumb"></div></div>
-<span>クリック対象表示</span>
-</label>
-</div>
-<div id="debugClickInfo" style="font-size:11px;line-height:1.45;color:var(--text-muted);"></div>
-<div class="divider"></div>
-<div class="settings-inline-controls">
-<button id="dbgExport" title="現在のデータをJSONとして保存">データ書き出し</button>
-<button id="dbgCopyState" title="状態のJSONをクリップボードへ">状態コピー</button>
-<button class="primary" id="dbgFixSnapshot" title="この年月のスナップショットを最新マスタで更新">今月ルール更新</button>
-<button class="text-danger" id="dbgReset" title="全データ初期化（元に戻せません）">全初期化</button>
-</div>
-<small class="text-muted">「今月ルール更新」は “この年月だけ” の入力ルール（店舗の業務コード有効/夜勤）を最新マスタで上書きします。</small>
-</div>
-</aside>
-<main>
-<div class="schedule-header"><div class="schedule-title" id="scheduleTitle"></div></div>
-<div class="schedule-wrapper">
-<div class="schedule-inner" id="scheduleInner">
-<div class="notice" id="schedulePlaceholder">「設定」から店舗・従業員を登録し、年月を選択して勤務表を作成してください。</div>
-</div>
-</div>
-</main>
-</div>
-<!-- Settings Modal -->
-<div class="modal-backdrop" id="settingsModalBackdrop">
-<div class="modal">
-<div class="modal-header">
-<h2>マスタ設定</h2>
-<button class="icon" id="settingsCloseButton">✕</button>
-</div>
-<div class="modal-body">
-<div class="notice" id="settingsScopeNote" style="margin-bottom:10px;">
-        既に作成済みの年月を開いている場合は「この年月のマスタ」を編集します。未作成の年月の場合は「今後の新規作成用マスタ」を編集します。
+  <div class="app-shell" id="app">
+    <div class="ambient ambient-orange"></div>
+    <div class="ambient ambient-blue"></div>
+    <header class="topbar">
+      <button class="brand" data-screen="title" aria-label="タイトルへ戻る">
+        <span class="brand-mark">∞</span>
+        <span><strong>INFINITE</strong><small>TIC TAC TOE</small></span>
+      </button>
+      <nav class="nav-tabs" aria-label="メインメニュー">
+        <button data-screen="game" class="active">PLAY</button>
+        <button data-screen="achievements">ACHIEVEMENTS</button>
+        <button data-screen="collection">COLLECTION</button>
+        <button data-screen="settings">SETTINGS</button>
+      </nav>
+      <div class="top-actions">
+        <button class="ghost" id="resetProgressButton" title="保存データを初期化">RESET</button>
+        <button class="sound-toggle" id="soundToggle" aria-label="サウンド切り替え">♪</button>
       </div>
-<div class="notice" id="propagateToTemplateWrap" style="display:none; margin-bottom:10px;">
-<label style="display:flex; align-items:center; gap:8px; user-select:none;">
-<input checked="" id="propagateToTemplateCheckbox" type="checkbox"/>
-<span>この変更を新規作成時にも反映</span>
-</label>
-<div class="text-muted" style="margin-top:6px;">※ 最新の勤務表を開いている場合のみ、次回以降の新規作成に反映できます。</div>
-</div>
-<div class="modal-tabs">
-<div class="modal-tab active" data-target="settingsStores">店舗</div>
-<div class="modal-tab" data-target="settingsEmployees">従業員</div>
-<div class="modal-tab" data-target="settingsWorkCodes">業務コード</div>
-<div class="modal-tab" data-target="settingsLeaveCodes">休暇コード</div>
-<div class="modal-tab" data-target="settingsHolidays">祝日</div>
-</div>
-<div class="settings-panels">
-<div class="settings-panel active" id="settingsStores">
-<p class="text-muted">店舗名・略称はユニーク。勤務表データがある店舗は削除できず無効化してください。</p>
-<div class="settings-table-frame"><table class="settings-table">
-<thead><tr>
-<th style="width:88px;">並び</th><th>店舗名</th><th style="width:90px;">略称</th><th style="width:70px;">有効</th>
-<th>業務コード（日勤/夜勤/無効）</th><th style="width:56px;">削除</th>
-</tr></thead>
-<tbody id="storeTableBody"></tbody>
-</table></div>
-<button class="add-link-btn" id="addStoreButton">店舗を追加</button>
-</div>
-<div class="settings-panel" id="settingsEmployees">
-<p class="text-muted">同姓同名は不可。勤務表データがある従業員は削除不可（未所属へ）。</p>
-<div class="employee-two-col">
-<div class="employee-col employee-col-left">
-<div class="employee-left-toolbar">
-<label class="toggle on" id="employeeUnassignedOnlyToggle" title="未所属の従業員だけを一覧表示します">
-<div class="toggle-pill"><div class="toggle-thumb"></div></div>
-<span>未所属のみ表示</span>
-</label>
-<div class="helper text-muted">未所属の従業員を右へドラッグして店舗へ割り当て</div>
-</div>
-<div class="text-muted" id="employeeUnassignedHint" style="display:none;font-size:11px;margin:-4px 0 8px;">未所属の従業員がいません</div>
-<div class="employee-table-frame">
-<table class="settings-table employee-table-fixed">
-<colgroup>
-<col class="drag-col" style="width:28px"/>
-<col style="width:18%"/>
-<col style="width:18%"/>
-<col style="width:30%"/>
-<col style="width:12%"/>
-<col style="width:56px"/>
-</colgroup>
-<thead><tr>
-<th class="employee-drag-handle" title="ドラッグして店舗へ追加"> </th>
-<th style="width:160px;">姓</th><th style="width:160px;">名</th><th>所属店舗</th><th style="width:110px;">店舗内順</th><th style="width:56px;">削除</th>
-</tr></thead>
-<tbody id="employeeTableBody"></tbody>
-</table>
-</div>
-<button class="add-link-btn" id="addEmployeeButton">従業員を追加</button>
-</div>
-<div class="employee-col employee-col-right">
-<div class="employee-order-head">
-<div class="employee-order-row">
-<div class="label">店舗</div>
-<select id="employeeOrderStoreSelect"></select>
-</div>
-</div>
-<div class="employee-order-list" id="employeeOrderList"></div>
-</div>
-</div>
-</div>
-<div class="settings-panel" id="settingsWorkCodes">
-<p class="text-muted">業務コードはA〜F。テンキー割当と色を設定します。</p>
-<div class="settings-table-frame"><table class="settings-table">
-<thead><tr><th style="width:80px;">コード</th><th style="width:120px;">テンキー</th><th style="width:120px;">文字色</th><th style="width:120px;">背景色（薄）</th></tr></thead>
-<tbody id="workCodeTableBody"></tbody>
-</table></div>
-</div>
-<div class="settings-panel" id="settingsLeaveCodes">
-<p class="text-muted">休暇コード（全店舗共通）。追加・削除可。</p>
-<div class="settings-table-frame"><table class="settings-table">
-<thead><tr><th>コード</th><th style="width:120px;">テンキー</th><th style="width:56px;">削除</th></tr></thead>
-<tbody id="leaveCodeTableBody"></tbody>
-</table></div>
-<button class="add-link-btn" id="addLeaveCodeButton">休暇コードを追加</button>
-</div>
+    </header>
 
-<div class="settings-panel" id="settingsHolidays">
-  <p class="text-muted">
-    祝日マスタ。新規年月の勤務表作成時に外部（Holidays JP API）から初期値を自動取得し、以降はこのマスタを参照します。必要に応じて名称変更や独自の休日を追加できます。
-  </p>
-  <div class="holiday-toolbar" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0 10px;">
-    <label class="holiday-year-field">
-      <input id="holidayYearInput" class="holiday-year-input" type="number" min="2000" max="2100" step="1" inputmode="numeric" style="width:96px;">
-      <span class="unit">年</span>
-    </label>
-    <button class="btn" id="holidayFetchButton" type="button">外部から取得</button>
-    <span class="text-muted" style="font-size:12px;">（外部取得は不足分のみ追加。既に編集した日付は上書きしません）</span>
+    <main>
+      <section class="screen title-screen is-visible" id="titleScreen" aria-labelledby="gameTitle">
+        <div class="hero-card glass">
+          <div class="kicker">DARK NEON STRATEGY</div>
+          <h1 id="gameTitle">無限三目並べ</h1>
+          <p>3つしか保持できない駒、4手目で消える最古の記憶。読み切るほど気持ちいい、終わらない三目並べ。</p>
+          <div class="hero-stats">
+            <span><b id="heroWinRate">0%</b>勝率</span>
+            <span><b id="heroGames">0</b>試合</span>
+            <span><b id="heroCollection">0%</b>図鑑</span>
+          </div>
+          <div class="hero-actions">
+            <button class="primary cta" id="startButton">今すぐ対戦</button>
+            <button class="secondary" data-screen="collection">未発見を見る</button>
+          </div>
+          <div class="next-reward" id="nextRewardHint">次の報酬を解析中...</div>
+        </div>
+        <div class="rule-card glass">
+          <h2>RULE CORE</h2>
+          <ol>
+            <li>3×3盤面に交互に配置。</li>
+            <li>各プレイヤーは最大3駒だけ保持。</li>
+            <li>4個目を置く瞬間、最古の自駒が消滅。</li>
+            <li>縦・横・斜めを揃えたら勝利。</li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="screen game-screen" id="gameScreen" aria-label="プレイ画面">
+        <aside class="hud-panel glass left-hud">
+          <div class="turn-chip" id="turnChip">YOUR TURN</div>
+          <div class="stat-grid">
+            <div><small>TURN</small><strong id="turnNumber">1</strong></div>
+            <div><small>WIN RATE</small><strong id="winRate">0%</strong></div>
+            <div><small>YOU</small><strong id="playerScore">0</strong></div>
+            <div><small>CPU</small><strong id="cpuScore">0</strong></div>
+            <div><small>STREAK</small><strong id="streak">0</strong></div>
+            <div><small>GAMES</small><strong id="totalGames">0</strong></div>
+          </div>
+          <div class="progress-block">
+            <div class="progress-label"><span>ACHIEVEMENTS</span><b id="achievementProgressText">0/6</b></div>
+            <div class="progress"><span id="achievementProgressBar"></span></div>
+          </div>
+          <div class="progress-block">
+            <div class="progress-label"><span>VICTORY ARCHIVE</span><b id="collectionProgressText">0/8</b></div>
+            <div class="progress blue"><span id="collectionProgressBar"></span></div>
+          </div>
+          <div class="micro-feed" id="microFeed" aria-live="polite"></div>
+        </aside>
+
+        <div class="arena-wrap">
+          <div class="cpu-thinking" id="thinkingIndicator"><span></span><span></span><span></span> CPU THINKING</div>
+          <div class="board-frame" id="boardFrame">
+            <div class="win-line" id="winLine"></div>
+            <div class="board" id="board" aria-label="三目並べ盤面"></div>
+          </div>
+          <div class="arena-footer">
+            <button class="secondary" id="newRoundButton">NEW ROUND</button>
+            <button class="ghost" id="hintButton">TACTICAL HINT</button>
+          </div>
+        </div>
+
+        <aside class="hud-panel glass right-hud">
+          <h2>TACTICAL STATUS</h2>
+          <div class="threat-panel" id="threatPanel"></div>
+          <h2>ACHIEVEMENTS</h2>
+          <div class="mini-achievements" id="miniAchievements"></div>
+          <h2>SETTINGS SNAP</h2>
+          <div class="settings-snap" id="settingsSnap"></div>
+        </aside>
+      </section>
+
+      <section class="screen end-screen" id="endScreen" aria-live="assertive">
+        <div class="result-card glass" id="resultCard">
+          <div class="result-emblem" id="resultEmblem">∞</div>
+          <h2 id="resultTitle">VICTORY</h2>
+          <p id="resultText"></p>
+          <div class="result-metrics" id="resultMetrics"></div>
+          <div class="hero-actions">
+            <button class="primary" id="continueButton">もう1戦</button>
+            <button class="secondary" data-screen="collection">図鑑を見る</button>
+            <button class="ghost" data-screen="title">終了</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen archive-screen" id="achievementsScreen">
+        <div class="section-heading">
+          <div><span class="kicker">PROGRESSION</span><h1>アチーブメント</h1></div>
+          <p id="achievementSummary">解除率 0%</p>
+        </div>
+        <div class="achievement-grid" id="achievementGrid"></div>
+      </section>
+
+      <section class="screen archive-screen" id="collectionScreen">
+        <div class="section-heading">
+          <div><span class="kicker">VICTORY ARCHIVE</span><h1>勝利盤面コレクション</h1></div>
+          <p id="collectionSummary">発見率 0%</p>
+        </div>
+        <div class="collection-grid" id="collectionGrid"></div>
+      </section>
+
+      <section class="screen settings-screen" id="settingsScreen">
+        <div class="settings-card glass">
+          <div class="section-heading compact"><div><span class="kicker">SYSTEM</span><h1>設定</h1></div></div>
+          <div class="settings-list">
+            <label><span>BGM音量</span><input id="bgmVolume" type="range" min="0" max="1" step="0.05"></label>
+            <label><span>SE音量</span><input id="seVolume" type="range" min="0" max="1" step="0.05"></label>
+            <label><span>CPU難易度</span><select id="difficultySelect"><option>EASY</option><option>NORMAL</option><option>HARD</option></select></label>
+            <label><span>エフェクト量</span><select id="effectsSelect"><option value="low">LOW</option><option value="normal">NORMAL</option><option value="high">HIGH</option></select></label>
+            <label><span>色覚サポート</span><input id="colorAssist" type="checkbox"></label>
+            <label><span>振動演出</span><input id="shakeEnabled" type="checkbox"></label>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="toast-stack" id="toastStack" aria-live="polite"></div>
+    <div class="screen-flash" id="screenFlash"></div>
   </div>
-  <div class="settings-table-frame">
-    <table class="settings-table" id="holidayTable">
-      <thead>
-        <tr>
-          <th style="width:180px;">日付</th>
-          <th>名称</th>
-<th style="width:56px;">削除</th>
-        </tr>
-      </thead>
-      <tbody id="holidayTableBody"></tbody>
-    </table>
-  </div>
-  <button class="add-link-btn" id="addHolidayButton" type="button">祝日を追加</button>
-</div>
-
-</div>
-</div>
-<div class="modal-footer">
-<span class="text-muted" style="margin-right:auto;font-size:11px;">※ マスタ変更は基本「この月の勤務表」にのみ反映されます。最新の勤務表ではチェックONで次回以降の新規作成にも反映できます。</span>
-<button class="primary" id="settingsSaveButton">マスタを保存</button>
-<button id="settingsCancelButton">閉じる</button>
-</div>
-</div>
-</div>
-<!-- Unsaved Modal -->
-<div class="modal-backdrop" id="unsavedModalBackdrop">
-<div class="modal" style="max-width:460px;">
-<div class="modal-header"><h2>未保存の変更があります</h2></div>
-<div class="unsaved-body">
-<p>勤務表に未保存の変更があります。どうしますか？</p>
-<ul>
-<li><strong>保存して移動</strong> … 現在の変更を保存してから移動します。</li>
-<li><strong>破棄して移動</strong> … 現在の変更を破棄して移動します。</li>
-<li><strong>キャンセル</strong> … 移動を中止します。</li>
-</ul>
-</div>
-<div class="modal-footer">
-<button class="text-danger" id="unsavedDiscardButton">破棄して移動</button>
-<button class="primary" id="unsavedSaveButton">保存して移動</button>
-<button id="unsavedCancelButton">キャンセル</button>
-</div>
-</div>
-</div>
-<!-- New Schedule Modal -->
-<div class="modal-backdrop" id="newScheduleModalBackdrop">
-<div class="modal" style="max-width:480px;">
-<div class="modal-header"><h2>勤務表を新規作成</h2></div>
-<div class="unsaved-body">
-<p id="newScheduleMessage"></p>
-<p>作成前にマスタを確認・修正できます。問題なければ有効な全店舗分をまとめて作成します。</p>
-</div>
-<div class="modal-footer">
-<button id="newScheduleWithSettingsButton">マスタを確認して作成</button>
-<button class="primary" id="newScheduleDirectButton">現在のマスタで作成</button>
-<button id="newScheduleCancelButton">キャンセル</button>
-</div>
-</div>
-</div>
-
-
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
